@@ -1,7 +1,7 @@
 [project]
-name = "unitest-api"
+name = "academe-api"
 version = "2.0.0"
-description = "UniTest v2 — Multi-tenant assessment platform API"
+description = "Academe v2 — Multi-tenant assessment platform API"
 requires-python = ">=3.12"
 readme = "README.md"
 

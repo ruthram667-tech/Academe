@@ -7,7 +7,7 @@ from app.config import get_settings
 settings = get_settings()
 
 celery_app = Celery(
-    "unitest",
+    "academe",
     broker=settings.redis_url,
     backend=settings.redis_url,
 )

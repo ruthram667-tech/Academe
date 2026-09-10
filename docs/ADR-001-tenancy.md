@@ -4,7 +4,7 @@
 Accepted — August 2026
 
 ## Context
-UniTest v2 must serve multiple colleges from a single deployment. Three tenancy
+Academe v2 must serve multiple colleges from a single deployment. Three tenancy
 strategies were considered:
 
 1. **Database-per-tenant** — strongest isolation, but unaffordable on an 8 GB
@@ -22,7 +22,7 @@ strategies were considered:
 Row-Level Security (RLS).**
 
 Key implementation rules:
-- The application connects as a **non-superuser** role (`unitest_app`).
+- The application connects as a **non-superuser** role (`academe_app`).
   `FORCE ROW LEVEL SECURITY` is set so RLS binds even for table owners.
 - A per-request FastAPI dependency calls `SET LOCAL app.tenant_id = '{id}'`
   inside the transaction. RLS policies reference

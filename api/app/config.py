@@ -14,8 +14,8 @@ class Settings(BaseSettings):
     pghost: str = "db"
     pgport: int = 5432
     pguser: str = "postgres"
-    pgpassword: str = "unitest_dev_password"
-    pgdatabase: str = "unitest"
+    pgpassword: str = "academe_dev_password"
+    pgdatabase: str = "academe"
 
     # ── Redis ──
     redis_url: str = "redis://redis:6379/0"
@@ -24,11 +24,11 @@ class Settings(BaseSettings):
     minio_endpoint: str = "minio:9000"
     minio_access_key: str = "minioadmin"
     minio_secret_key: str = "minioadmin"
-    minio_bucket: str = "unitest-uploads"
+    minio_bucket: str = "academe-uploads"
     minio_use_ssl: bool = False
 
     # ── API ──
-    secret_key: str = "unitest_dev_secret_change_me_in_production"
+    secret_key: str = "academe_dev_secret_change_me_in_production"
     api_port: int = 8000
     debug: bool = True
 
