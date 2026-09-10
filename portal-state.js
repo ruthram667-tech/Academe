@@ -319,19 +319,34 @@
       return { success: true, redirect: 'superadmin-dashboard.html', user: admin };
     },
 
-    // First time password change
-    updateStudentPassword: function (userId, newPassword) {
+    // First time password change & forced update
+    changeUserPassword: function (identifierOrId, newPassword) {
       const users = load(KEYS.USERS, DEFAULT_USERS);
-      const userIndex = users.findIndex(u => u.id === userId);
-      if (userIndex === -1) return { success: false, message: 'User not found' };
+      const clean = String(identifierOrId || '').trim().toLowerCase();
+      const userIndex = users.findIndex(u => 
+        u.id === identifierOrId || 
+        (u.regNo && u.regNo.toLowerCase() === clean) || 
+        (u.email && u.email.toLowerCase() === clean)
+      );
+      if (userIndex === -1) return { success: false, message: 'User account not found' };
 
       users[userIndex].password = newPassword;
       users[userIndex].mustChangePassword = false;
       save(KEYS.USERS, users);
 
-      this.setSession(users[userIndex]);
-      this.logAudit('Password Updated', `${users[userIndex].name} updated their default password.`);
-      return { success: true, redirect: 'index.html', user: users[userIndex] };
+      const updatedUser = users[userIndex];
+      this.setSession(updatedUser);
+      this.logAudit('Password Updated', `${updatedUser.name} updated account password.`);
+
+      let redirect = 'index.html';
+      if (updatedUser.role === 'staff') redirect = 'staff-dashboard.html';
+      else if (updatedUser.role === 'superadmin') redirect = 'superadmin-dashboard.html';
+
+      return { success: true, redirect: redirect, user: updatedUser };
+    },
+
+    updateStudentPassword: function (userId, newPassword) {
+      return this.changeUserPassword(userId, newPassword);
     },
 
     // Logout routing adhering to architecture
