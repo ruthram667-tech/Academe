@@ -38,6 +38,8 @@
     const duration = document.getElementById('testDurationInput').value;
     const marks = document.getElementById('testMarksInput').value;
     const prompt = document.getElementById('testPromptInput').value.trim();
+    const kwRaw = document.getElementById('testKeywordsInput') ? document.getElementById('testKeywordsInput').value : '';
+    const keywords = kwRaw.split(',').map(k => k.trim()).filter(k => k.length > 0);
 
     const created = state.createTest({
       title,
@@ -45,6 +47,7 @@
       department: dept,
       durationMinutes: duration,
       totalMarks: marks,
+      keywords: keywords.length > 0 ? keywords : ['Consensus', 'Fault Tolerance', 'Algorithm'],
       questions: [
         { id: 'q1', prompt: prompt, maxMarks: Number(marks) }
       ]
@@ -90,12 +93,14 @@
     tbody.innerHTML = '';
 
     if (submissions.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-dim);">No student submissions recorded yet.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">No student submissions recorded yet.</td></tr>`;
     } else {
       submissions.forEach(s => {
         const tr = document.createElement('tr');
         const isGraded = s.status === 'graded';
         const initials = (s.studentName || 'ST').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        const docName = s.fileName || 'Solution_Document.pdf';
+        const isPPT = docName.endsWith('.ppt') || docName.endsWith('.pptx');
 
         tr.innerHTML = `
           <td>
@@ -110,6 +115,16 @@
           <td><span style="font-family:var(--font-mono); color:var(--text-muted);">${s.regNo}</span></td>
           <td>
             <div style="font-weight:500;">${s.testTitle}</div>
+          </td>
+          <td>
+            <div style="display:flex; align-items:center; gap:0.4rem;">
+              <span class="badge" style="background:${isPPT ? 'rgba(245,158,11,0.2); color:#fbbf24' : 'rgba(16,185,129,0.2); color:#34d399'}; font-size:0.68rem; padding:0.15rem 0.4rem;">
+                ${isPPT ? 'PPT' : 'PDF'}
+              </span>
+              <span style="font-size:0.8rem; color:#cbd5e1; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${docName}">
+                ${docName}
+              </span>
+            </div>
           </td>
           <td style="color:var(--text-muted);">${s.submittedAt}</td>
           <td>
