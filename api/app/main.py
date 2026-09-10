@@ -1,4 +1,4 @@
-"""UniTest v2 — FastAPI application factory."""
+"""Academe v2 — FastAPI application factory."""
 
 import uuid
 from contextlib import asynccontextmanager
@@ -33,7 +33,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="UniTest v2",
+    title="Academe v2",
     description="Multi-tenant assessment platform API",
     version="2.0.0",
     lifespan=lifespan,

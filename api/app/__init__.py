@@ -1,1 +1,1 @@
-"""UniTest v2 API package."""
+"""Academe v2 API package."""

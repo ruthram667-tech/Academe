@@ -1,4 +1,4 @@
-# UniTest v2
+# Academe v2
 
 Multi-tenant assessment platform — React + FastAPI + PostgreSQL.
 
@@ -27,6 +27,6 @@ docs/         Architecture Decision Records
 
 | Role         | Email                | Password   |
 |--------------|----------------------|------------|
-| Tenant Admin | admin@unitest.edu    | admin123   |
-| Staff        | staffa@unitest.edu   | staff123   |
-| Student      | studentx@unitest.edu | student123 |
+| Tenant Admin | admin@academe.edu    | admin123   |
+| Staff        | staffa@academe.edu   | staff123   |
+| Student      | studentx@academe.edu | student123 |
