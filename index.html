@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniTest — Student Portal Dashboard</title>
+  <meta name="description" content="Student assessment overview, live tests, and grades" />
+  <link rel="stylesheet" href="portal-common.css" />
+  <link rel="stylesheet" href="student.css" />
+</head>
+<body>
+  <div class="bg-mesh" aria-hidden="true">
+    <div class="mesh-blob mesh-blob-1" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <header class="portal-navbar">
+    <a href="index.html" class="brand-wrapper">
+      <div class="brand-icon" style="background: linear-gradient(135deg, #10b981, #059669)">🎓</div>
+      <div class="brand-text">
+        <span class="brand-name">UniTest</span>
+        <span class="brand-badge">Student Portal</span>
+      </div>
+    </a>
+
+    <div class="nav-user-controls">
+      <div class="user-badge">
+        <div class="user-avatar student" id="userAvatar">SJ</div>
+        <div class="user-info">
+          <span class="user-name" id="userName">Sarah Jenkins</span>
+          <span class="user-role-label" id="userRegNo">2024CS101 • Sem 6</span>
+        </div>
+      </div>
+      <button type="button" class="btn-logout" id="logoutBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Welcome Banner -->
+    <section class="dashboard-header-banner">
+      <div class="student-greeting">
+        <h1>Welcome Back, <span id="bannerStudentName">Sarah</span>! 👋</h1>
+        <p style="color: var(--text-muted); margin-bottom: 0.85rem;">
+          Track your course assessments, submit assignments, and review academic evaluations in real-time.
+        </p>
+        <div class="student-meta-tags">
+          <span class="meta-pill" id="deptPill">Department: Computer Science</span>
+          <span class="meta-pill" id="semPill">Academic Term: Semester 6</span>
+          <span class="meta-pill" style="color: #34d399; border-color: rgba(16, 185, 129, 0.3)">● Status: Active Enrollment</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Performance Metrics -->
+    <section class="stats-grid" aria-label="Student Statistics">
+      <div class="stat-card">
+        <div class="stat-icon emerald">📚</div>
+        <div>
+          <div class="stat-val" id="statAvailableTests">2</div>
+          <div class="stat-desc">Available Tests</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon amber">⏳</div>
+        <div>
+          <div class="stat-val" id="statPendingGrading">1</div>
+          <div class="stat-desc">Pending Evaluation</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon indigo">🎯</div>
+        <div>
+          <div class="stat-val" id="statGradedCount">2</div>
+          <div class="stat-desc">Graded Assessments</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon rose">⭐</div>
+        <div>
+          <div class="stat-val" id="statAvgScore">91%</div>
+          <div class="stat-desc">Average Grade</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Active Assessments Section -->
+    <section>
+      <div class="section-title-row">
+        <h2 class="section-title">Assigned Assessments</h2>
+        <span style="font-size: 0.84rem; color: var(--text-muted);">Timed Online Examinations</span>
+      </div>
+
+      <div class="assessment-grid" id="assessmentContainer">
+        <!-- Rendered dynamically via student.js -->
+      </div>
+    </section>
+
+    <!-- Evaluation Results & Teacher Feedback Section -->
+    <section style="margin-top: 1.5rem;">
+      <div class="section-title-row">
+        <h2 class="section-title">Evaluation Records &amp; Teacher Feedback</h2>
+        <span style="font-size: 0.84rem; color: var(--text-muted);">Results Published by Faculty</span>
+      </div>
+
+      <div class="grade-table-wrap">
+        <table class="grade-table">
+          <thead>
+            <tr>
+              <th>Assessment</th>
+              <th>Submitted Date</th>
+              <th>Status</th>
+              <th>Score</th>
+              <th>Teacher Feedback</th>
+            </tr>
+          </thead>
+          <tbody id="gradeTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Interactive Test Taker Modal -->
+  <div class="modal-overlay" id="testModal" role="dialog" aria-modal="true" aria-labelledby="testModalTitle">
+    <div class="modal-card test-taker-modal">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="testModalTitle">Assessment Examination</h2>
+          <div style="font-size: 0.8rem; color: var(--text-muted);" id="testModalSubtitle">CS301 • 60 Minutes</div>
+        </div>
+        <button type="button" class="modal-close-btn" id="closeTestModalBtn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.84rem; color: #c7d2fe;">⏱️ Session Timer Running</span>
+        <span style="font-family: var(--font-mono); font-weight: 700; color: #a5b4fc;" id="examTimer">59:45</span>
+      </div>
+
+      <form id="testAnswerForm">
+        <div id="testQuestionsContainer">
+          <!-- Dynamic Question Inputs -->
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle);">
+          <button type="button" class="btn btn-secondary" id="cancelTestBtn">Save Draft &amp; Exit</button>
+          <button type="submit" class="btn btn-success" id="submitExamBtn">Submit for Grading →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="portal-state.js"></script>
+  <script src="student.js"></script>
+</body>
+</html>

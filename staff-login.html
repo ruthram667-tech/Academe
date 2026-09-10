@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniTest — Staff &amp; Faculty Login</title>
+  <meta name="description" content="Dedicated portal for Teachers and Faculty" />
+  <link rel="stylesheet" href="portal-common.css" />
+  <link rel="stylesheet" href="login.css" />
+  <style>
+    .login-card::before {
+      background: linear-gradient(90deg, #f59e0b, #d97706, #6366f1) !important;
+    }
+    .login-logo-box {
+      background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.35) !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-mesh" aria-hidden="true">
+    <div class="mesh-blob mesh-blob-1" style="background: radial-gradient(circle, #f59e0b 0%, transparent 70%);"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+  </div>
+
+  <main class="login-page-wrapper">
+    <div class="login-card-container">
+      <div class="login-card">
+        <header class="login-brand-header">
+          <div class="login-logo-box" aria-hidden="true">👨‍🏫</div>
+          <h1 class="login-title">Faculty Portal</h1>
+          <p class="login-subtitle">Teacher Assessment Management</p>
+        </header>
+
+        <div style="margin-bottom: 1.5rem; text-align: center;">
+          <button type="button" class="btn btn-secondary" id="fillStaffDemoBtn" style="font-size: 0.8rem; width: 100%;">
+            ⚡ Auto-Fill Staff Credentials (staffa@unitest.edu)
+          </button>
+        </div>
+
+        <form id="staffLoginForm">
+          <div class="form-group">
+            <label class="form-label" for="staffEmail">Faculty Email</label>
+            <input id="staffEmail" type="email" class="form-input" placeholder="staffa@unitest.edu" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="staffPassword">Password</label>
+            <input id="staffPassword" type="password" class="form-input" placeholder="Enter staff password" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="staffSubmitBtn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #f59e0b, #d97706);">
+            <span>Access Faculty Dashboard</span>
+            <span>→</span>
+          </button>
+        </form>
+
+        <footer class="alt-logins-footer">
+          <a href="login.html" class="alt-link">← Return to Unified Login Gateway</a>
+        </footer>
+      </div>
+    </div>
+  </main>
+
+  <script src="portal-state.js"></script>
+  <script>
+    (function () {
+      const state = window.PortalState;
+      const form = document.getElementById('staffLoginForm');
+      const emailInput = document.getElementById('staffEmail');
+      const passInput = document.getElementById('staffPassword');
+      const submitBtn = document.getElementById('staffSubmitBtn');
+
+      document.getElementById('fillStaffDemoBtn').addEventListener('click', () => {
+        emailInput.value = 'staffa@unitest.edu';
+        passInput.value = 'staff123';
+        state.showToast('Pre-filled Staff credentials', 'info');
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>Verifying Faculty Credentials...</span>';
+
+        setTimeout(() => {
+          const res = state.staffLogin(emailInput.value, passInput.value);
+          if (res.success) {
+            state.showToast('Faculty verified. Opening Dashboard...', 'success');
+            setTimeout(() => window.location.href = res.redirect, 600);
+          } else {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>Access Faculty Dashboard</span><span>→</span>';
+            state.showToast(res.message, 'error');
+          }
+        }, 400);
+      });
+    })();
+  </script>
+</body>
+</html>

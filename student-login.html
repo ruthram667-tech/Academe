@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniTest — Student Login</title>
+  <meta name="description" content="Dedicated Student Assessment Portal" />
+  <link rel="stylesheet" href="portal-common.css" />
+  <link rel="stylesheet" href="login.css" />
+  <style>
+    .login-card::before {
+      background: linear-gradient(90deg, #10b981, #059669, #06b6d4) !important;
+    }
+    .login-logo-box {
+      background: linear-gradient(135deg, #10b981, #059669) !important;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35) !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-mesh" aria-hidden="true">
+    <div class="mesh-blob mesh-blob-1" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+  </div>
+
+  <main class="login-page-wrapper">
+    <div class="login-card-container">
+      <div class="login-card">
+        <header class="login-brand-header">
+          <div class="login-logo-box" aria-hidden="true">🎓</div>
+          <h1 class="login-title">Student Portal</h1>
+          <p class="login-subtitle">Assessment &amp; Grading Access</p>
+        </header>
+
+        <div style="margin-bottom: 1.5rem; text-align: center;">
+          <button type="button" class="btn btn-secondary" id="fillStudentDemoBtn" style="font-size: 0.8rem; width: 100%;">
+            ⚡ Auto-Fill Student Credentials (2024CS101)
+          </button>
+        </div>
+
+        <form id="studentLoginForm">
+          <div class="form-group">
+            <label class="form-label" for="studentReg">Registration Number</label>
+            <input id="studentReg" type="text" class="form-input" placeholder="e.g. 2024CS101" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="studentPassword">Password</label>
+            <input id="studentPassword" type="password" class="form-input" placeholder="Enter student password" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="studentSubmitBtn" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #10b981, #059669);">
+            <span>Enter Student Workspace</span>
+            <span>→</span>
+          </button>
+        </form>
+
+        <footer class="alt-logins-footer">
+          <a href="login.html" class="alt-link">← Return to Unified Login Gateway</a>
+        </footer>
+      </div>
+    </div>
+  </main>
+
+  <script src="portal-state.js"></script>
+  <script>
+    (function () {
+      const state = window.PortalState;
+      const form = document.getElementById('studentLoginForm');
+      const regInput = document.getElementById('studentReg');
+      const passInput = document.getElementById('studentPassword');
+      const submitBtn = document.getElementById('studentSubmitBtn');
+
+      document.getElementById('fillStudentDemoBtn').addEventListener('click', () => {
+        regInput.value = '2024CS101';
+        passInput.value = 'student123';
+        state.showToast('Pre-filled Student credentials', 'info');
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>Verifying Student ID...</span>';
+
+        setTimeout(() => {
+          const res = state.studentLogin(regInput.value, passInput.value);
+          if (res.mustChangePassword) {
+            // Forward to unified login with modal
+            window.location.href = 'login.html';
+            return;
+          }
+          if (res.success) {
+            state.showToast('Student verified. Opening Dashboard...', 'success');
+            setTimeout(() => window.location.href = res.redirect, 600);
+          } else {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>Enter Student Workspace</span><span>→</span>';
+            state.showToast(res.message, 'error');
+          }
+        }, 400);
+      });
+    })();
+  </script>
+</body>
+</html>
