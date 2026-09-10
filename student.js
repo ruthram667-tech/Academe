@@ -1,4 +1,4 @@
-// UniGrade — Student Portal Controller (CodeTantra-Inspired Design)
+// Academe — Student Portal Controller (CodeTantra-Inspired Design)
 (function () {
   'use strict';
 
@@ -30,7 +30,7 @@
     if (navAvatar) navAvatar.textContent = initials;
     if (navName) navName.textContent = session.name;
     if (dropName) dropName.textContent = session.name;
-    if (dropEmail) dropEmail.textContent = session.email || `${(session.regNo || 'student').toLowerCase()}@student.unitest.edu`;
+    if (dropEmail) dropEmail.textContent = session.email || `${(session.regNo || 'student').toLowerCase()}@student.academe.edu`;
   }
 
   updateProfileDisplay();
@@ -582,7 +582,7 @@ public class RaftWorker {
       const current = state.getSession() || student;
       if (profileNameInput) profileNameInput.value = current.name || '';
       if (profileRegInput) profileRegInput.value = current.regNo || '2024CS101';
-      if (profileEmailInput) profileEmailInput.value = current.email || `${current.regNo.toLowerCase()}@student.unitest.edu`;
+      if (profileEmailInput) profileEmailInput.value = current.email || `${current.regNo.toLowerCase()}@student.academe.edu`;
       if (profileDeptInput) profileDeptInput.value = current.department || 'Computer Science';
       openModal('modalProfile');
     });

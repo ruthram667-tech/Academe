@@ -1,10 +1,11 @@
 /**
- * UniTest Portal - Unified Reactive State & Auth Engine
+ * Academe Portal - Unified Reactive State & Auth Engine
  * Synchronizes sessions, role-based access, and persistent mock/API data.
  */
 
 (function () {
-  const STORAGE_PREFIX = 'unitest_';
+  const STORAGE_PREFIX = 'academe_';
+  const OLD_PREFIX = 'unitest_';
   const KEYS = {
     SESSION: `${STORAGE_PREFIX}session`,
     USERS: `${STORAGE_PREFIX}users`,
@@ -14,13 +15,20 @@
     SPLASH_DONE: `${STORAGE_PREFIX}splash_ready`
   };
 
+  // Migrate any previous mock storage keys
+  ['users', 'tests', 'submissions', 'audit_logs', 'session'].forEach(k => {
+    if (!localStorage.getItem(`${STORAGE_PREFIX}${k}`) && localStorage.getItem(`${OLD_PREFIX}${k}`)) {
+      localStorage.setItem(`${STORAGE_PREFIX}${k}`, localStorage.getItem(`${OLD_PREFIX}${k}`));
+    }
+  });
+
   // Default Seed Data
   const DEFAULT_USERS = [
     {
       id: 'usr_student_1',
       regNo: '2024CS101',
       name: 'Sarah Jenkins',
-      email: 'sarah.j@student.unitest.edu',
+      email: 'sarah.j@student.academe.edu',
       role: 'student',
       department: 'Computer Science',
       semester: 'Semester 6',
@@ -32,7 +40,7 @@
       id: 'usr_student_2',
       regNo: '2024CS999',
       name: 'Alex Rivera (First-Time)',
-      email: 'alex.r@student.unitest.edu',
+      email: 'alex.r@student.academe.edu',
       role: 'student',
       department: 'Computer Science',
       semester: 'Semester 1',
@@ -42,7 +50,7 @@
     },
     {
       id: 'usr_staff_1',
-      email: 'staffa@unitest.edu',
+      email: 'staffa@academe.edu',
       name: 'Dr. Alan Turing',
       role: 'staff',
       department: 'Computer Science & AI',
@@ -52,7 +60,7 @@
     },
     {
       id: 'usr_admin_1',
-      email: 'admin@unitest.edu',
+      email: 'admin@academe.edu',
       name: 'Elena Vance',
       role: 'superadmin',
       department: 'Central Administration',

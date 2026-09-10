@@ -1,4 +1,4 @@
-// UniTest Grading Interface Controller with Interactive Document Viewer & Keyword Highlighting
+// Academe Grading Interface Controller with Interactive Document Viewer & Keyword Highlighting
 (function () {
   'use strict';
 
@@ -344,7 +344,7 @@
       ${sectionsHtml}
       <div style="margin-top:2rem; padding-top:0.85rem; border-top:1px solid #E2E8F0; display:flex; justify-content:space-between; font-size:0.75rem; color:#94A3B8;">
         <span>Document Integrity Verified ✓</span>
-        <span>UniGrade Academic Evaluation Platform</span>
+        <span>Academe Academic Evaluation Platform</span>
       </div>
     `;
 

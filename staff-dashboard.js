@@ -1,4 +1,4 @@
-// UniTest Faculty Dashboard Controller
+// Academe Faculty Dashboard Controller
 (function () {
   const state = window.PortalState;
   if (!state) return;
