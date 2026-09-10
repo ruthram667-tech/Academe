@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniTest — Submission Evaluation &amp; Grading</title>
+  <meta name="description" content="Faculty interface for evaluating assessment submissions" />
+  <link rel="stylesheet" href="portal-common.css" />
+  <link rel="stylesheet" href="grade.css" />
+</head>
+<body>
+  <div class="bg-mesh" aria-hidden="true">
+    <div class="mesh-blob mesh-blob-1" style="background: radial-gradient(circle, #f59e0b 0%, transparent 70%);"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+  </div>
+
+  <header class="portal-navbar">
+    <a href="staff-dashboard.html" class="brand-wrapper">
+      <div class="brand-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706)">👨‍🏫</div>
+      <div class="brand-text">
+        <span class="brand-name">UniTest</span>
+        <span class="brand-badge">Evaluation Interface</span>
+      </div>
+    </a>
+
+    <div class="nav-user-controls">
+      <button type="button" class="btn btn-secondary" id="navBackBtn">
+        ← Back to Faculty Dashboard
+      </button>
+      <button type="button" class="btn-logout" id="logoutBtn">
+        <span>Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grade-header-bar">
+      <div>
+        <h1 style="font-family: var(--font-display); font-size: 1.75rem; font-weight: 800; margin-bottom: 0.25rem;">
+          Assessment Grading &amp; Review
+        </h1>
+        <p style="color: var(--text-muted); font-size: 0.88rem;">
+          Evaluate student answer accuracy, assign numerical marks, and provide qualitative feedback.
+        </p>
+      </div>
+      <div>
+        <button type="button" class="btn btn-secondary" id="cancelGradeBtn">← Back</button>
+      </div>
+    </div>
+
+    <!-- Student & Assessment Metadata -->
+    <div class="submission-meta-card">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="user-avatar student" id="subAvatar" style="width: 48px; height: 48px; font-size: 1.1rem;">SJ</div>
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 700;" id="subStudentName">Sarah Jenkins</h2>
+          <div style="font-size: 0.82rem; color: var(--text-muted);" id="subStudentReg">Registration No: 2024CS101</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+        <div>
+          <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); display: block;">Assessment</span>
+          <strong id="subTestTitle" style="color: #fff;">CS301: Distributed Consensus</strong>
+        </div>
+        <div>
+          <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); display: block;">Submitted</span>
+          <span id="subTime" style="color: var(--text-muted);">Today at 09:42 AM</span>
+        </div>
+        <div>
+          <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); display: block;">Current Status</span>
+          <span id="subStatusBadge" class="badge badge-pending">Pending Grading</span>
+        </div>
+      </div>
+    </div>
+
+    <form id="gradingForm">
+      <div class="grade-layout-grid">
+        <!-- Left Column: Questions & Student Answers -->
+        <div id="questionsGradingContainer">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Right Column: Final Feedback & Score Summary -->
+        <div>
+          <div class="grade-summary-panel">
+            <h3 style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;">
+              Evaluation Summary
+            </h3>
+
+            <div class="score-display-box">
+              <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.35rem;">
+                Total Computed Marks
+              </div>
+              <div class="score-big-number">
+                <span id="totalScoreComputed">0</span><span style="font-size: 1.3rem; color: var(--text-dim);"> / <span id="maxScoreTarget">100</span></span>
+              </div>
+              <div style="font-size: 0.82rem; color: #34d399; margin-top: 0.4rem;" id="percentageIndicator">
+                Grade: In Progress
+              </div>
+            </div>
+
+            <!-- Instructor Qualitative Feedback -->
+            <div class="form-group">
+              <label class="form-label" for="feedbackText">Instructor Feedback</label>
+              <div class="feedback-chip-row">
+                <button type="button" class="feedback-chip" data-text="Outstanding technical clarity and rigorous explanation!">⭐ Outstanding clarity</button>
+                <button type="button" class="feedback-chip" data-text="Solid conceptual understanding, but consider boundary conditions.">👍 Good concepts</button>
+                <button type="button" class="feedback-chip" data-text="Correct algorithm architecture, but needs more depth on fault tolerance.">⚠️ Needs more depth</button>
+              </div>
+              <textarea 
+                id="feedbackText" 
+                class="form-textarea" 
+                rows="4" 
+                placeholder="Write actionable comments, areas of strength, and points for improvement for the student..." 
+                required
+              ></textarea>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem;">
+              <button type="submit" class="btn btn-warning" id="saveGradeBtn" style="width: 100%;">
+                <span>✓ Save Grade &amp; Return to Dashboard</span>
+              </button>
+              <button type="button" class="btn btn-secondary" id="exitWithoutSavingBtn" style="width: 100%;">
+                Cancel &amp; Return
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <script src="portal-state.js"></script>
+  <script src="grade.js"></script>
+</body>
+</html>
