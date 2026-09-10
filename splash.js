@@ -1,4 +1,4 @@
-// UniTest Splash Controller
+// Academe Splash Controller
 (function () {
   const fill = document.getElementById('loaderFill');
   const percentEl = document.getElementById('loaderPercent');
@@ -35,6 +35,7 @@
       // Completed - Check if already has valid session
       setTimeout(() => {
         try {
+          sessionStorage.setItem('academe_splash_ready', '1');
           sessionStorage.setItem('unitest_splash_ready', '1');
           const session = window.PortalState ? window.PortalState.getSession() : null;
           if (session) {

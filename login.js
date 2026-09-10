@@ -1,11 +1,11 @@
-// UniTest Unified Login Controller
+// Academe Unified Login Controller
 (function () {
   const state = window.PortalState;
   if (!state) return;
 
   // Splash Gate Protection
   const urlParams = new URLSearchParams(window.location.search);
-  const cameFromSplash = urlParams.get('splash') === '1' || sessionStorage.getItem('unitest_splash_ready') === '1';
+  const cameFromSplash = urlParams.get('splash') === '1' || sessionStorage.getItem('academe_splash_ready') === '1' || sessionStorage.getItem('unitest_splash_ready') === '1';
 
   // Check if session exists
   const activeSession = state.getSession();
@@ -76,13 +76,13 @@
   });
 
   document.getElementById('demoStaffBtn').addEventListener('click', () => {
-    idInput.value = 'staffa@unitest.edu';
+    idInput.value = 'staffa@academe.edu';
     passInput.value = 'staff123';
     state.showToast('Filled Teacher / Staff credentials (Dr. Alan Turing)', 'info');
   });
 
   document.getElementById('demoAdminBtn').addEventListener('click', () => {
-    idInput.value = 'admin@unitest.edu';
+    idInput.value = 'admin@academe.edu';
     passInput.value = 'admin123';
     state.showToast('Filled Super Admin credentials (Elena Vance)', 'info');
   });

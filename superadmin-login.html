@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UniTest — Super Admin Login</title>
+  <title>Academe — Super Admin Login</title>
   <meta name="description" content="Dedicated administrative portal access" />
   <link rel="stylesheet" href="portal-common.css" />
   <link rel="stylesheet" href="login.css" />
@@ -35,14 +35,14 @@
         <!-- Quick Demo Pill -->
         <div style="margin-bottom: 1.5rem; text-align: center;">
           <button type="button" class="btn btn-secondary" id="fillAdminDemoBtn" style="font-size: 0.8rem; width: 100%;">
-            ⚡ Auto-Fill Admin Credentials (admin@unitest.edu)
+            ⚡ Auto-Fill Admin Credentials (admin@academe.edu)
           </button>
         </div>
 
         <form id="adminLoginForm">
           <div class="form-group">
             <label class="form-label" for="adminEmail">Administrator Email</label>
-            <input id="adminEmail" type="email" class="form-input" placeholder="admin@unitest.edu" required />
+            <input id="adminEmail" type="email" class="form-input" placeholder="admin@academe.edu" required />
           </div>
 
           <div class="form-group">
@@ -73,7 +73,7 @@
       const submitBtn = document.getElementById('adminSubmitBtn');
 
       document.getElementById('fillAdminDemoBtn').addEventListener('click', () => {
-        emailInput.value = 'admin@unitest.edu';
+        emailInput.value = 'admin@academe.edu';
         passInput.value = 'admin123';
         state.showToast('Pre-filled Super Admin credentials', 'info');
       });

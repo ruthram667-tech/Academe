@@ -1,4 +1,4 @@
-// UniTest Super Admin Dashboard Controller
+// Academe Super Admin Dashboard Controller
 (function () {
   const state = window.PortalState;
   if (!state) return;
