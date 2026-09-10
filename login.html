@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniTest — Unified Portal Login</title>
+  <meta name="description" content="Central access portal for Students, Staff, and Administrators" />
+  <link rel="stylesheet" href="portal-common.css" />
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <!-- Ambient background mesh -->
+  <div class="bg-mesh" aria-hidden="true">
+    <div class="mesh-blob mesh-blob-1"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+    <div class="mesh-blob mesh-blob-3"></div>
+  </div>
+
+  <main class="login-page-wrapper">
+    <div class="login-card-container">
+      <div class="login-card">
+        <header class="login-brand-header">
+          <div class="login-logo-box" aria-hidden="true">⚡</div>
+          <h1 class="login-title">UniTest Portal</h1>
+          <p class="login-subtitle">Unified Authentication Gateway</p>
+        </header>
+
+        <!-- Quick-Fill Demo Selector -->
+        <section class="demo-accounts-section" aria-label="Demo Credentials">
+          <div class="demo-title">
+            <span>⚡ Quick Demo Credentials</span>
+            <span style="color:var(--primary); font-weight:normal;">Click to auto-fill</span>
+          </div>
+          <div class="demo-pills">
+            <button type="button" class="demo-pill-btn pill-student" id="demoStudentBtn">
+              <span>🎓</span>
+              <div>
+                <strong>Student</strong>
+                <div style="font-size:0.7rem; color:var(--text-dim)">2024CS101</div>
+              </div>
+            </button>
+            <button type="button" class="demo-pill-btn pill-student" id="demoNewStudentBtn">
+              <span>🆕</span>
+              <div>
+                <strong>New Student</strong>
+                <div style="font-size:0.7rem; color:var(--text-dim)">2024CS999</div>
+              </div>
+            </button>
+            <button type="button" class="demo-pill-btn pill-staff" id="demoStaffBtn">
+              <span>👨‍🏫</span>
+              <div>
+                <strong>Teacher / Staff</strong>
+                <div style="font-size:0.7rem; color:var(--text-dim)">staffa@...</div>
+              </div>
+            </button>
+            <button type="button" class="demo-pill-btn pill-admin" id="demoAdminBtn">
+              <span>👑</span>
+              <div>
+                <strong>Super Admin</strong>
+                <div style="font-size:0.7rem; color:var(--text-dim)">admin@...</div>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <!-- Unified Login Form -->
+        <form id="loginForm" autocomplete="off">
+          <div class="form-group">
+            <label class="form-label" for="loginId">Registration No or Institutional Email</label>
+            <input 
+              id="loginId" 
+              type="text" 
+              class="form-input" 
+              placeholder="e.g. 2024CS101 or staffa@unitest.edu" 
+              required 
+            />
+            <span class="field-error" id="idError">Please enter a valid ID</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loginPass">Password</label>
+            <div class="input-with-icon">
+              <input 
+                id="loginPass" 
+                type="password" 
+                class="form-input" 
+                placeholder="Enter account password" 
+                required 
+              />
+              <button type="button" class="input-icon-btn" id="togglePassBtn" aria-label="Toggle password visibility">
+                👁️
+              </button>
+            </div>
+            <span class="field-error" id="passError">Password is required</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="submitBtn" style="width: 100%; margin-top: 1rem;">
+            <span>Sign In to Portal</span>
+            <span>→</span>
+          </button>
+        </form>
+
+        <!-- Alternative Logins Footer -->
+        <footer class="alt-logins-footer">
+          <span style="font-size: 0.78rem; color: var(--text-dim);">Role-Specific Direct Portals</span>
+          <div class="alt-links-row">
+            <a href="student-login.html" class="alt-link">Student Login</a>
+            <span style="color:var(--border-subtle)">•</span>
+            <a href="staff-login.html" class="alt-link">Staff Login</a>
+            <span style="color:var(--border-subtle)">•</span>
+            <a href="superadmin-login.html" class="alt-link">Super Admin Login</a>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </main>
+
+  <!-- First-Time Student Change Password Modal -->
+  <div class="modal-overlay" id="changePasswordModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Set Your Password</h2>
+        <span class="badge badge-student">First-Time Setup</span>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem;">
+        Welcome to UniTest! For security compliance, please replace your temporary password with a new personal password before accessing your dashboard.
+      </p>
+
+      <form id="changePasswordForm">
+        <div class="form-group">
+          <label class="form-label" for="newPassword">New Password</label>
+          <div class="input-with-icon">
+            <input id="newPassword" type="password" class="form-input" placeholder="Create strong password" required />
+            <button type="button" class="input-icon-btn" id="toggleNewPassBtn" aria-label="Toggle password visibility">👁️</button>
+          </div>
+          <div class="pw-strength-box">
+            <div class="pw-bar-track">
+              <div class="pw-bar-fill" id="pwStrengthBar"></div>
+            </div>
+            <span class="pw-strength-label" id="pwStrengthText">Strength: Enter password</span>
+          </div>
+          <span class="field-error" id="newPassError">Password must be at least 6 characters</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirmPassword">Confirm New Password</label>
+          <input id="confirmPassword" type="password" class="form-input" placeholder="Re-type new password" required />
+          <span class="field-error" id="confirmPassError">Passwords do not match</span>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" id="cancelChangePwBtn" style="flex: 1;">Cancel</button>
+          <button type="submit" class="btn btn-success" id="savePasswordBtn" style="flex: 2;">Save &amp; Continue →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="portal-state.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

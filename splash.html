@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniTest Portal — Loading Assessment Platform</title>
+  <meta name="description" content="UniTest Assessment Portal gateway and security verification" />
+  <link rel="stylesheet" href="portal-common.css" />
+  <link rel="stylesheet" href="splash.css" />
+</head>
+<body>
+  <!-- Ambient background mesh -->
+  <div class="bg-mesh" aria-hidden="true">
+    <div class="mesh-blob mesh-blob-1"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+    <div class="mesh-blob mesh-blob-3"></div>
+  </div>
+
+  <div class="splash-container">
+    <div class="splash-card">
+      <div class="splash-emblem" aria-hidden="true">
+        <span>⚡</span>
+      </div>
+      <h1 class="splash-title">UniTest</h1>
+      <p class="splash-subtitle">Academic Assessment &amp; Evaluation Platform</p>
+
+      <div class="loader-track">
+        <div class="loader-progress" id="loaderFill"></div>
+      </div>
+
+      <div class="loader-meta">
+        <span id="loaderStatus">Initializing workspace...</span>
+        <span id="loaderPercent">0%</span>
+      </div>
+
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        <span id="statusNote">Protected by Role-Based Encryption</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="portal-state.js"></script>
+  <script src="splash.js"></script>
+</body>
+</html>
