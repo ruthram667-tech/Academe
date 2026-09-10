@@ -3,164 +3,719 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UniTest — Student Portal Dashboard</title>
-  <meta name="description" content="Student assessment overview, live tests, and grades" />
-  <link rel="stylesheet" href="portal-common.css" />
+  <title>UniGrade — Student Portal Dashboard</title>
+  <meta name="description" content="Student academic portal for courses, assessments, programming labs, and tools" />
   <link rel="stylesheet" href="student.css" />
 </head>
 <body>
-  <div class="bg-mesh" aria-hidden="true">
-    <div class="mesh-blob mesh-blob-1" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
-    <div class="mesh-blob mesh-blob-2"></div>
-  </div>
 
-  <!-- Main Navigation Bar -->
-  <header class="portal-navbar">
-    <a href="index.html" class="brand-wrapper">
-      <div class="brand-icon" style="background: linear-gradient(135deg, #10b981, #059669)">🎓</div>
-      <div class="brand-text">
-        <span class="brand-name">UniTest</span>
-        <span class="brand-badge">Student Portal</span>
+  <!-- ═══════════════════════════════════════
+       1. TOP FIXED DARK NAVBAR (#1E293B)
+       ═══════════════════════════════════════ -->
+  <header class="top-navbar">
+    <!-- Left: Brand -->
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-brand-icon">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"></path>
+        </svg>
       </div>
+      <span class="navbar-brand-text">UniGrade</span>
     </a>
 
-    <div class="nav-user-controls">
-      <div class="user-badge">
-        <div class="user-avatar student" id="userAvatar">SJ</div>
-        <div class="user-info">
-          <span class="user-name" id="userName">Sarah Jenkins</span>
-          <span class="user-role-label" id="userRegNo">2024CS101 • Sem 6</span>
+    <!-- Right: Navigation Controls -->
+    <nav class="navbar-right">
+      <!-- Home Link -->
+      <a href="index.html" class="nav-link-btn" id="navHomeBtn">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Home</span>
+      </a>
+
+      <!-- Profile Dropdown -->
+      <div class="profile-dropdown-wrapper" id="profileDropdown">
+        <button type="button" class="profile-trigger" id="profileTriggerBtn">
+          <div class="profile-avatar" id="navAvatar">SJ</div>
+          <span id="navStudentName">Sarah Jenkins</span>
+          <svg class="profile-chevron" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <div class="profile-dropdown-menu">
+          <div class="dropdown-user-info">
+            <div class="dropdown-user-name" id="dropdownName">Sarah Jenkins</div>
+            <div class="dropdown-user-email" id="dropdownEmail">sarah.j@student.unitest.edu</div>
+          </div>
+          <button type="button" class="dropdown-menu-item" id="updateProfileBtn">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Update Profile
+          </button>
+          <button type="button" class="dropdown-menu-item" id="changePasswordBtn">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </button>
+          <div class="dropdown-divider"></div>
+          <button type="button" class="dropdown-menu-item" style="color: #EF4444;" id="dropdownLogoutBtn">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="stroke: #EF4444;">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Sign Out
+          </button>
         </div>
       </div>
-      <button type="button" class="btn-logout" id="logoutBtn">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+
+      <!-- Quick Support Button -->
+      <button type="button" class="nav-support-btn" id="navSupportBtn">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <span>Support</span>
+      </button>
+
+      <!-- Red Logout Button -->
+      <button type="button" class="nav-logout-btn" id="logoutBtn">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
           <polyline points="16 17 21 12 16 7"></polyline>
           <line x1="21" y1="12" x2="9" y2="12"></line>
         </svg>
         <span>Logout</span>
       </button>
-    </div>
+    </nav>
   </header>
 
-  <main class="container">
-    <!-- Welcome Banner -->
-    <section class="dashboard-header-banner">
-      <div class="student-greeting">
-        <h1>Welcome Back, <span id="bannerStudentName">Sarah</span>! 👋</h1>
-        <p style="color: var(--text-muted); margin-bottom: 0.85rem;">
-          Track your course assessments, submit assignments, and review academic evaluations in real-time.
-        </p>
-        <div class="student-meta-tags">
-          <span class="meta-pill" id="deptPill">Department: Computer Science</span>
-          <span class="meta-pill" id="semPill">Academic Term: Semester 6</span>
-          <span class="meta-pill" style="color: #34d399; border-color: rgba(16, 185, 129, 0.3)">● Status: Active Enrollment</span>
+  <!-- ═══════════════════════════════════════
+       2. MAIN CONTENT — DASHBOARD CARD GRID
+       ═══════════════════════════════════════ -->
+  <main class="main-content">
+    <div class="content-container">
+      <div class="cards-grid">
+
+        <!-- Card 1: Courses -->
+        <div class="action-card" id="cardCourses" role="button" tabindex="0">
+          <div class="card-illustration">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="30" width="80" height="60" rx="4" fill="#CBD5E1"/>
+              <rect x="24" y="34" width="72" height="52" rx="2" fill="#F1F5F9"/>
+              <rect x="30" y="42" width="26" height="4" rx="1" fill="#10B981"/>
+              <rect x="30" y="50" width="40" height="3" rx="1" fill="#94A3B8"/>
+              <rect x="30" y="56" width="35" height="3" rx="1" fill="#94A3B8"/>
+              <rect x="30" y="62" width="42" height="3" rx="1" fill="#94A3B8"/>
+              <rect x="30" y="70" width="20" height="3" rx="1" fill="#94A3B8"/>
+              <rect x="78" y="42" width="14" height="18" rx="2" fill="#10B981" opacity="0.25"/>
+              <path d="M82 48l4 3 4-6" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="35" y="22" width="50" height="12" rx="3" fill="#2C3E50"/>
+              <rect x="42" y="26" width="36" height="4" rx="1" fill="#F8FAFC"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <p>Click here to view all your enrolled courses and subjects.</p>
+          </div>
+          <button type="button" class="card-footer-btn" id="btnCourses">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            Courses
+          </button>
         </div>
-      </div>
-    </section>
 
-    <!-- Key Performance Metrics -->
-    <section class="stats-grid" aria-label="Student Statistics">
-      <div class="stat-card">
-        <div class="stat-icon emerald">📚</div>
-        <div>
-          <div class="stat-val" id="statAvailableTests">2</div>
-          <div class="stat-desc">Available Tests</div>
+        <!-- Card 2: Tests & Assessments -->
+        <div class="action-card" id="cardTests" role="button" tabindex="0">
+          <div class="card-illustration">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="30" y="18" width="60" height="84" rx="5" fill="#CBD5E1"/>
+              <rect x="34" y="22" width="52" height="76" rx="3" fill="#F8FAFC"/>
+              <rect x="40" y="30" width="32" height="5" rx="1.5" fill="#2C3E50"/>
+              <circle cx="46" cy="46" r="4" fill="#E2E8F0" stroke="#10B981" stroke-width="2"/>
+              <path d="M44 46l1.5 1.5L49 44" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="54" y="44" width="26" height="3" rx="1" fill="#64748B"/>
+              <circle cx="46" cy="58" r="4" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="2"/>
+              <rect x="54" y="56" width="22" height="3" rx="1" fill="#94A3B8"/>
+              <circle cx="46" cy="70" r="4" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="2"/>
+              <rect x="54" y="68" width="28" height="3" rx="1" fill="#94A3B8"/>
+              <circle cx="46" cy="82" r="4" fill="#E2E8F0" stroke="#10B981" stroke-width="2"/>
+              <path d="M44 82l1.5 1.5L49 80" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="54" y="80" width="20" height="3" rx="1" fill="#64748B"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <p>Click here to view all your scheduled, active, and completed tests.</p>
+          </div>
+          <button type="button" class="card-footer-btn" id="btnTests">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Tests
+          </button>
         </div>
-      </div>
 
-      <div class="stat-card">
-        <div class="stat-icon amber">⏳</div>
-        <div>
-          <div class="stat-val" id="statPendingGrading">1</div>
-          <div class="stat-desc">Pending Evaluation</div>
+        <!-- Card 3: Programming Labs -->
+        <div class="action-card" id="cardLabs" role="button" tabindex="0">
+          <div class="card-illustration">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="15" y="25" width="90" height="65" rx="6" fill="#2C3E50"/>
+              <rect x="19" y="29" width="82" height="53" rx="3" fill="#0F172A"/>
+              <rect x="25" y="36" width="8" height="3" rx="1" fill="#10B981"/>
+              <rect x="36" y="36" width="20" height="3" rx="1" fill="#818CF8"/>
+              <rect x="59" y="36" width="12" height="3" rx="1" fill="#F59E0B"/>
+              <rect x="30" y="43" width="14" height="3" rx="1" fill="#38BDF8"/>
+              <rect x="47" y="43" width="24" height="3" rx="1" fill="#F1F5F9" opacity="0.6"/>
+              <rect x="30" y="50" width="18" height="3" rx="1" fill="#FB923C"/>
+              <rect x="51" y="50" width="16" height="3" rx="1" fill="#F1F5F9" opacity="0.4"/>
+              <rect x="25" y="57" width="8" height="3" rx="1" fill="#10B981"/>
+              <rect x="36" y="57" width="28" height="3" rx="1" fill="#94A3B8"/>
+              <rect x="25" y="64" width="30" height="3" rx="1" fill="#64748B"/>
+              <rect x="25" y="71" width="5" height="3" rx="1" fill="#10B981" opacity="0.5"/>
+              <rect x="33" y="71" width="15" height="3" rx="1" fill="#818CF8" opacity="0.5"/>
+              <path d="M40 95l-7-5h-4l-3 5h14z" fill="#94A3B8"/>
+              <path d="M80 95l7-5h4l3 5H80z" fill="#94A3B8"/>
+              <rect x="30" y="95" width="60" height="4" rx="2" fill="#CBD5E1"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <p>Click here to access interactive programming labs and IDE.</p>
+          </div>
+          <button type="button" class="card-footer-btn" id="btnLabs">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            Programming Labs
+          </button>
         </div>
-      </div>
 
-      <div class="stat-card">
-        <div class="stat-icon indigo">🎯</div>
-        <div>
-          <div class="stat-val" id="statGradedCount">2</div>
-          <div class="stat-desc">Graded Assessments</div>
+        <!-- Card 4: Tools -->
+        <div class="action-card" id="cardTools" role="button" tabindex="0">
+          <div class="card-illustration">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="60" cy="55" r="28" fill="#E2E8F0"/>
+              <circle cx="60" cy="55" r="20" fill="#F8FAFC"/>
+              <circle cx="60" cy="55" r="10" fill="#CBD5E1"/>
+              <circle cx="60" cy="55" r="4" fill="#2C3E50"/>
+              <rect x="56" y="22" width="8" height="12" rx="2" fill="#10B981"/>
+              <rect x="56" y="76" width="8" height="12" rx="2" fill="#10B981"/>
+              <rect x="28" y="51" width="12" height="8" rx="2" fill="#10B981"/>
+              <rect x="80" y="51" width="12" height="8" rx="2" fill="#10B981"/>
+              <rect x="35" y="31" width="10" height="8" rx="2" fill="#94A3B8" transform="rotate(-45 40 35)"/>
+              <rect x="76" y="72" width="10" height="8" rx="2" fill="#94A3B8" transform="rotate(-45 81 76)"/>
+              <rect x="76" y="31" width="10" height="8" rx="2" fill="#94A3B8" transform="rotate(45 81 35)"/>
+              <rect x="35" y="72" width="10" height="8" rx="2" fill="#94A3B8" transform="rotate(45 40 76)"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <p>Click here to access developer utilities and learning tools.</p>
+          </div>
+          <button type="button" class="card-footer-btn" id="btnTools">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            Tools
+          </button>
         </div>
-      </div>
 
-      <div class="stat-card">
-        <div class="stat-icon rose">⭐</div>
-        <div>
-          <div class="stat-val" id="statAvgScore">91%</div>
-          <div class="stat-desc">Average Grade</div>
+        <!-- Card 5: Help & Support -->
+        <div class="action-card" id="cardHelp" role="button" tabindex="0">
+          <div class="card-illustration">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="60" cy="50" r="30" fill="#E2E8F0"/>
+              <circle cx="60" cy="50" r="22" fill="#F8FAFC"/>
+              <path d="M52 44c0-4.42 3.58-8 8-8s8 3.58 8 8c0 3-1.65 5.6-4.1 6.98-.72.41-1.4.88-1.9 1.52V55" stroke="#2C3E50" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="60" cy="61" r="2" fill="#2C3E50"/>
+              <path d="M42 85c0-2 1-4 3-5l10-5c3-1.5 7-1.5 10 0l10 5c2 1 3 3 3 5" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="60" cy="75" r="5" fill="#10B981" opacity="0.3"/>
+              <circle cx="60" cy="75" r="3" fill="#10B981"/>
+              <path d="M35 92h50" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
+              <path d="M40 97h40" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <p>Reach out to technical support and view troubleshooting guides.</p>
+          </div>
+          <button type="button" class="card-footer-btn" id="btnHelp">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Help &amp; Support
+          </button>
         </div>
-      </div>
-    </section>
 
-    <!-- Active Assessments Section -->
-    <section>
-      <div class="section-title-row">
-        <h2 class="section-title">Assigned Assessments</h2>
-        <span style="font-size: 0.84rem; color: var(--text-muted);">Timed Online Examinations</span>
       </div>
-
-      <div class="assessment-grid" id="assessmentContainer">
-        <!-- Rendered dynamically via student.js -->
-      </div>
-    </section>
-
-    <!-- Evaluation Results & Teacher Feedback Section -->
-    <section style="margin-top: 1.5rem;">
-      <div class="section-title-row">
-        <h2 class="section-title">Evaluation Records &amp; Teacher Feedback</h2>
-        <span style="font-size: 0.84rem; color: var(--text-muted);">Results Published by Faculty</span>
-      </div>
-
-      <div class="grade-table-wrap">
-        <table class="grade-table">
-          <thead>
-            <tr>
-              <th>Assessment</th>
-              <th>Submitted Date</th>
-              <th>Status</th>
-              <th>Score</th>
-              <th>Teacher Feedback</th>
-            </tr>
-          </thead>
-          <tbody id="gradeTableBody">
-            <!-- Rendered dynamically -->
-          </tbody>
-        </table>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <!-- Interactive Test Taker Modal -->
-  <div class="modal-overlay" id="testModal" role="dialog" aria-modal="true" aria-labelledby="testModalTitle">
-    <div class="modal-card test-taker-modal">
+  <!-- ═══════════════════════════════════════
+       3. STICKY FOOTER
+       ═══════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; 2026 UniGrade Assessment Platform. All Rights Reserved.</span>
+      <div class="footer-links">
+        <a href="#" id="linkPrivacy">Privacy Policy</a>
+        <a href="#" id="linkTerms">Terms of Service</a>
+        <a href="#" id="linkContact">Contact Us</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════
+       4. INTERACTIVE MODALS
+       ═══════════════════════════════════════ -->
+
+  <!-- Modal 1: Enrolled Courses -->
+  <div class="modal-backdrop" id="modalCourses">
+    <div class="modal-box modal-lg">
       <div class="modal-header">
-        <div>
-          <h2 class="modal-title" id="testModalTitle">Assessment Examination</h2>
-          <div style="font-size: 0.8rem; color: var(--text-muted);" id="testModalSubtitle">CS301 • 60 Minutes</div>
+        <div class="modal-header-text">
+          <h3>Enrolled Courses &amp; Curriculum</h3>
+          <p>Academic Term: Spring 2026 • 4 Registered Subjects</p>
         </div>
-        <button type="button" class="modal-close-btn" id="closeTestModalBtn" aria-label="Close modal">✕</button>
+        <button type="button" class="modal-close-btn" data-close="modalCourses">&times;</button>
       </div>
-
-      <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 0.84rem; color: #c7d2fe;">⏱️ Session Timer Running</span>
-        <span style="font-family: var(--font-mono); font-weight: 700; color: #a5b4fc;" id="examTimer">59:45</span>
-      </div>
-
-      <form id="testAnswerForm">
-        <div id="testQuestionsContainer">
-          <!-- Dynamic Question Inputs -->
+      <div class="modal-body">
+        <div class="modal-item-card">
+          <div class="modal-item-header">
+            <div>
+              <div class="modal-item-title">CS301: Advanced Distributed Consensus</div>
+              <div class="modal-item-meta">
+                <span>👨‍🏫 Dr. Alan Turing</span>
+                <span>📚 4 Credits</span>
+                <span>🏛️ Dept of Computer Science</span>
+              </div>
+            </div>
+            <span class="badge-tag active">In Progress</span>
+          </div>
+          <p style="font-size: 0.82rem; color: #475569; margin-bottom: 0.5rem;">
+            Covers leader election, Byzantine Fault Tolerance, Raft, Paxos, and distributed commit protocols.
+          </p>
+          <div class="keyword-chips-row">
+            <span class="keyword-chip">Consensus</span>
+            <span class="keyword-chip">Raft</span>
+            <span class="keyword-chip">PBFT</span>
+            <span class="keyword-chip">Replication</span>
+          </div>
         </div>
 
-        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle);">
-          <button type="button" class="btn btn-secondary" id="cancelTestBtn">Save Draft &amp; Exit</button>
-          <button type="submit" class="btn btn-success" id="submitExamBtn">Submit for Grading →</button>
+        <div class="modal-item-card">
+          <div class="modal-item-header">
+            <div>
+              <div class="modal-item-title">CS202: Data Structures &amp; Dynamic Programming</div>
+              <div class="modal-item-meta">
+                <span>👩‍🏫 Dr. Ada Lovelace</span>
+                <span>📚 4 Credits</span>
+                <span>🏛️ Dept of Algorithms</span>
+              </div>
+            </div>
+            <span class="badge-tag active">In Progress</span>
+          </div>
+          <p style="font-size: 0.82rem; color: #475569; margin-bottom: 0.5rem;">
+            Advanced algorithmic paradigms, memoization tables, DAG shortest paths, and matrix optimization.
+          </p>
+          <div class="keyword-chips-row">
+            <span class="keyword-chip">Dynamic Programming</span>
+            <span class="keyword-chip">Matrix Chain</span>
+            <span class="keyword-chip">Complexity Analysis</span>
+          </div>
+        </div>
+
+        <div class="modal-item-card">
+          <div class="modal-item-header">
+            <div>
+              <div class="modal-item-title">CS304: Cloud Native Systems &amp; Microservices</div>
+              <div class="modal-item-meta">
+                <span>👨‍🏫 Dr. Linus Torvalds</span>
+                <span>📚 3 Credits</span>
+                <span>🏛️ Systems Engineering</span>
+              </div>
+            </div>
+            <span class="badge-tag active">Upcoming</span>
+          </div>
+          <p style="font-size: 0.82rem; color: #475569; margin-bottom: 0.5rem;">
+            Container orchestration, service meshes, distributed saga pattern, and idempotent message queues.
+          </p>
+        </div>
+
+        <div class="modal-item-card">
+          <div class="modal-item-header">
+            <div>
+              <div class="modal-item-title">MA201: Discrete Mathematics &amp; Graph Theory</div>
+              <div class="modal-item-meta">
+                <span>👨‍🏫 Dr. John von Neumann</span>
+                <span>📚 3 Credits</span>
+                <span>🏛️ Applied Mathematics</span>
+              </div>
+            </div>
+            <span class="badge-tag active">In Progress</span>
+          </div>
+          <p style="font-size: 0.82rem; color: #475569; margin-bottom: 0.5rem;">
+            Combinatorics, graph colorings, Eulerian circuits, recurrence relations, and Boolean logic.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-secondary" data-close="modalCourses">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Tests, Question Prompts & PDF/PPT Upload -->
+  <div class="modal-backdrop" id="modalTests">
+    <div class="modal-box modal-lg">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h3>Assessments &amp; Document Submissions</h3>
+          <p>Review questions posted by faculty and upload your PDF or PPT solution documents</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close="modalTests">&times;</button>
+      </div>
+      <div class="modal-body" id="testsListContainer">
+        <!-- Rendered dynamically by student.js -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-secondary" data-close="modalTests">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2b: Document Upload Sub-Modal -->
+  <div class="modal-backdrop" id="modalUploadDocument">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h3 id="uploadModalTitle">Upload Assessment Document</h3>
+          <p id="uploadModalSubtitle">Accepts PDF, PPT, or PPTX format (Max 25MB)</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close="modalUploadDocument">&times;</button>
+      </div>
+      <form id="uploadDocForm">
+        <div class="modal-body">
+          <div class="modal-item-prompt" id="uploadQuestionPrompt">
+            <!-- Question text -->
+          </div>
+
+          <div class="file-dropzone" id="fileDropzone">
+            <input type="file" id="fileInputHidden" accept=".pdf,.ppt,.pptx" style="display:none;" />
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <div class="dropzone-title">Drop your solution document here, or <span style="color:#10B981; text-decoration:underline;">browse files</span></div>
+            <div class="dropzone-hint">Supported extensions: .pdf, .ppt, .pptx (Clean readable format for keyword highlighting)</div>
+          </div>
+
+          <div class="file-preview-card" id="filePreviewCard" style="display:none;">
+            <div class="file-preview-info">
+              <div class="file-preview-icon" id="previewIcon">PDF</div>
+              <div>
+                <div class="file-preview-name" id="previewFileName">Document.pdf</div>
+                <div class="file-preview-size" id="previewFileSize">1.8 MB</div>
+              </div>
+            </div>
+            <button type="button" class="btn-modal-secondary" id="btnRemoveFile" style="padding:0.35rem 0.75rem; font-size:0.78rem;">Remove</button>
+          </div>
+
+          <div class="form-group" style="margin-top: 1.15rem;">
+            <label class="form-label">Optional Student Remarks / Submission Summary</label>
+            <textarea class="form-textarea" id="uploadRemarks" rows="2" placeholder="e.g. Solutions to Section A and Section B included in slides 1-14..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-secondary" data-close="modalUploadDocument">Cancel</button>
+          <button type="submit" class="btn-modal-accent" id="btnConfirmUpload">
+            <span>Upload &amp; Submit Document</span>
+          </button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- Modal 3: Programming Labs & Online IDE -->
+  <div class="modal-backdrop" id="modalLabs">
+    <div class="modal-box modal-lg">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h3>Interactive Programming Sandbox</h3>
+          <p>Online code editor, multi-language runner, and execution console</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close="modalLabs">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="code-sandbox-box">
+          <div class="code-sandbox-toolbar">
+            <select class="code-lang-select" id="labLanguageSelect">
+              <option value="python">Python 3.11</option>
+              <option value="javascript">JavaScript (Node.js)</option>
+              <option value="cpp">C++ 17</option>
+              <option value="java">Java 21</option>
+            </select>
+            <button type="button" class="btn-run-code" id="btnRunCode">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Run Code</span>
+            </button>
+          </div>
+          <textarea class="code-textarea" id="labCodeArea" spellcheck="false"># Distributed Systems — Raft Leader Election State Machine
+class Node:
+    def __init__(self, node_id):
+        self.node_id = node_id
+        self.state = "Follower"
+        self.current_term = 0
+        self.voted_for = None
+
+    def start_election(self):
+        self.state = "Candidate"
+        self.current_term += 1
+        self.voted_for = self.node_id
+        print(f"[Node {self.node_id}] Initiating election for Term {self.current_term}")
+        return True
+
+cluster = [Node(i) for i in range(1, 4)]
+cluster[0].start_election()
+print("Cluster State: Election quorum established (2/3 votes).")
+</textarea>
+          <div class="code-terminal" id="labConsoleOutput">Ready for execution. Click 'Run Code' above.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-secondary" data-close="modalLabs">Close Sandbox</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Developer Tools -->
+  <div class="modal-backdrop" id="modalTools">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h3>Developer &amp; Learning Utilities</h3>
+          <p>Quick utilities for computer science coursework</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close="modalTools">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="tools-nav-tabs">
+          <button type="button" class="tool-tab-btn active" data-tab="tabCalc">Calculator</button>
+          <button type="button" class="tool-tab-btn" data-tab="tabCounter">Word Counter</button>
+          <button type="button" class="tool-tab-btn" data-tab="tabBase64">Base64 Encoder</button>
+        </div>
+
+        <!-- Tab 1: Calculator -->
+        <div class="tool-tab-pane active" id="tabCalc">
+          <div class="form-group">
+            <label class="form-label">Math Expression (e.g. 2^10, sqrt(144), log2(1024), 45 * 12)</label>
+            <input type="text" class="form-input" id="calcInput" placeholder="Type expression (e.g. Math.sqrt(256) * 4)" value="Math.pow(2, 16)" />
+          </div>
+          <button type="button" class="btn-modal-primary" id="btnEvaluateMath" style="width: 100%; justify-content: center;">
+            Calculate Result
+          </button>
+          <div id="calcResultBox" style="margin-top: 1rem; padding: 0.75rem; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; font-weight: 700; color: #10B981; font-size: 1.1rem; text-align: center;">
+            Result: 65,536
+          </div>
+        </div>
+
+        <!-- Tab 2: Word Counter -->
+        <div class="tool-tab-pane" id="tabCounter">
+          <div class="form-group">
+            <label class="form-label">Input Text</label>
+            <textarea class="form-textarea" id="counterTextarea" rows="4" placeholder="Paste essay, code comments, or summary here..."></textarea>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; text-align: center;">
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:0.6rem;">
+              <div style="font-size:1.2rem; font-weight:700; color:#1E293B;" id="countWords">0</div>
+              <div style="font-size:0.75rem; color:#64748B;">Words</div>
+            </div>
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:0.6rem;">
+              <div style="font-size:1.2rem; font-weight:700; color:#1E293B;" id="countChars">0</div>
+              <div style="font-size:0.75rem; color:#64748B;">Characters</div>
+            </div>
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:0.6rem;">
+              <div style="font-size:1.2rem; font-weight:700; color:#10B981;" id="countReadTime">0s</div>
+              <div style="font-size:0.75rem; color:#64748B;">Read Time</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Base64 Encoder -->
+        <div class="tool-tab-pane" id="tabBase64">
+          <div class="form-group">
+            <label class="form-label">Plain Text / Encoded String</label>
+            <textarea class="form-textarea" id="base64Input" rows="3" placeholder="Enter string to encode or base64 to decode..."></textarea>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+            <button type="button" class="btn-modal-primary" id="btnEncode64" style="flex:1; justify-content:center;">Encode to Base64</button>
+            <button type="button" class="btn-modal-secondary" id="btnDecode64" style="flex:1; justify-content:center;">Decode from Base64</button>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Output Result</label>
+            <textarea class="form-textarea" id="base64Output" rows="2" readonly style="background:#F8FAFC; font-family:monospace; font-size:0.82rem;"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-secondary" data-close="modalTools">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Help & Support -->
+  <div class="modal-backdrop" id="modalHelp">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h3>Help Center &amp; Student Support</h3>
+          <p>Frequently asked questions and direct support contact</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close="modalHelp">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="faq-item open">
+          <div class="faq-question">
+            <span>How do I submit my assessment document?</span>
+            <span>▾</span>
+          </div>
+          <div class="faq-answer">
+            Open the <strong>Tests</strong> card, locate the active assessment, and click <strong>Upload Solution</strong>. You can drag and drop a PDF or PowerPoint presentation (.ppt, .pptx).
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How does the faculty keyword-highlighting work?</span>
+            <span>▾</span>
+          </div>
+          <div class="faq-answer">
+            During grading, faculty can see essential target keywords pre-highlighted in your uploaded document or search custom terms on-the-fly to expedite evaluation.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>What should I do if my document upload fails?</span>
+            <span>▾</span>
+          </div>
+          <div class="faq-answer">
+            Ensure your file is below 25MB and is a standard .pdf, .ppt, or .pptx file. You can also contact support using the form below.
+          </div>
+        </div>
+
+        <h4 style="font-size:0.9rem; font-weight:700; margin:1.25rem 0 0.5rem; color:#1E293B;">Submit a Support Query</h4>
+        <form id="supportTicketForm">
+          <div class="form-group">
+            <label class="form-label">Issue Category</label>
+            <select class="form-select" id="supportCategory">
+              <option>Assessment Submission Question</option>
+              <option>Course Material Access</option>
+              <option>Technical / Browser Error</option>
+              <option>Password or Profile Issue</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message Details</label>
+            <textarea class="form-textarea" id="supportMessage" rows="3" placeholder="Describe the issue you are facing..." required></textarea>
+          </div>
+          <button type="submit" class="btn-modal-primary" style="width: 100%; justify-content: center;">
+            Send Support Ticket
+          </button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-secondary" data-close="modalHelp">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 6: Update Profile -->
+  <div class="modal-backdrop" id="modalProfile">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h3>Update Student Profile</h3>
+          <p>Manage your academic registration details and contact information</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close="modalProfile">&times;</button>
+      </div>
+      <form id="updateProfileForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" id="profileInputName" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Registration Number</label>
+            <input type="text" class="form-input" id="profileInputReg" readonly />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Institutional Email</label>
+            <input type="email" class="form-input" id="profileInputEmail" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Academic Department</label>
+            <input type="text" class="form-input" id="profileInputDept" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-secondary" data-close="modalProfile">Cancel</button>
+          <button type="submit" class="btn-modal-accent">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 7: Change Password -->
+  <div class="modal-backdrop" id="modalPassword">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <h3>Change Account Password</h3>
+          <p>Ensure your account uses a secure password</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-close="modalPassword">&times;</button>
+      </div>
+      <form id="changePasswordForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-input" id="currentPassInput" placeholder="Enter existing password" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-input" id="newPassInput" placeholder="Enter new password (min 6 characters)" required minlength="6" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" class="form-input" id="confirmPassInput" placeholder="Confirm new password" required minlength="6" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-secondary" data-close="modalPassword">Cancel</button>
+          <button type="submit" class="btn-modal-accent">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script src="portal-state.js"></script>
   <script src="student.js"></script>
 </body>

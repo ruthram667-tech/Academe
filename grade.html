@@ -76,9 +76,70 @@
 
     <form id="gradingForm">
       <div class="grade-layout-grid">
-        <!-- Left Column: Questions & Student Answers -->
-        <div id="questionsGradingContainer">
-          <!-- Dynamically populated -->
+        <!-- Left Column: Document Viewer & Rubrics -->
+        <div>
+          <!-- 1. Document Viewer & Keyword Highlighting Card -->
+          <div class="document-viewer-card">
+            <div class="doc-viewer-header">
+              <div class="doc-info-group">
+                <span class="doc-badge-pill" id="docTypeBadge">PDF</span>
+                <div>
+                  <div class="doc-filename" id="docFileName">Document_Submission.pdf</div>
+                  <div class="doc-filesize" id="docFileSize">1.8 MB • Uploaded via Student Portal</div>
+                </div>
+              </div>
+
+              <!-- Page & Zoom Controls -->
+              <div class="doc-controls-group">
+                <button type="button" class="btn-ctrl" id="prevPageBtn" title="Previous Page">◀</button>
+                <span class="doc-page-indicator" id="pageIndicator">Page 1 of 2</span>
+                <button type="button" class="btn-ctrl" id="nextPageBtn" title="Next Page">▶</button>
+                <div class="ctrl-divider"></div>
+                <button type="button" class="btn-ctrl" id="zoomOutBtn" title="Zoom Out">−</button>
+                <span style="font-size:0.75rem; color:var(--text-muted);" id="zoomLevel">100%</span>
+                <button type="button" class="btn-ctrl" id="zoomInBtn" title="Zoom In">+</button>
+              </div>
+            </div>
+
+            <!-- Keyword Highlighting Assistance Toolbar -->
+            <div class="keyword-assistant-toolbar">
+              <div class="kw-toolbar-top">
+                <div class="kw-title-group">
+                  <span style="font-size:1.1rem;">🔍</span>
+                  <div>
+                    <strong style="color:#fff; font-size:0.88rem;">Keyword Highlighting Assistant</strong>
+                    <div style="font-size:0.72rem; color:var(--text-dim);">
+                      Click any keyword below to locate it, or add custom terms during correction.
+                    </div>
+                  </div>
+                </div>
+                <!-- Custom keyword input -->
+                <div class="kw-add-group">
+                  <input type="text" id="customKeywordInput" class="form-input kw-input" placeholder="Type keyword to highlight (e.g. Paxos)..." />
+                  <button type="button" class="btn btn-warning" id="btnAddKeyword" style="padding:0.4rem 0.85rem; font-size:0.8rem;">
+                    + Highlight
+                  </button>
+                </div>
+              </div>
+
+              <!-- Keyword Chips List -->
+              <div class="kw-chips-container" id="kwChipsContainer">
+                <!-- Dynamically populated chips with match count -->
+              </div>
+            </div>
+
+            <!-- Authentic Document Canvas Sheet -->
+            <div class="doc-canvas-wrapper" id="docCanvasWrapper">
+              <div class="document-sheet" id="documentSheet">
+                <!-- Dynamically rendered document content with highlights -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Question Grading Rubrics Container -->
+          <div id="questionsGradingContainer">
+            <!-- Dynamically populated -->
+          </div>
         </div>
 
         <!-- Right Column: Final Feedback & Score Summary -->

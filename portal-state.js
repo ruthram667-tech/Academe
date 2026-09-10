@@ -425,6 +425,84 @@
       return { success: true, submission: newSub };
     },
 
+    submitStudentDocument: function (testId, docData) {
+      const session = this.getSession();
+      if (!session || session.role !== 'student') return { success: false, message: 'Student authentication required.' };
+      const test = this.getTestById(testId);
+      if (!test) return { success: false, message: 'Assessment not found.' };
+
+      const submissions = this.getSubmissions();
+      const existingIdx = submissions.findIndex(s => s.testId === testId && s.studentId === session.id);
+
+      const subRecord = {
+        id: existingIdx >= 0 ? submissions[existingIdx].id : `sub-${Date.now().toString().slice(-4)}`,
+        testId: test.id,
+        testTitle: test.title,
+        studentId: session.id,
+        studentName: session.name,
+        regNo: session.regNo,
+        submittedAt: 'Just now',
+        status: 'pending',
+        score: null,
+        maxScore: test.totalMarks || 100,
+        feedback: '',
+        answers: docData.answers || {
+          summary: docData.summary || `Solution document uploaded: ${docData.fileName || 'document'}`
+        },
+        fileName: docData.fileName || 'Solution_Document.pdf',
+        fileType: docData.fileType || 'application/pdf',
+        fileSize: docData.fileSize || '1.8 MB',
+        keywords: test.keywords || ['consensus', 'fault tolerance', 'algorithm', 'system']
+      };
+
+      if (existingIdx >= 0) {
+        submissions[existingIdx] = { ...submissions[existingIdx], ...subRecord };
+      } else {
+        submissions.unshift(subRecord);
+      }
+
+      save(KEYS.SUBMISSIONS, submissions);
+      this.logAudit('Document Uploaded', `${session.name} uploaded ${docData.fileName || 'document'} for ${test.title}`);
+      return { success: true, submission: subRecord };
+    },
+
+    updateUserProfile: function (userId, data) {
+      const users = load(KEYS.USERS, DEFAULT_USERS);
+      const idx = users.findIndex(u => u.id === userId);
+      if (idx === -1) return { success: false, message: 'User not found' };
+
+      users[idx] = { ...users[idx], ...data };
+      save(KEYS.USERS, users);
+
+      const session = this.getSession();
+      if (session && session.id === userId) {
+        this.setSession({ ...session, ...data });
+      }
+      this.logAudit('Profile Updated', `${users[idx].name} updated profile information.`);
+      return { success: true, user: users[idx] };
+    },
+
+    changeUserPassword: function (userId, oldPass, newPass) {
+      const users = load(KEYS.USERS, DEFAULT_USERS);
+      const idx = users.findIndex(u => u.id === userId);
+      if (idx === -1) return { success: false, message: 'User not found' };
+
+      if (users[idx].password !== oldPass) {
+        return { success: false, message: 'Current password is incorrect.' };
+      }
+
+      users[idx].password = newPass;
+      users[idx].mustChangePassword = false;
+      save(KEYS.USERS, users);
+
+      const session = this.getSession();
+      if (session && session.id === userId) {
+        this.setSession({ ...session, password: newPass, mustChangePassword: false });
+      }
+      this.logAudit('Password Changed', `${users[idx].name} updated account password.`);
+      return { success: true, user: users[idx] };
+    },
+
     saveGrade: function (subId, score, feedback) {
       const submissions = this.getSubmissions();
       const index = submissions.findIndex(s => s.id === subId);
