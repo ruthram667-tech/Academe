@@ -15,36 +15,41 @@
 
   // Logout Handler
   document.getElementById('logoutBtn').addEventListener('click', () => {
-    state.showToast('Ending administrator session...', 'info');
+    if (state.showToast) state.showToast('Ending administrator session...', 'info');
     setTimeout(() => {
-      state.logout();
+      if (state.logout) {
+        state.logout();
+      } else if (state.clearSession) {
+        state.clearSession();
+        window.location.replace('login.html');
+      }
     }, 300);
   });
 
-  // 2. Directory Tab Switcher
-  const tabStaffRosterBtn = document.getElementById('tabStaffRosterBtn');
-  const tabStudentRosterBtn = document.getElementById('tabStudentRosterBtn');
-  const viewStaffDirectory = document.getElementById('viewStaffDirectory');
-  const viewStudentDirectory = document.getElementById('viewStudentDirectory');
-  const directoryInfoText = document.getElementById('directoryInfoText');
+  // 2. Client-side Routing / Tab Switching for Sidebar
+  const navItems = document.querySelectorAll('.nav-item');
+  const contentSections = document.querySelectorAll('.content-section');
 
-  if (tabStaffRosterBtn && tabStudentRosterBtn) {
-    tabStaffRosterBtn.addEventListener('click', () => {
-      tabStaffRosterBtn.classList.add('active');
-      tabStudentRosterBtn.classList.remove('active');
-      if (viewStaffDirectory) viewStaffDirectory.style.display = 'block';
-      if (viewStudentDirectory) viewStudentDirectory.style.display = 'none';
-      if (directoryInfoText) directoryInfoText.textContent = 'Manage educator credentials & departments';
-    });
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      // Remove active class from all nav items
+      navItems.forEach(nav => nav.classList.remove('active'));
+      // Add active class to clicked item
+      item.classList.add('active');
 
-    tabStudentRosterBtn.addEventListener('click', () => {
-      tabStudentRosterBtn.classList.add('active');
-      tabStaffRosterBtn.classList.remove('active');
-      if (viewStaffDirectory) viewStaffDirectory.style.display = 'none';
-      if (viewStudentDirectory) viewStudentDirectory.style.display = 'block';
-      if (directoryInfoText) directoryInfoText.textContent = 'Manage student enrollment & academic cohorts';
+      // Hide all content sections
+      contentSections.forEach(section => section.classList.remove('active'));
+      
+      // Show the target section
+      const targetId = item.getAttribute('data-target');
+      if (targetId) {
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.classList.add('active');
+        }
+      }
     });
-  }
+  });
 
   // 3. Register Faculty Staff Modal & Form
   const addStaffModal = document.getElementById('addStaffModal');

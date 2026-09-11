@@ -32,102 +32,10 @@
          LEFT PANEL (~52% Width, High-Level Interactive Animated Visual Stage)
          ════════════════════════════════════════════════════════════════ -->
     <aside class="left-branding-panel">
-      <!-- Animated Ambient Mesh Overlay -->
-      <div class="mesh-overlay" aria-hidden="true"></div>
-
-      <!-- Floating Animated Glow Spheres -->
-      <div class="glow-orb orb-1" aria-hidden="true"></div>
-      <div class="glow-orb orb-2" aria-hidden="true"></div>
-      <div class="glow-orb orb-3" aria-hidden="true"></div>
-
-      <!-- High-Performance Interactive Constellation Canvas -->
-      <canvas id="neuralCanvas" class="neural-canvas" aria-hidden="true"></canvas>
-
-      <!-- Left Panel High-Level Animation Stage Content -->
-      <div class="left-panel-content">
-        <!-- System Badge -->
-        <div class="tech-pill-badge">
-          <span class="live-dot-pulse"></span>
-          <span>ACADEME CORE • HIGH-PERFORMANCE ACADEMIC OS</span>
-        </div>
-
-        <!-- Main Animated Heading & Tagline -->
-        <div class="brand-text-header">
-          <h1 class="brand-title">Next-Generation <span class="gradient-text-animated">Academic Intelligence</span></h1>
-          <p class="brand-tagline">Dynamic digital ecosystem powering collaborative lecture notes, examination assessments, and seminar presentations.</p>
-        </div>
-
-        <!-- 3D Holographic Orbit Stage with Floating Nodes -->
-        <div class="hologram-stage" id="hologramStage">
-          <!-- Concentric Gyroscope Orbital Rings -->
-          <div class="orbit-ring-outer"></div>
-          <div class="orbit-ring-middle"></div>
-          <div class="orbit-ring-inner"></div>
-
-          <!-- Central Refractive Hologram Core -->
-          <div class="hologram-core">
-            <div class="core-glow-burst"></div>
-            <div class="core-icon-box">
-              <i class="fa-solid fa-graduation-cap"></i>
-            </div>
-            <div class="core-rings"></div>
-          </div>
-
-          <!-- 4 Floating Glassmorphic Orbital Nodes -->
-          <!-- Node 1: Course Repositories -->
-          <div class="orbital-node node-1" style="--node-delay: 0s;">
-            <div class="orbital-node-icon cyan">
-              <i class="fa-solid fa-book-open"></i>
-            </div>
-            <div class="orbital-node-content">
-              <div class="node-title">Course Repositories</div>
-              <div class="node-sub">Live Notes &amp; Syllabus Modules</div>
-            </div>
-            <span class="node-pulse-indicator cyan"></span>
-          </div>
-
-          <!-- Node 2: PDF Assessment Engine -->
-          <div class="orbital-node node-2" style="--node-delay: 1.5s;">
-            <div class="orbital-node-icon emerald">
-              <i class="fa-solid fa-file-shield"></i>
-            </div>
-            <div class="orbital-node-content">
-              <div class="node-title">PDF Assessment Engine</div>
-              <div class="node-sub">Student Solution Pipelines</div>
-            </div>
-            <span class="node-pulse-indicator emerald"></span>
-          </div>
-
-          <!-- Node 3: Seminar Presentations -->
-          <div class="orbital-node node-3" style="--node-delay: 3s;">
-            <div class="orbital-node-icon amber">
-              <i class="fa-solid fa-chalkboard-user"></i>
-            </div>
-            <div class="orbital-node-content">
-              <div class="node-title">Seminar Presentations</div>
-              <div class="node-sub">PowerPoint Review Hub</div>
-            </div>
-            <span class="node-pulse-indicator amber"></span>
-          </div>
-
-          <!-- Node 4: Master Governance -->
-          <div class="orbital-node node-4" style="--node-delay: 4.5s;">
-            <div class="orbital-node-icon purple">
-              <i class="fa-solid fa-shield-halved"></i>
-            </div>
-            <div class="orbital-node-content">
-              <div class="node-title">Central Governance</div>
-              <div class="node-sub">Master Superadmin Control</div>
-            </div>
-            <span class="node-pulse-indicator purple"></span>
-          </div>
-        </div>
-
-        <!-- Left Footer Indicator -->
-        <div class="left-panel-footer">
-          <span><i class="fa-solid fa-circle-check text-success me-1"></i> System Operational • Zero Legacy Demo</span>
-          <span>Version 2.4.0</span>
-        </div>
+      <!-- High-Performance Academic OS Logo/Brand (Minimalist) -->
+      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; color: white; text-align: center; padding: 2rem;">
+        <i class="fa-solid fa-graduation-cap" style="font-size: 4rem; margin-bottom: 1rem; color: rgba(255,255,255,0.9);"></i>
+        <h1 style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 2.5rem; letter-spacing: -1px; margin: 0;">Academe</h1>
       </div>
     </aside>
 
@@ -238,11 +146,11 @@
               <div class="callout-body">
                 <div class="callout-field">
                   <span class="callout-lbl">Username:</span>
-                  <code class="callout-val" id="valSuperUser">superadmin</code>
+                  <code class="callout-val" id="valSuperUser">RM</code>
                 </div>
                 <div class="callout-field">
                   <span class="callout-lbl">Password:</span>
-                  <code class="callout-val" id="valSuperPass">admin123</code>
+                  <code class="callout-val" id="valSuperPass">RK</code>
                 </div>
               </div>
               <div class="callout-hint">
@@ -260,8 +168,8 @@
                     type="text" 
                     class="form-control-custom" 
                     id="adminIdInput" 
-                    placeholder="superadmin or admin@academe.edu" 
-                    value="superadmin"
+                    placeholder="RM or rm@academe.edu" 
+                    value="RM"
                     required 
                     autocomplete="username"
                   />
@@ -280,8 +188,8 @@
                     type="password" 
                     class="form-control-custom" 
                     id="adminPasswordInput" 
-                    placeholder="admin123" 
-                    value="admin123"
+                    placeholder="RK" 
+                    value="RK"
                     required 
                     autocomplete="current-password"
                   />

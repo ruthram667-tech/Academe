@@ -108,36 +108,56 @@
     }
   });
 
-  // 6. Action Cards Click Handlers
-  // Card 1: Courses & Notes
+  // 6. Action Cards Click Handlers & Tab Routing
+  const navItems = document.querySelectorAll('.nav-item');
+  const contentSections = document.querySelectorAll('.content-section');
+
+  function switchToTab(targetId) {
+    // Update nav active states
+    navItems.forEach(nav => {
+      nav.classList.toggle('active', nav.getAttribute('data-target') === targetId);
+    });
+
+    // Update section active states
+    contentSections.forEach(section => {
+      section.classList.toggle('active', section.id === targetId);
+    });
+
+    // Trigger rendering
+    if (targetId === 'section-course') renderCoursesList();
+    if (targetId === 'section-test') {
+      if (typeof currentTestFilter === 'undefined') window.currentTestFilter = 'ongoing';
+      renderTestsList(window.currentTestFilter || 'ongoing');
+    }
+    if (targetId === 'section-presentation') renderPresentationsList();
+  }
+
+  // Bind Sidebar Nav Items
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const targetId = item.getAttribute('data-target');
+      if (targetId) switchToTab(targetId);
+    });
+  });
+
+  // Bind Overview Cards
   const btnCourses = document.getElementById('btnCourses');
   const cardCourses = document.getElementById('cardCourses');
   [btnCourses, cardCourses].forEach(el => {
-    if (el) el.addEventListener('click', () => {
-      renderCoursesList();
-      openModal('modalCourses');
-    });
+    if (el) el.addEventListener('click', () => switchToTab('section-course'));
   });
 
-  // Card 2: Tests & Assessments
   const btnTests = document.getElementById('btnTests');
   const cardTests = document.getElementById('cardTests');
-  let currentTestFilter = 'ongoing';
+  window.currentTestFilter = 'ongoing'; // global scope for filtering
   [btnTests, cardTests].forEach(el => {
-    if (el) el.addEventListener('click', () => {
-      renderTestsList(currentTestFilter);
-      openModal('modalTests');
-    });
+    if (el) el.addEventListener('click', () => switchToTab('section-test'));
   });
 
-  // Card 3: Presentations
   const btnPresentations = document.getElementById('btnPresentations');
   const cardPresentations = document.getElementById('cardPresentations');
   [btnPresentations, cardPresentations].forEach(el => {
-    if (el) el.addEventListener('click', () => {
-      renderPresentationsList();
-      openModal('modalPresentations');
-    });
+    if (el) el.addEventListener('click', () => switchToTab('section-presentation'));
   });
 
   // 7. Courses & Lecture Notes Viewer Workflow

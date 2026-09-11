@@ -4,8 +4,8 @@
  */
 
 (function () {
-  const STORAGE_PREFIX = 'academe_';
-  const OLD_PREFIX = 'unitest_';
+  const STORAGE_PREFIX = 'academe_v3_'; // Bumped to force a clean slate for the user
+  const OLD_PREFIX = 'academe_';
   const KEYS = {
     SESSION: `${STORAGE_PREFIX}session`,
     USERS: `${STORAGE_PREFIX}users`,
@@ -17,304 +17,26 @@
     SPLASH_DONE: `${STORAGE_PREFIX}splash_ready`
   };
 
-  // Migrate any previous mock storage keys
-  ['users', 'tests', 'submissions', 'courses', 'presentations', 'audit_logs', 'session'].forEach(k => {
-    if (!localStorage.getItem(`${STORAGE_PREFIX}${k}`) && localStorage.getItem(`${OLD_PREFIX}${k}`)) {
-      localStorage.setItem(`${STORAGE_PREFIX}${k}`, localStorage.getItem(`${OLD_PREFIX}${k}`));
-    }
-  });
-
   // Default Seed Data — Only Master Superadmin (All demo student/staff IDs removed)
   const DEFAULT_USERS = [
     {
       id: 'usr_superadmin',
-      username: 'superadmin',
-      email: 'admin@academe.edu',
-      name: 'Master Superadmin',
+      username: 'RM',
+      email: 'rm@academe.edu',
+      name: 'RM',
       role: 'superadmin',
       department: 'Central Administration',
-      password: 'admin123',
+      password: 'RK',
       mustChangePassword: false,
-      avatar: 'SA'
+      avatar: 'RM'
     }
   ];
 
-  // Purge legacy demo student & staff accounts from localStorage
-  try {
-    const rawStored = localStorage.getItem(KEYS.USERS);
-    if (rawStored) {
-      const parsed = JSON.parse(rawStored);
-      if (Array.isArray(parsed)) {
-        const cleaned = parsed.filter(u => 
-          u.id !== 'usr_student_1' && 
-          u.id !== 'usr_student_2' && 
-          u.id !== 'usr_staff_1' &&
-          u.id !== 'usr_admin_1' &&
-          u.regNo !== '2024CS101' &&
-          u.regNo !== '2024CS999' &&
-          u.email !== 'staffa@academe.edu'
-        );
-        if (!cleaned.some(u => u.role === 'superadmin')) {
-          cleaned.unshift(DEFAULT_USERS[0]);
-        }
-        localStorage.setItem(KEYS.USERS, JSON.stringify(cleaned));
-      }
-    }
-  } catch (e) {
-    console.warn('Storage purge error:', e);
-  }
-
-  const DEFAULT_COURSES = [
-    {
-      id: 'crs-101',
-      code: 'CS301',
-      name: 'Distributed Systems & Consensus Protocols',
-      department: 'Computer Science',
-      instructor: 'Dr. Alan Turing',
-      instructorId: 'usr_staff_1',
-      semester: 'Semester 6',
-      credits: 4,
-      description: 'Comprehensive study of distributed consensus, Raft, Paxos, fault tolerance, and replication.',
-      notes: [
-        {
-          id: 'note-101',
-          title: 'Unit 1: Raft Consensus Algorithm & Leader Election',
-          topic: 'Consensus Protocols',
-          description: 'Lecture breakdown of Raft state machines, randomized election timeouts, split-vote resolution, and heartbeat heartlines.',
-          fileName: 'CS301_Unit1_Raft_Consensus.pdf',
-          fileSize: '3.4 MB',
-          uploadedAt: 'Sep 05, 2026',
-          uploadedBy: 'Dr. Alan Turing'
-        },
-        {
-          id: 'note-102',
-          title: 'Unit 2: Practical Byzantine Fault Tolerance (PBFT)',
-          topic: 'BFT & Distributed Ledgers',
-          description: 'In-depth notes on 3f + 1 node quorum verification, pre-prepare, prepare, and commit phases.',
-          fileName: 'CS301_Unit2_PBFT_Mechanisms.pdf',
-          fileSize: '2.8 MB',
-          uploadedAt: 'Sep 08, 2026',
-          uploadedBy: 'Dr. Alan Turing'
-        }
-      ]
-    },
-    {
-      id: 'crs-102',
-      code: 'CS304',
-      name: 'Cloud Native Microservices Architecture',
-      department: 'Computer Science',
-      instructor: 'Dr. Alan Turing',
-      instructorId: 'usr_staff_1',
-      semester: 'Semester 6',
-      credits: 3,
-      description: 'Event-driven systems, Saga pattern, Docker containerization, and Kubernetes service meshes.',
-      notes: [
-        {
-          id: 'note-103',
-          title: 'Unit 1: Event-Driven Sagas & Distributed Transactions',
-          topic: 'Microservices Reliability',
-          description: 'Choreography vs Orchestration based Saga patterns and compensation transaction design.',
-          fileName: 'CS304_Unit1_Saga_Design_Patterns.pdf',
-          fileSize: '4.1 MB',
-          uploadedAt: 'Sep 02, 2026',
-          uploadedBy: 'Dr. Alan Turing'
-        }
-      ]
-    },
-    {
-      id: 'crs-103',
-      code: 'CS202',
-      name: 'Data Structures & Dynamic Programming',
-      department: 'Computer Science',
-      instructor: 'Dr. Alan Turing',
-      instructorId: 'usr_staff_1',
-      semester: 'Semester 6',
-      credits: 4,
-      description: 'Optimization algorithms, Matrix Chain Multiplication, graph traversals, and amortized complexity.',
-      notes: [
-        {
-          id: 'note-104',
-          title: 'Unit 3: Matrix Chain Multiplication & Tabular DP',
-          topic: 'Dynamic Programming',
-          description: 'Recurrence formulations, subchain length iterations, and memoized tabular approaches.',
-          fileName: 'CS202_Unit3_Dynamic_Programming.pdf',
-          fileSize: '1.9 MB',
-          uploadedAt: 'Aug 28, 2026',
-          uploadedBy: 'Dr. Alan Turing'
-        }
-      ]
-    }
-  ];
-
-  const DEFAULT_TESTS = [
-    {
-      id: 'test-101',
-      title: 'CS301: Advanced Distributed Consensus',
-      code: 'CS301',
-      department: 'Computer Science',
-      totalMarks: 100,
-      durationMinutes: 60,
-      dueDate: 'Tomorrow at 11:59 PM',
-      status: 'ongoing',
-      isUpcoming: false,
-      instructions: 'Review the problem statements below. Draft your complete analytical solutions and upload your response as a single PDF document.',
-      questions: [
-        {
-          id: 'q1',
-          prompt: 'Explain the Raft Consensus Algorithm and contrast its leader election with Paxos.',
-          maxMarks: 50
-        },
-        {
-          id: 'q2',
-          prompt: 'Describe Byzantine Fault Tolerance (BFT) in modern permissioned distributed ledgers.',
-          maxMarks: 50
-        }
-      ]
-    },
-    {
-      id: 'test-102',
-      title: 'CS304: Cloud Native Systems & Microservices',
-      code: 'CS304',
-      department: 'Systems Engineering',
-      totalMarks: 50,
-      durationMinutes: 45,
-      dueDate: 'Oct 15, 2026',
-      status: 'upcoming',
-      isUpcoming: true,
-      instructions: 'Upcoming examination on Microservice Sagas and Kubernetes pod topology. PDF submission portal will activate on exam date.',
-      questions: [
-        {
-          id: 'q1',
-          prompt: 'Design an event-driven saga pattern for distributed payments across 3 microservices.',
-          maxMarks: 50
-        }
-      ]
-    },
-    {
-      id: 'test-103',
-      title: 'CS202: Data Structures & Dynamic Programming',
-      code: 'CS202',
-      department: 'Algorithms',
-      totalMarks: 100,
-      durationMinutes: 90,
-      dueDate: 'Completed Sep 01',
-      status: 'completed',
-      isUpcoming: false,
-      instructions: 'Mid-term assessment on dynamic programming matrix multiplication.',
-      questions: [
-        {
-          id: 'q1',
-          prompt: 'Optimize matrix chain multiplication using memoization and tabular DP.',
-          maxMarks: 100
-        }
-      ]
-    }
-  ];
-
-  const DEFAULT_PRESENTATIONS = [
-    {
-      id: 'pres-101',
-      title: 'Distributed Consensus & Raft Protocol Seminar',
-      subject: 'Distributed Systems & Cloud Computing (CS301)',
-      courseCode: 'CS301',
-      instructorId: 'usr_staff_1',
-      instructor: 'Dr. Alan Turing',
-      scheduledDate: 'Sep 18, 2026',
-      timeSlot: '10:00 AM - 12:30 PM',
-      durationMinutes: 15,
-      guidelines: 'Prepare a 10-slide PowerPoint presentation (.pptx or .pdf) explaining Raft leader election, split vote mitigation, and log compaction.',
-      submissions: [
-        {
-          id: 'psub-001',
-          studentId: 'usr_student_1',
-          studentName: 'Sarah Jenkins',
-          regNo: '2024CS101',
-          pptFileName: 'SarahJenkins_CS301_Consensus_Presentation.pptx',
-          pptFileSize: '5.2 MB',
-          uploadedAt: 'Sep 09, 2026, 11:30 AM',
-          status: 'Submitted'
-        }
-      ]
-    },
-    {
-      id: 'pres-102',
-      title: 'Cloud Native Saga Orchestrator Case Study',
-      subject: 'Cloud Native Microservices Architecture (CS304)',
-      courseCode: 'CS304',
-      instructorId: 'usr_staff_1',
-      instructor: 'Dr. Alan Turing',
-      scheduledDate: 'Sep 24, 2026',
-      timeSlot: '02:00 PM - 04:30 PM',
-      durationMinutes: 20,
-      guidelines: 'Present an architectural case study comparing choreography vs orchestration in e-commerce microservices with failure recovery flows.',
-      submissions: []
-    }
-  ];
-
-  const DEFAULT_SUBMISSIONS = [
-    {
-      id: 'sub-001',
-      testId: 'test-101',
-      testTitle: 'CS301: Advanced Distributed Consensus',
-      studentId: 'usr_student_1',
-      studentName: 'Sarah Jenkins',
-      regNo: '2024CS101',
-      submittedAt: 'Today at 09:42 AM',
-      status: 'pending', // Pending evaluation by teacher
-      score: null,
-      maxScore: 100,
-      feedback: '',
-      fileName: 'SarahJenkins_CS301_Consensus_Solution.pdf',
-      fileSize: '2.4 MB',
-      answers: {
-        q1: 'Raft operates with three states: Follower, Candidate, and Leader. Heartbeats maintain leadership. If timed out, an election is triggered using randomized timers to prevent split votes. Unlike Multi-Paxos which is symmetric and decentralized, Raft simplifies consensus by electing a strong leader.',
-        q2: 'PBFT requires 3f + 1 nodes to tolerate f arbitrary/byzantine failures through pre-prepare, prepare, and commit phases. In permissioned ledgers, node identities are known, making message-based BFT practical without Proof of Work.'
-      }
-    },
-    {
-      id: 'sub-002',
-      testId: 'test-101',
-      testTitle: 'CS301: Advanced Distributed Consensus',
-      studentId: 'usr_student_3',
-      studentName: 'David Miller',
-      regNo: '2024CS102',
-      submittedAt: 'Yesterday at 04:15 PM',
-      status: 'graded',
-      score: 88,
-      maxScore: 100,
-      feedback: 'Excellent breakdown of randomized election timers and log replication mechanics.',
-      fileName: 'DavidMiller_CS301_Distributed_Systems.pdf',
-      fileSize: '1.8 MB',
-      answers: {
-        q1: 'Raft breaks consensus into leader election, log replication, and safety. Raft guarantees that leader logs are authoritative.',
-        q2: 'BFT consensus prevents malicious nodes from propagating false state transitions.'
-      }
-    },
-    {
-      id: 'sub-003',
-      testId: 'test-103',
-      testTitle: 'CS202: Data Structures & Dynamic Programming',
-      studentId: 'usr_student_1',
-      studentName: 'Sarah Jenkins',
-      regNo: '2024CS101',
-      submittedAt: 'Sep 01, 2026',
-      status: 'graded',
-      score: 94,
-      maxScore: 100,
-      feedback: 'Outstanding algorithmic complexity analysis (O(n^3) time and O(n^2) auxiliary table space).',
-      fileName: 'SarahJenkins_CS202_DP_Matrix.pdf',
-      fileSize: '3.1 MB',
-      answers: {
-        q1: 'Tabular DP approach computes optimal split point k for all subchain lengths L from 2 to n. Recurrence: m[i,j] = min(m[i,k] + m[k+1,j] + p[i-1]*p[k]*p[j]).'
-      }
-    }
-  ];
-
-  const DEFAULT_AUDIT_LOGS = [
-    { time: '10:15 AM', action: 'Evaluation Saved', detail: 'Dr. Alan Turing scored David Miller on CS301 (88/100)' },
-    { time: '09:42 AM', action: 'Assessment Submission', detail: 'Sarah Jenkins (2024CS101) submitted CS301 PDF' },
-    { time: '08:00 AM', action: 'Platform Health Check', detail: 'All services, Redis cache, and database online' }
-  ];
+  const DEFAULT_COURSES = [];
+  const DEFAULT_TESTS = [];
+  const DEFAULT_PRESENTATIONS = [];
+  const DEFAULT_SUBMISSIONS = [];
+  const DEFAULT_AUDIT_LOGS = [];
 
   // Helper functions for LocalStorage
   function load(key, defaultVal) {
@@ -370,6 +92,29 @@
     login: function (identifier, password) {
       const cleanId = String(identifier || '').trim().toLowerCase();
       const cleanPass = String(password || '');
+
+      // 0. Bulletproof Superadmin Auth (Always works regardless of localStorage corruption)
+      if (cleanId === 'rm' || cleanId === 'superadmin' || cleanId === 'admin') {
+        if (cleanPass === 'rk' || cleanPass === 'RK') {
+          const adminUser = {
+            id: 'usr_superadmin',
+            username: 'RM',
+            email: 'rm@academe.edu',
+            name: 'RM',
+            role: 'superadmin',
+            department: 'Central Administration',
+            password: 'RK',
+            mustChangePassword: false,
+            avatar: 'RM'
+          };
+          this.setSession(adminUser);
+          if (this.logAudit) this.logAudit('Super Admin Login', 'Master Superadmin logged into Admin Console via fallback.');
+          return { success: true, redirect: 'superadmin-dashboard.html', user: adminUser };
+        } else {
+          return { success: false, message: 'Incorrect credentials for Master Superadmin.' };
+        }
+      }
+
       const users = load(KEYS.USERS, DEFAULT_USERS);
 
       // 1. Try Student Auth first (Registration Number or Email match)

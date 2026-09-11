@@ -1,883 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Academe — Faculty Portal Dashboard</title>
-  <meta name="description" content="Instructor portal for managing courses, lecture notes, assessments, and presentation reviews" />
-  <link rel="stylesheet" href="student.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academe — Staff Dashboard</title>
+  
+  <!-- Fonts: Outfit & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="portal-common.css" />
   <link rel="stylesheet" href="staff-dashboard.css" />
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════
-       1. TOP FIXED DARK NAVBAR (#1E293B)
-       ═══════════════════════════════════════ -->
-  <header class="top-navbar">
-    <!-- Left: Brand -->
-    <a href="staff-dashboard.html" class="navbar-brand">
-      <div class="navbar-brand-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
-        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-          <path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"></path>
-        </svg>
-      </div>
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <span class="navbar-brand-text">Academe</span>
-        <span class="staff-role-pill">Faculty</span>
-      </div>
-    </a>
-
-    <!-- Right: Navigation Controls -->
-    <nav class="navbar-right">
-      <!-- Home Link -->
-      <a href="staff-dashboard.html" class="nav-link-btn" id="navHomeBtn">
-        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-          <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-        <span>Home</span>
+  <!-- 1. Top Header -->
+  <header class="top-header">
+    <div class="header-left">
+      <a href="index.html" class="brand">
+        <i class="fa-solid fa-graduation-cap"></i> Academe
       </a>
-
-      <!-- Profile Dropdown -->
-      <div class="profile-dropdown-wrapper" id="profileDropdown">
-        <button type="button" class="profile-trigger" id="profileTriggerBtn">
-          <div class="profile-avatar staff-avatar-badge" id="navAvatar">AT</div>
-          <span id="navStaffName">Dr. Alan Turing</span>
-          <svg class="profile-chevron" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
+      <a href="staff-dashboard.html" class="nav-home">Home</a>
+    </div>
+    <div class="header-right">
+      <div class="user-info">
+        <span class="username" id="displayUsername">Loading...</span>
+        <button type="button" class="btn-logout" id="logoutBtn">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
         </button>
-
-        <div class="profile-dropdown-menu">
-          <div class="dropdown-user-info">
-            <div class="dropdown-user-name" id="dropdownName">Dr. Alan Turing</div>
-            <div class="dropdown-user-email" id="dropdownEmail">alan.turing@academe.edu</div>
-            <div class="dropdown-user-dept" id="dropdownDept">Computer Science &amp; AI</div>
-          </div>
-          <button type="button" class="dropdown-menu-item" id="updateProfileBtn">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            Update Profile
-          </button>
-          <button type="button" class="dropdown-menu-item" id="changePasswordBtn">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
-            Change Password
-          </button>
-          <div class="dropdown-divider"></div>
-          <button type="button" class="dropdown-menu-item" style="color: #EF4444;" id="dropdownLogoutBtn">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="stroke: #EF4444;">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
-            Sign Out
-          </button>
-        </div>
       </div>
-
-      <!-- Quick Support Button -->
-      <button type="button" class="nav-support-btn" id="navSupportBtn">
-        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-          <line x1="12" y1="17" x2="12.01" y2="17"></line>
-        </svg>
-        <span>Support</span>
-      </button>
-
-      <!-- Red Logout Button -->
-      <button type="button" class="nav-logout-btn" id="logoutBtn">
-        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-          <polyline points="16 17 21 12 16 7"></polyline>
-          <line x1="21" y1="12" x2="9" y2="12"></line>
-        </svg>
-        <span>Logout</span>
-      </button>
-    </nav>
+    </div>
   </header>
 
-  <!-- ═══════════════════════════════════════
-       2. MAIN CONTENT — DASHBOARD CARD GRID
-       ═══════════════════════════════════════ -->
-  <main class="main-content">
-    <div class="content-container">
+  <!-- Layout Wrapper (Sidebar + Main Content) -->
+  <div class="dashboard-wrapper">
+    
+    <!-- 2. Left Sidebar -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <!-- Course Tab -->
+        <a class="nav-item active" data-target="section-course">
+          <i class="fa-solid fa-book"></i>
+          <span class="nav-label">Course</span>
+        </a>
+        <!-- CIA & AL Tab -->
+        <a class="nav-item" data-target="section-cia">
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span class="nav-label">CIA &amp; AL</span>
+        </a>
+        <!-- Presentation Tab -->
+        <a class="nav-item" data-target="section-presentation">
+          <i class="fa-solid fa-person-chalkboard"></i>
+          <span class="nav-label">Presentation</span>
+        </a>
+        <!-- Test Tab -->
+        <a class="nav-item" data-target="section-test">
+          <i class="fa-solid fa-file-signature"></i>
+          <span class="nav-label">Test</span>
+        </a>
+      </nav>
+    </aside>
 
-      <!-- Faculty Welcome Banner -->
-      <div class="staff-hero-banner">
-        <div>
-          <h1 class="staff-hero-title">Faculty Academic Workspace</h1>
-          <p class="staff-hero-subtitle">
-            Manage course study materials, evaluate student test answer PDFs, and review seminar presentation slides.
-          </p>
+    <!-- 3. Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Course Section -->
+      <section id="section-course" class="content-section active">
+        <h2 class="section-title">Course Management</h2>
+        <p class="section-desc">View and manage your assigned teaching subjects and upload study materials.</p>
+        
+        <div class="placeholder-box">
+          <i class="fa-solid fa-book-open"></i>
+          <h3>Course List Placeholder</h3>
+          <p>Your assigned courses and modules will be displayed here for management.</p>
         </div>
-        <div class="staff-hero-stats">
-          <div class="hero-stat-item">
-            <span class="hero-stat-num" id="heroNumCourses">3</span>
-            <span class="hero-stat-lbl">Active Courses</span>
-          </div>
-          <div class="hero-stat-sep"></div>
-          <div class="hero-stat-item">
-            <span class="hero-stat-num" id="heroNumTests">3</span>
-            <span class="hero-stat-lbl">Assessments</span>
-          </div>
-          <div class="hero-stat-sep"></div>
-          <div class="hero-stat-item">
-            <span class="hero-stat-num" id="heroNumPresentations">2</span>
-            <span class="hero-stat-lbl">Presentations</span>
-          </div>
+      </section>
+
+      <!-- CIA & AL Section -->
+      <section id="section-cia" class="content-section">
+        <h2 class="section-title">CIA &amp; AL Records</h2>
+        <p class="section-desc">Continuous Internal Assessment and Attendance/Assignment Lists.</p>
+        
+        <div class="placeholder-box">
+          <i class="fa-solid fa-table"></i>
+          <h3>CIA &amp; AL Placeholder</h3>
+          <p>Tables and forms for entering internal assessment marks and tracking student attendance will appear here.</p>
         </div>
-      </div>
+      </section>
 
-      <!-- 3 Primary Action Cards (Exact same layout as student portal) -->
-      <div class="cards-grid">
-
-        <!-- Card 1: Courses & Notes -->
-        <div class="action-card" id="cardCourses" role="button" tabindex="0">
-          <div class="card-illustration">
-            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="20" y="30" width="80" height="60" rx="4" fill="#CBD5E1"/>
-              <rect x="24" y="34" width="72" height="52" rx="2" fill="#F1F5F9"/>
-              <rect x="30" y="42" width="26" height="4" rx="1" fill="#F59E0B"/>
-              <rect x="30" y="50" width="40" height="3" rx="1" fill="#94A3B8"/>
-              <rect x="30" y="56" width="35" height="3" rx="1" fill="#94A3B8"/>
-              <rect x="30" y="62" width="42" height="3" rx="1" fill="#94A3B8"/>
-              <rect x="30" y="70" width="20" height="3" rx="1" fill="#94A3B8"/>
-              <rect x="78" y="42" width="14" height="18" rx="2" fill="#F59E0B" opacity="0.25"/>
-              <path d="M82 48l4 3 4-6" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <rect x="35" y="22" width="50" height="12" rx="3" fill="#2C3E50"/>
-              <rect x="42" y="26" width="36" height="4" rx="1" fill="#F8FAFC"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <p>Manage your assigned teaching subjects, view lecture schedules, and upload course study notes for students.</p>
-          </div>
-          <button type="button" class="card-footer-btn" id="btnCourses">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-            </svg>
-            Courses &amp; Notes
-          </button>
+      <!-- Presentation Section -->
+      <section id="section-presentation" class="content-section">
+        <h2 class="section-title">Presentation Scheduler</h2>
+        <p class="section-desc">Schedule seminar slots and review student PowerPoint uploads.</p>
+        
+        <div class="placeholder-box">
+          <i class="fa-solid fa-users-viewfinder"></i>
+          <h3>Presentations Placeholder</h3>
+          <p>Interfaces for defining presentation topics, scheduling timeslots, and grading student slides will load here.</p>
         </div>
+      </section>
 
-        <!-- Card 2: Tests & PDF Submissions -->
-        <div class="action-card" id="cardTests" role="button" tabindex="0">
-          <div class="card-illustration">
-            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="30" y="18" width="60" height="84" rx="5" fill="#CBD5E1"/>
-              <rect x="34" y="22" width="52" height="76" rx="3" fill="#F8FAFC"/>
-              <rect x="40" y="30" width="32" height="5" rx="1.5" fill="#2C3E50"/>
-              <circle cx="46" cy="46" r="4" fill="#E2E8F0" stroke="#F59E0B" stroke-width="2"/>
-              <path d="M44 46l1.5 1.5L49 44" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <rect x="54" y="44" width="26" height="3" rx="1" fill="#64748B"/>
-              <circle cx="46" cy="58" r="4" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="2"/>
-              <rect x="54" y="56" width="22" height="3" rx="1" fill="#94A3B8"/>
-              <circle cx="46" cy="70" r="4" fill="#E2E8F0" stroke="#CBD5E1" stroke-width="2"/>
-              <rect x="54" y="68" width="28" height="3" rx="1" fill="#94A3B8"/>
-              <circle cx="46" cy="82" r="4" fill="#E2E8F0" stroke="#F59E0B" stroke-width="2"/>
-              <path d="M44 82l1.5 1.5L49 80" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <rect x="54" y="80" width="20" height="3" rx="1" fill="#64748B"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <p>Publish examinations and evaluate student PDF answer sheets organized by student name.</p>
-          </div>
-          <button type="button" class="card-footer-btn" id="btnTests">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-            </svg>
-            Tests &amp; Submissions
-          </button>
+      <!-- Test Section -->
+      <section id="section-test" class="content-section">
+        <h2 class="section-title">Tests &amp; Assessments</h2>
+        <p class="section-desc">Create new tests, manage active exams, and grade student submissions.</p>
+        
+        <div class="placeholder-box">
+          <i class="fa-solid fa-file-pen"></i>
+          <h3>Assessment Engine Placeholder</h3>
+          <p>Test creation forms, question banks, and the PDF grading interface will be accessible from this tab.</p>
         </div>
+      </section>
 
-        <!-- Card 3: Presentations -->
-        <div class="action-card" id="cardPresentations" role="button" tabindex="0">
-          <div class="card-illustration">
-            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="22" y="24" width="76" height="52" rx="4" fill="#2C3E50"/>
-              <rect x="26" y="28" width="68" height="44" rx="2" fill="#0F172A"/>
-              <circle cx="44" cy="50" r="10" fill="#F59E0B" opacity="0.3"/>
-              <path d="M44 40 A10 10 0 0 1 54 50 L44 50 Z" fill="#F59E0B"/>
-              <rect x="62" y="42" width="24" height="4" rx="2" fill="#94A3B8"/>
-              <rect x="62" y="50" width="18" height="4" rx="2" fill="#64748B"/>
-              <rect x="62" y="58" width="14" height="4" rx="2" fill="#64748B"/>
-              <path d="M60 76 L60 92 M48 92 L72 92" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <p>Schedule presentation seminars, define topic guidelines, and review student PowerPoint slides.</p>
-          </div>
-          <button type="button" class="card-footer-btn" id="btnPresentations">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-              <line x1="8" y1="21" x2="16" y2="21"></line>
-              <line x1="12" y1="17" x2="12" y2="21"></line>
-            </svg>
-            Presentations
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </main>
-
-  <!-- ═══════════════════════════════════════
-       3. STICKY FOOTER
-       ═══════════════════════════════════════ -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>&copy; 2026 Academe Assessment Platform. All Rights Reserved.</span>
-      <div class="footer-links">
-        <a href="#" id="linkPrivacy">Privacy Policy</a>
-        <a href="#" id="linkTerms">Terms of Service</a>
-        <a href="#" id="linkContact">Contact Us</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ═══════════════════════════════════════
-       4. INTERACTIVE MODALS
-       ═══════════════════════════════════════ -->
-
-  <!-- Modal 1: Teaching Courses & Lecture Notes Viewer -->
-  <div class="modal-backdrop" id="modalCourses">
-    <div class="modal-box modal-lg">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3>My Teaching Courses &amp; Lecture Notes</h3>
-          <p>Subjects assigned to you this semester — view uploaded notes or publish new materials</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalCourses">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Top Controls Bar -->
-        <div class="modal-action-bar">
-          <div class="search-input-wrapper">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" id="searchCoursesInput" placeholder="Filter courses or notes..." class="search-input" />
-          </div>
-          <button type="button" class="btn-staff-primary" id="openAddNoteModalBtn">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span>+ Add Notes</span>
-          </button>
-        </div>
-
-        <div id="staffCoursesListContainer">
-          <!-- Rendered dynamically by staff-dashboard.js -->
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-modal-secondary" data-close="modalCourses">Close</button>
-      </div>
-    </div>
+    </main>
   </div>
 
-  <!-- Modal 1b: Add Course Note Form -->
-  <div class="modal-backdrop" id="modalAddNote">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3>Add Course Study Notes</h3>
-          <p>Publish lecture notes, unit summaries, or reference files for enrolled students</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalAddNote">&times;</button>
-      </div>
-      <form id="formAddNote">
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label" for="noteCourseSelect">Target Course / Subject *</label>
-            <select id="noteCourseSelect" class="form-select" required>
-              <!-- Populated dynamically -->
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="noteTopicInput">Unit / Topic Title *</label>
-            <input type="text" id="noteTopicInput" class="form-input" placeholder="e.g. Unit 3: Consensus Protocols &amp; Raft" required />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="noteTitleInput">Lecture / Notes Title *</label>
-            <input type="text" id="noteTitleInput" class="form-input" placeholder="e.g. Lecture 05: Leader Election &amp; Log Compaction" required />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="noteDescInput">Key Concepts / Description</label>
-            <textarea id="noteDescInput" class="form-textarea" rows="3" placeholder="Brief summary of what this lecture note covers..."></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="noteFileNameInput">Attachment File Name</label>
-            <input type="text" id="noteFileNameInput" class="form-input" placeholder="e.g. CS301_Unit3_Raft_Consensus_Notes.pdf" value="Lecture_Study_Notes.pdf" />
-          </div>
-
-          <div class="file-dropzone" id="noteFileDropzone">
-            <input type="file" id="noteFileInput" accept=".pdf,.doc,.docx,.ppt,.pptx" style="display:none;" />
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
-            </svg>
-            <div class="dropzone-title">Drop notes file here, or <span style="color:#F59E0B; text-decoration:underline;">browse files</span></div>
-            <div class="dropzone-hint">Accepted: PDF, DOCX, PPTX (Simulated document storage)</div>
-          </div>
-
-          <div class="file-preview-card" id="noteFilePreview" style="display:none; margin-top: 0.75rem;">
-            <div class="file-preview-info">
-              <div class="file-preview-icon" id="notePreviewIcon" style="background:#FEF3C7; color:#B45309;">DOC</div>
-              <div>
-                <div class="file-preview-name" id="notePreviewName">Notes.pdf</div>
-                <div class="file-preview-size" id="notePreviewSize">2.5 MB</div>
-              </div>
-            </div>
-            <button type="button" class="btn-modal-secondary" id="btnRemoveNoteFile" style="padding:0.35rem 0.75rem; font-size:0.78rem;">Remove</button>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn-modal-secondary" data-close="modalAddNote">Cancel</button>
-          <button type="submit" class="btn-staff-primary" id="btnSubmitAddNote">
-            <span>Publish Notes to Course</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal 2: Tests, Assessments & Student PDF Submissions -->
-  <div class="modal-backdrop" id="modalTests">
-    <div class="modal-box modal-lg">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3>Assessments &amp; Student PDF Submissions</h3>
-          <p>Review student answer sheets organized by student name, evaluate submissions, and publish tests</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalTests">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Top Tabs & Action Row -->
-        <div class="modal-tab-action-row">
-          <div class="tools-nav-tabs">
-            <button type="button" class="tool-tab-btn active" id="tabStaffSubmissionsBtn">
-              Student Submissions (<span id="subCountBadge">0</span>)
-            </button>
-            <button type="button" class="tool-tab-btn" id="tabStaffTestsListBtn">
-              Published Assessments (<span id="testCountBadge">0</span>)
-            </button>
-          </div>
-
-          <button type="button" class="btn-staff-primary" id="openCreateTestModalBtn">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span>+ Create New Test</span>
-          </button>
-        </div>
-
-        <!-- Tab 1: Student PDF Submissions Roster -->
-        <div id="viewStaffSubmissions">
-          <div class="modal-filter-bar">
-            <div class="search-input-wrapper">
-              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <input type="text" id="searchSubmissionsInput" placeholder="Search by student name, registration no, or test title..." class="search-input" />
-            </div>
-            <div class="filter-pills-group">
-              <button type="button" class="filter-pill active" data-sub-filter="all">All</button>
-              <button type="button" class="filter-pill" data-sub-filter="pending">Pending Evaluation</button>
-              <button type="button" class="filter-pill" data-sub-filter="graded">Evaluated</button>
-            </div>
-          </div>
-
-          <div class="table-responsive-container">
-            <table class="academe-table">
-              <thead>
-                <tr>
-                  <th>Student Name</th>
-                  <th>Reg No</th>
-                  <th>Assessment Title</th>
-                  <th>Submitted Answer PDF</th>
-                  <th>Submitted At</th>
-                  <th>Status</th>
-                  <th>Score</th>
-                  <th style="text-align: right;">Action</th>
-                </tr>
-              </thead>
-              <tbody id="staffSubmissionsTableBody">
-                <!-- Rendered dynamically -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Tab 2: Published Assessments List -->
-        <div id="viewStaffTestsList" style="display: none;">
-          <div id="staffTestsListContainer" class="tests-admin-grid">
-            <!-- Rendered dynamically -->
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-modal-secondary" data-close="modalTests">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 2b: Create Test Modal -->
-  <div class="modal-backdrop" id="modalCreateTest">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3>Create New Course Assessment</h3>
-          <p>Publish an assessment with analytical questions and PDF submission guidelines</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalCreateTest">&times;</button>
-      </div>
-      <form id="formCreateTest">
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label" for="testTitleInput">Assessment Title *</label>
-            <input type="text" id="testTitleInput" class="form-input" placeholder="e.g. CS401: Distributed Consensus &amp; Raft Examination" required />
-          </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="testCodeInput">Course Code *</label>
-              <input type="text" id="testCodeInput" class="form-input" placeholder="e.g. CS301" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="testDeptInput">Department *</label>
-              <input type="text" id="testDeptInput" class="form-input" value="Computer Science" required />
-            </div>
-          </div>
-
-          <div class="form-row-3">
-            <div class="form-group">
-              <label class="form-label" for="testDurationInput">Duration (Mins) *</label>
-              <input type="number" id="testDurationInput" class="form-input" value="90" min="15" max="300" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="testMarksInput">Total Marks *</label>
-              <input type="number" id="testMarksInput" class="form-input" value="100" min="10" max="500" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="testStatusSelect">Test Status *</label>
-              <select id="testStatusSelect" class="form-select">
-                <option value="ongoing">Ongoing (Active Now)</option>
-                <option value="upcoming">Upcoming (Scheduled)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="testDueDateInput">Due Date &amp; Time *</label>
-            <input type="text" id="testDueDateInput" class="form-input" placeholder="e.g. Sep 22, 2026 • 11:59 PM" value="Sep 22, 2026 • 11:59 PM" required />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="testPromptInput">Problem Statement &amp; Questions *</label>
-            <textarea id="testPromptInput" class="form-textarea" rows="4" placeholder="Enter problem statement, question parts (Part A / Part B), and formatting rules for students..." required></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="testKeywordsInput">Target Keywords for Grading Guidance (Comma-separated)</label>
-            <input type="text" id="testKeywordsInput" class="form-input" placeholder="e.g. Raft, Paxos, Quorum, Heartbeat, Election" value="Raft, Paxos, Consensus, Quorum, Fault Tolerance" />
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn-modal-secondary" data-close="modalCreateTest">Cancel</button>
-          <button type="submit" class="btn-staff-primary" id="btnSubmitCreateTest">
-            <span>Publish Assessment →</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal 2c: Quick Grade Modal -->
-  <div class="modal-backdrop" id="modalQuickGrade">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3 id="gradeModalTitle">Evaluate Student Submission</h3>
-          <p>Review student answer sheet PDF and award score with feedback</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalQuickGrade">&times;</button>
-      </div>
-      <form id="formQuickGrade">
-        <input type="hidden" id="gradeSubId" />
-        <div class="modal-body">
-          <!-- Submission Info Card -->
-          <div class="eval-info-card">
-            <div class="eval-info-row">
-              <span class="eval-lbl">Student:</span>
-              <strong id="gradeStudentName">Sarah Jenkins</strong>
-              <span class="badge-tag info" id="gradeStudentReg">2024CS101</span>
-            </div>
-            <div class="eval-info-row">
-              <span class="eval-lbl">Assessment:</span>
-              <span id="gradeTestTitle">CS301: Advanced Distributed Consensus</span>
-            </div>
-            <div class="eval-info-row">
-              <span class="eval-lbl">Uploaded Solution:</span>
-              <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <span class="badge-doc pdf">PDF</span>
-                <span id="gradeFileName" style="font-weight: 500;">SarahJenkins_Solution.pdf</span>
-                <button type="button" class="btn-preview-sm" id="btnPreviewGradePDF">View PDF</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Keyword Auto-Grader Simulation -->
-          <div class="auto-grader-section" style="margin-top: 1rem; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-              <h4 style="margin: 0; font-size: 0.95rem; color: #1E293B; display: flex; align-items: center; gap: 0.4rem;">
-                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2" style="color: #6366F1;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                AI Keyword Analysis
-              </h4>
-              <button type="button" class="btn-staff-primary" id="btnRunKeywordScan" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; background: #6366F1; border-color: #4F46E5;">Scan Submission</button>
-            </div>
-            
-            <div class="form-group" style="margin-bottom: 0.75rem;">
-              <label class="form-label" for="gradeKeywordsInput" style="font-size: 0.75rem;">Target Keywords (comma-separated)</label>
-              <input type="text" id="gradeKeywordsInput" class="form-input" style="font-size: 0.8rem; padding: 0.4rem;" placeholder="e.g. Protocol, Consensus, Fault Tolerance" />
-            </div>
-
-            <div id="keywordAnalysisResult" style="display: none;">
-              <div style="font-size: 0.8rem; color: #475569; margin-bottom: 0.4rem;"><strong>Extracted Text Preview:</strong></div>
-              <div id="simulatedExtractedText" style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 4px; padding: 0.75rem; font-size: 0.8rem; color: #334155; max-height: 120px; overflow-y: auto; line-height: 1.5; margin-bottom: 0.75rem;">
-                <!-- Simulated text with highlights goes here -->
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; background: #EEF2FF; padding: 0.5rem 0.75rem; border-radius: 4px; border: 1px solid #C7D2FE;">
-                <div style="font-size: 0.8rem; color: #4338CA;">
-                  <span id="keywordMatchCount">0</span> Keyword Matches Found
-                </div>
-                <div style="font-size: 0.8rem; font-weight: 600; color: #4338CA;">
-                  Suggested Score: <span id="suggestedScoreLabel">0</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group" style="margin-top: 1rem;">
-            <label class="form-label" for="gradeScoreInput">
-              Marks Awarded (Out of <span id="gradeMaxMarksLabel">100</span>) *
-            </label>
-            <input type="number" id="gradeScoreInput" class="form-input" min="0" max="100" placeholder="e.g. 92" required />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="gradeFeedbackInput">Evaluator Feedback &amp; Constructive Remarks</label>
-            <textarea id="gradeFeedbackInput" class="form-textarea" rows="3" placeholder="Provide constructive feedback, notes on methodology, and points of excellence..."></textarea>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn-modal-secondary" data-close="modalQuickGrade">Cancel</button>
-          <a href="#" id="linkFullGradeStudio" class="btn-modal-secondary" style="color: #6366F1; text-decoration: none;">
-            Full Grade Studio ↗
-          </a>
-          <button type="submit" class="btn-staff-primary">
-            <span>Save &amp; Publish Grade</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal 3: Presentations & Student PPT Reviews -->
-  <div class="modal-backdrop" id="modalPresentations">
-    <div class="modal-box modal-lg">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3>Seminar Presentations &amp; Student Slides</h3>
-          <p>Schedule seminar presentations and review student submitted PowerPoint slides</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalPresentations">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Top Tabs & Action Row -->
-        <div class="modal-tab-action-row">
-          <div class="tools-nav-tabs">
-            <button type="button" class="tool-tab-btn active" id="tabStaffPresSubmissionsBtn">
-              Student Slides (<span id="presSubCountBadge">0</span>)
-            </button>
-            <button type="button" class="tool-tab-btn" id="tabStaffPresSessionsBtn">
-              Scheduled Presentations (<span id="presCountBadge">0</span>)
-            </button>
-          </div>
-
-          <button type="button" class="btn-staff-primary" id="openSchedulePresModalBtn">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span>+ Schedule Presentation</span>
-          </button>
-        </div>
-
-        <!-- Tab 1: Student PPT Submissions Roster -->
-        <div id="viewStaffPresSubmissions">
-          <div class="modal-filter-bar">
-            <div class="search-input-wrapper">
-              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <input type="text" id="searchPresSubmissionsInput" placeholder="Search by student name, registration no, or presentation..." class="search-input" />
-            </div>
-          </div>
-
-          <div class="table-responsive-container">
-            <table class="academe-table">
-              <thead>
-                <tr>
-                  <th>Student Name</th>
-                  <th>Reg No</th>
-                  <th>Presentation Topic</th>
-                  <th>Subject</th>
-                  <th>Uploaded Slides (.pptx)</th>
-                  <th>Submitted At</th>
-                  <th>Status</th>
-                  <th style="text-align: right;">Action</th>
-                </tr>
-              </thead>
-              <tbody id="staffPresSubmissionsTableBody">
-                <!-- Rendered dynamically -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Tab 2: Scheduled Presentations List -->
-        <div id="viewStaffPresSessions" style="display: none;">
-          <div id="staffPresSessionsContainer" class="pres-admin-grid">
-            <!-- Rendered dynamically -->
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-modal-secondary" data-close="modalPresentations">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 3b: Schedule Presentation Modal -->
-  <div class="modal-backdrop" id="modalSchedulePresentation">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3>Schedule New Presentation Seminar</h3>
-          <p>Define presentation title, subject, schedule, and guidelines for students</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalSchedulePresentation">&times;</button>
-      </div>
-      <form id="formSchedulePres">
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label" for="presTitleInput">Presentation Seminar Title *</label>
-            <input type="text" id="presTitleInput" class="form-input" placeholder="e.g. Distributed Consensus &amp; Raft Protocol Seminar" required />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="presSubjectInput">Course / Subject *</label>
-            <input type="text" id="presSubjectInput" class="form-input" placeholder="e.g. Distributed Systems &amp; Cloud Computing (CS301)" required />
-          </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label class="form-label" for="presDateInput">Scheduled Date *</label>
-              <input type="text" id="presDateInput" class="form-input" placeholder="e.g. Sep 25, 2026" value="Sep 25, 2026" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="presTimeInput">Time Slot *</label>
-              <input type="text" id="presTimeInput" class="form-input" placeholder="e.g. 10:00 AM - 12:30 PM" value="10:00 AM - 12:30 PM" required />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="presDurationInput">Duration per Presenter (Minutes) *</label>
-            <input type="number" id="presDurationInput" class="form-input" value="15" min="5" max="60" required />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="presGuidelinesInput">Presentation Guidelines &amp; Topic Scope *</label>
-            <textarea id="presGuidelinesInput" class="form-textarea" rows="3" placeholder="Instruct students on slide count, formatting, and key deliverables..." required></textarea>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn-modal-secondary" data-close="modalSchedulePresentation">Cancel</button>
-          <button type="submit" class="btn-staff-primary">
-            <span>Schedule Presentation →</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal 4: Document Preview Modal (for PDF & PPT) -->
-  <div class="modal-backdrop" id="modalDocPreview">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3 id="docPreviewTitle">Document Preview</h3>
-          <p id="docPreviewSubtitle">Viewer simulation</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalDocPreview">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="doc-viewer-card">
-          <div class="doc-viewer-badge" id="docPreviewBadge">PDF</div>
-          <h4 id="docPreviewName" style="margin: 0.75rem 0 0.35rem; font-size: 1.1rem; color: #1E293B;">Solution.pdf</h4>
-          <div id="docPreviewMeta" style="font-size: 0.8rem; color: #64748B; margin-bottom: 1.25rem;">Size: 2.4 MB • Status: Verified</div>
-
-          <div class="doc-viewer-canvas">
-            <div class="doc-sim-header">
-              <span class="doc-sim-dot red"></span>
-              <span class="doc-sim-dot yellow"></span>
-              <span class="doc-sim-dot green"></span>
-              <span style="font-size: 0.72rem; color: #94A3B8; margin-left: 0.5rem;">Document Viewer Engine v2.4</span>
-            </div>
-            <div class="doc-sim-content" id="docSimContent">
-              <div class="doc-sim-line title"></div>
-              <div class="doc-sim-line long"></div>
-              <div class="doc-sim-line medium"></div>
-              <div class="doc-sim-line long"></div>
-              <div class="doc-sim-box"></div>
-              <div class="doc-sim-line long"></div>
-              <div class="doc-sim-line short"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-modal-secondary" data-close="modalDocPreview">Close</button>
-        <button type="button" class="btn-staff-primary" id="btnDownloadPreviewDoc">
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          <span>Download File</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 5: Update Profile Modal -->
-  <div class="modal-backdrop" id="modalProfile">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3>Update Faculty Profile</h3>
-          <p>Modify your contact details and display preferences</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalProfile">&times;</button>
-      </div>
-      <form id="formProfile">
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label" for="profileNameInput">Full Name</label>
-            <input type="text" id="profileNameInput" class="form-input" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="profileEmailInput">Institutional Email</label>
-            <input type="email" id="profileEmailInput" class="form-input" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="profileDeptInput">Academic Department</label>
-            <input type="text" id="profileDeptInput" class="form-input" />
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-modal-secondary" data-close="modalProfile">Cancel</button>
-          <button type="submit" class="btn-staff-primary">Save Changes</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal 6: Change Password Modal -->
-  <div class="modal-backdrop" id="modalPassword">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3>Change Password</h3>
-          <p>Keep your instructor account credentials secure</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalPassword">&times;</button>
-      </div>
-      <form id="formPassword">
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label" for="oldPasswordInput">Current Password</label>
-            <input type="password" id="oldPasswordInput" class="form-input" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="newPasswordInput">New Password</label>
-            <input type="password" id="newPasswordInput" class="form-input" required minlength="6" />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="confirmPasswordInput">Confirm New Password</label>
-            <input type="password" id="confirmPasswordInput" class="form-input" required minlength="6" />
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-modal-secondary" data-close="modalPassword">Cancel</button>
-          <button type="submit" class="btn-staff-primary">Update Password</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal 7: Support Modal -->
-  <div class="modal-backdrop" id="modalSupport">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <h3>Faculty Support Desk</h3>
-          <p>Contact Academe academic administration &amp; technical help</p>
-        </div>
-        <button type="button" class="modal-close-btn" data-close="modalSupport">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem;">
-          <h4 style="font-size: 0.96rem; font-weight: 700; color: #1E293B; margin-bottom: 0.25rem;">Academic IT Office</h4>
-          <p style="font-size: 0.82rem; color: #64748B;">For assessment schedule changes, enrollment rosters, and exam grading escalations.</p>
-          <div style="margin-top: 0.75rem; font-size: 0.84rem; color: #334155;">
-            <div><strong>Email:</strong> faculty.support@academe.edu</div>
-            <div><strong>Phone:</strong> +1 (800) 555-FACULTY (ext. 402)</div>
-            <div><strong>Hours:</strong> Mon - Fri, 8:00 AM - 6:00 PM EST</div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-modal-secondary" data-close="modalSupport">Close</button>
-      </div>
-    </div>
-  </div>
-
+  <!-- Scripts -->
   <script src="portal-state.js"></script>
   <script src="staff-dashboard.js"></script>
 </body>
