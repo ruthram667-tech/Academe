@@ -608,6 +608,14 @@
   const btnPreviewGradePDF = document.getElementById('btnPreviewGradePDF');
   const linkFullGradeStudio = document.getElementById('linkFullGradeStudio');
 
+  // AI Keyword Analysis Elements
+  const btnRunKeywordScan = document.getElementById('btnRunKeywordScan');
+  const gradeKeywordsInput = document.getElementById('gradeKeywordsInput');
+  const keywordAnalysisResult = document.getElementById('keywordAnalysisResult');
+  const simulatedExtractedText = document.getElementById('simulatedExtractedText');
+  const keywordMatchCount = document.getElementById('keywordMatchCount');
+  const suggestedScoreLabel = document.getElementById('suggestedScoreLabel');
+
   let activeGradingSub = null;
 
   function openQuickGradeModal(subId) {
@@ -637,6 +645,17 @@
       linkFullGradeStudio.href = `grade.html?id=${sub.id}`;
     }
 
+    // Reset AI Keyword Analysis UI
+    if (keywordAnalysisResult) keywordAnalysisResult.style.display = 'none';
+    if (gradeKeywordsInput) {
+      const test = state.getTests().find(t => t.id === sub.testId || t.title === sub.testTitle);
+      if (test && test.keywords && test.keywords.length > 0) {
+        gradeKeywordsInput.value = test.keywords.join(', ');
+      } else {
+        gradeKeywordsInput.value = '';
+      }
+    }
+
     openModal('modalQuickGrade');
   }
 
@@ -649,6 +668,52 @@
           `${activeGradingSub.testTitle} — ${activeGradingSub.studentName}`
         );
       }
+    });
+  }
+
+  // AI Keyword Auto-Grader Simulation Logic
+  if (btnRunKeywordScan) {
+    btnRunKeywordScan.addEventListener('click', () => {
+      if (!activeGradingSub) return;
+      
+      const keywordsRaw = gradeKeywordsInput ? gradeKeywordsInput.value.trim() : '';
+      if (!keywordsRaw) {
+         state.showToast('Please enter target keywords to scan for.', 'warning');
+         return;
+      }
+      
+      const keywords = keywordsRaw.split(',').map(k => k.trim()).filter(k => k.length > 0);
+      
+      // Simulate student answer text relevant to the assessment
+      const baseText = `This document provides the solution for the assessment. In modern distributed systems, reaching a distributed decision is critical. One popular approach is using the Raft algorithm which simplifies Paxos. It uses a strong leader approach and handles fault tolerance via log replication. To ensure consistency, a quorum is required before committing entries. Heartbeat mechanisms are used to maintain leader authority. Network partitions can cause temporary divergence, but the system recovers once consensus can be established again among a majority of nodes.`;
+      
+      let processedText = baseText;
+      let matchCount = 0;
+      
+      keywords.forEach(kw => {
+        const regex = new RegExp(`\\b(${kw})\\b`, 'gi');
+        if (regex.test(processedText)) {
+           matchCount++;
+           // Replace with mark tags
+           processedText = processedText.replace(regex, `<mark style="background:#FEF08A; color:#854D0E; padding:0 2px; border-radius:2px;">$1</mark>`);
+        }
+      });
+      
+      const maxScore = activeGradingSub.maxScore || 100;
+      const ratio = matchCount / Math.max(keywords.length, 1);
+      const suggested = Math.round((ratio * 0.6 + 0.4) * maxScore); // Base 40% + 60% based on keyword ratio
+      const finalScore = matchCount === 0 ? Math.round(maxScore * 0.4) : suggested;
+      
+      if (simulatedExtractedText) simulatedExtractedText.innerHTML = processedText;
+      if (keywordMatchCount) keywordMatchCount.textContent = matchCount;
+      if (suggestedScoreLabel) suggestedScoreLabel.textContent = `${finalScore} / ${maxScore}`;
+      if (keywordAnalysisResult) keywordAnalysisResult.style.display = 'block';
+      
+      if (gradeScoreInput) {
+        gradeScoreInput.value = finalScore;
+      }
+      
+      state.showToast('Keyword analysis complete. Suggested score applied.', 'success');
     });
   }
 
