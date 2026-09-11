@@ -342,6 +342,9 @@
     const studentBadge = document.getElementById('studentRosterCountBadge');
     if (studentBadge) studentBadge.textContent = students.length;
 
+    // Refresh class dropdown options
+    populateStudentClassOptions();
+
     // Render Classes Table
     const classesTbody = document.getElementById('classesTableBody');
     if (classesTbody) {

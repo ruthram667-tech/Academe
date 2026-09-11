@@ -278,7 +278,122 @@
     });
   }
 
+  // Modal functions for Class and Course
+  function openAddClassModal() {
+    const classSelect = document.getElementById('staffAvailableClassSelect');
+    if (classSelect) {
+      const classes = state.getClasses() || [];
+      const myAssignments = state.getStaffAssignments(staffSession.id) || [];
+      const myClassIds = new Set(myAssignments.map(a => a.classId));
+      
+      classSelect.innerHTML = '';
+      if (classes.length === 0) {
+        classSelect.innerHTML = '<option value="">No classes available (create one in Superadmin)</option>';
+      } else {
+        classes.forEach(c => {
+          const isAdded = myClassIds.has(c.id);
+          const opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = `${c.name} (${c.department || 'CS'}) ${isAdded ? '— [Already in Dashboard]' : ''}`;
+          if (isAdded) opt.disabled = true;
+          classSelect.appendChild(opt);
+        });
+      }
+    }
+    openModal('staffAddClassModal');
+  }
+
+  function openAddCourseToClassModal(classId, className) {
+    document.getElementById('modalTargetClassId').value = classId;
+    document.getElementById('modalTargetClassName').textContent = className;
+    
+    // Populate pre-existing course select
+    const existingSelect = document.getElementById('staffExistingCourseSelect');
+    if (existingSelect) {
+      existingSelect.innerHTML = '<option value="">-- Or enter new subject details below --</option>';
+      const allCourses = state.getCourses() || [];
+      allCourses.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `${c.code} - ${c.name || c.title}`;
+        opt.dataset.code = c.code;
+        opt.dataset.title = c.name || c.title;
+        opt.dataset.credits = c.credits || 3;
+        existingSelect.appendChild(opt);
+      });
+
+      existingSelect.onchange = () => {
+        const selectedOpt = existingSelect.selectedOptions[0];
+        if (selectedOpt && selectedOpt.value) {
+          document.getElementById('staffNewCourseTitle').value = selectedOpt.dataset.title || '';
+          document.getElementById('staffNewCourseCode').value = selectedOpt.dataset.code || '';
+          document.getElementById('staffNewCourseCredits').value = selectedOpt.dataset.credits || 3;
+        } else {
+          document.getElementById('staffNewCourseTitle').value = '';
+          document.getElementById('staffNewCourseCode').value = '';
+          document.getElementById('staffNewCourseCredits').value = 3;
+        }
+      };
+    }
+
+    document.getElementById('staffNewCourseTitle').value = '';
+    document.getElementById('staffNewCourseCode').value = '';
+    document.getElementById('staffNewCourseCredits').value = 3;
+
+    openModal('staffAddCourseModal');
+  }
+
   function initModals() {
+    // Add Class Button
+    document.getElementById('btnOpenAddClassModal')?.addEventListener('click', openAddClassModal);
+
+    // Add Class Form
+    document.getElementById('staffAddClassForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const classSelect = document.getElementById('staffAvailableClassSelect');
+      const classId = classSelect?.value;
+      if (!classId) return;
+
+      const res = state.assignStaffClass(staffSession.id, classId);
+      if (res.success) {
+        state.showToast('Class added to your dashboard!', 'success');
+        closeModal('staffAddClassModal');
+        renderClasses();
+      } else {
+        state.showToast(res.message || 'Error adding class', 'error');
+      }
+    });
+
+    // Add Course to Class Form
+    document.getElementById('staffAddCourseForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const classId = document.getElementById('modalTargetClassId').value;
+      const title = document.getElementById('staffNewCourseTitle').value.trim();
+      const code = document.getElementById('staffNewCourseCode').value.trim();
+      const credits = document.getElementById('staffNewCourseCredits').value;
+
+      if (!title) {
+        state.showToast('Please enter a course subject title', 'warning');
+        return;
+      }
+
+      const res = state.addCourseToClass(staffSession.id, classId, {
+        title: title,
+        code: code,
+        credits: credits
+      });
+
+      if (res.success) {
+        state.showToast(`Course "${title}" assigned to class!`, 'success');
+        closeModal('staffAddCourseModal');
+        e.target.reset();
+        renderClasses();
+        renderCourses();
+      } else {
+        state.showToast(res.message || 'Error assigning course', 'error');
+      }
+    });
+
     // Add Course Material
     document.getElementById('btnOpenAddMaterialModal')?.addEventListener('click', () => openModal('addCourseMaterialModal'));
     document.getElementById('addCourseMaterialForm')?.addEventListener('submit', (e) => {
@@ -446,6 +561,8 @@
 
   // 8. Init Dashboard
   function renderAll() {
+    ensureInitialAssignments();
+    renderClasses();
     renderCourses();
     renderTests();
     renderPresentations();
