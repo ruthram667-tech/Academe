@@ -10,8 +10,10 @@
   if (!admin) return;
 
   // Set Profile UI
-  document.getElementById('adminName').textContent = admin.name || 'Master Superadmin';
-  document.getElementById('adminAvatar').textContent = admin.avatar || 'SA';
+  const adminNameEl = document.getElementById('adminName');
+  if (adminNameEl) adminNameEl.textContent = admin.name || 'Master Superadmin';
+  const adminAvatarEl = document.getElementById('adminAvatar');
+  if (adminAvatarEl) adminAvatarEl.textContent = admin.avatar || 'SA';
 
   // Logout Handler
   document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -146,16 +148,28 @@
     const staffMembers = users.filter(u => u.role === 'staff');
 
     // Update KPI counters
-    document.getElementById('statStudentCount').textContent = students.length;
-    document.getElementById('statStaffCount').textContent = staffMembers.length;
-    document.getElementById('statAssessmentCount').textContent = tests.length;
-    document.getElementById('statSubmissionsCount').textContent = submissions.length;
-    document.getElementById('staffRosterCountBadge').textContent = staffMembers.length;
-    document.getElementById('studentRosterCountBadge').textContent = students.length;
+    const statStudentCount = document.getElementById('statStudentCount');
+    if (statStudentCount) statStudentCount.textContent = students.length;
+    
+    const statStaffCount = document.getElementById('statStaffCount');
+    if (statStaffCount) statStaffCount.textContent = staffMembers.length;
+    
+    const statAssessmentCount = document.getElementById('statAssessmentCount');
+    if (statAssessmentCount) statAssessmentCount.textContent = tests.length;
+    
+    const statSubmissionsCount = document.getElementById('statSubmissionsCount');
+    if (statSubmissionsCount) statSubmissionsCount.textContent = submissions.length;
+    
+    const staffBadge = document.getElementById('staffRosterCountBadge');
+    if (staffBadge) staffBadge.textContent = staffMembers.length;
+    
+    const studentBadge = document.getElementById('studentRosterCountBadge');
+    if (studentBadge) studentBadge.textContent = students.length;
 
     // Render Staff Table
     const staffTbody = document.getElementById('staffTableBody');
-    staffTbody.innerHTML = '';
+    if (staffTbody) {
+      staffTbody.innerHTML = '';
     if (staffMembers.length === 0) {
       staffTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-dim);">No faculty accounts registered yet. Click <strong>"+ Register Faculty Staff"</strong> above to create one.</td></tr>`;
     } else {
@@ -181,11 +195,13 @@
         staffTbody.appendChild(tr);
       });
     }
+    }
 
     // Render Student Table
     const studentTbody = document.getElementById('studentTableBody');
-    studentTbody.innerHTML = '';
-    if (students.length === 0) {
+    if (studentTbody) {
+      studentTbody.innerHTML = '';
+      if (students.length === 0) {
       studentTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-dim);">No student accounts enrolled yet. Click <strong>"+ Register Student"</strong> above to enroll students.</td></tr>`;
     } else {
       students.forEach(st => {
@@ -211,6 +227,7 @@
         studentTbody.appendChild(tr);
       });
     }
+    }
 
     // Attach User Deletion Listeners
     document.querySelectorAll('.btn-delete-staff, .btn-delete-student').forEach(btn => {
@@ -232,34 +249,38 @@
 
     // Render Tests Overview
     const testsTbody = document.getElementById('adminTestsBody');
-    testsTbody.innerHTML = '';
-    tests.forEach(t => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><span class="badge" style="background:rgba(255,255,255,0.06);">${t.code}</span></td>
-        <td><strong style="color:#fff;">${t.title}</strong></td>
-        <td style="color:var(--text-muted);">${t.department}</td>
-        <td>${t.totalMarks} Marks</td>
-        <td>${t.durationMinutes} Mins</td>
-      `;
-      testsTbody.appendChild(tr);
-    });
+    if (testsTbody) {
+      testsTbody.innerHTML = '';
+      tests.forEach(t => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="badge" style="background:rgba(255,255,255,0.06);">${t.code}</span></td>
+          <td><strong style="color:#fff;">${t.title}</strong></td>
+          <td style="color:var(--text-muted);">${t.department}</td>
+          <td>${t.totalMarks} Marks</td>
+          <td>${t.durationMinutes} Mins</td>
+        `;
+        testsTbody.appendChild(tr);
+      });
+    }
 
     // Render Audit Trail
     const auditContainer = document.getElementById('auditLogList');
-    auditContainer.innerHTML = '';
-    auditLogs.slice(0, 15).forEach(l => {
-      const item = document.createElement('div');
-      item.className = 'audit-log-item';
-      item.innerHTML = `
-        <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
-          <strong style="color:#a5b4fc;">${l.action}</strong>
-          <span style="color:var(--text-dim);">${l.time}</span>
-        </div>
-        <div style="font-size:0.78rem; color:var(--text-muted);">${l.detail}</div>
-      `;
-      auditContainer.appendChild(item);
-    });
+    if (auditContainer) {
+      auditContainer.innerHTML = '';
+      auditLogs.slice(0, 15).forEach(l => {
+        const item = document.createElement('div');
+        item.className = 'audit-log-item';
+        item.innerHTML = `
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+            <strong style="color:#a5b4fc;">${l.action}</strong>
+            <span style="color:var(--text-dim);">${l.time}</span>
+          </div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">${l.detail}</div>
+        `;
+        auditContainer.appendChild(item);
+      });
+    }
   }
 
   renderDashboard();

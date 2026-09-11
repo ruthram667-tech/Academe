@@ -250,14 +250,8 @@
 
     // Logout routing adhering to architecture
     logout: function () {
-      const session = this.getSession();
-      const isSuperAdmin = session && session.role === 'superadmin';
       this.clearSession();
-      if (isSuperAdmin) {
-        window.location.href = 'superadmin-login.html';
-      } else {
-        window.location.href = 'login.html';
-      }
+      window.location.href = 'login.html';
     },
 
     // Session Route Guard
