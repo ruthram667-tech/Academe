@@ -46,6 +46,10 @@
           <i class="fa-solid fa-chalkboard-user"></i>
           <span class="nav-label">Manage Staff</span>
         </a>
+        <a class="nav-item" data-target="section-classes">
+          <i class="fa-solid fa-shapes"></i>
+          <span class="nav-label">Manage Classes</span>
+        </a>
         <a class="nav-item" data-target="section-students">
           <i class="fa-solid fa-user-graduate"></i>
           <span class="nav-label">Manage Students</span>
@@ -158,16 +162,49 @@
         </div>
       </section>
 
+      <!-- Manage Classes Section -->
+      <section id="section-classes" class="content-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <div>
+            <h2 class="section-title">Class &amp; Section Management</h2>
+            <p class="section-desc" style="margin-bottom:0;">Configure academic classes, batches, and sections for faculty and students.</p>
+          </div>
+          <div>
+            <button type="button" class="btn btn-primary" id="openAddClassModalBtn" style="background: linear-gradient(135deg, #6366f1, #4f46e5); border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-plus"></i> Create New Class
+            </button>
+          </div>
+        </div>
+        
+        <div class="admin-table-panel">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Class / Section Name</th>
+                <th>Department</th>
+                <th>Section</th>
+                <th>Academic Year</th>
+                <th>Enrolled Students</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="classesTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <!-- Manage Students Section -->
       <section id="section-students" class="content-section">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
           <div>
             <h2 class="section-title">Enrolled Students</h2>
-            <p class="section-desc" style="margin-bottom:0;">Manage student accounts and credentials.</p>
+            <p class="section-desc" style="margin-bottom:0;">Manage student accounts, credentials, and class section assignments.</p>
           </div>
           <div style="display: flex; gap: 0.75rem;">
             <input type="file" id="studentCsvInput" accept=".csv" style="display: none;" />
-            <button type="button" class="btn btn-secondary" id="btnBulkImportStudents" style="border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white; display: flex; align-items: center; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary" id="btnBulkImportStudents" title="CSV Format: name,regno,email,department,semester,class,password" style="border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white; display: flex; align-items: center; gap: 0.5rem;">
               <i class="fa-solid fa-file-csv"></i> Bulk Import
             </button>
             <button type="button" class="btn btn-primary" id="openAddStudentModalBtn" style="background: linear-gradient(135deg, #10b981, #059669); border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
@@ -182,6 +219,7 @@
               <tr>
                 <th>Student Name</th>
                 <th>Reg No. / ID</th>
+                <th>Assigned Class</th>
                 <th>Email</th>
                 <th>Department</th>
                 <th>Semester</th>
@@ -288,6 +326,12 @@
           </div>
         </div>
         <div class="form-group">
+          <label class="form-label" for="studentClassSelect">Assigned Class / Section *</label>
+          <select id="studentClassSelect" class="form-select" style="background:#161e2e; color:#fff; border:1px solid rgba(255,255,255,0.1); padding:0.6rem 0.8rem; border-radius:8px; width:100%;" required>
+            <!-- Populated dynamically from state.getClasses() -->
+          </select>
+        </div>
+        <div class="form-group">
           <label class="form-label" for="studentPasswordInput">Initial Password *</label>
           <input id="studentPasswordInput" type="password" class="form-input" placeholder="Set student login password" required />
         </div>
@@ -295,6 +339,42 @@
           <button type="button" class="btn btn-secondary" id="cancelAddStudentBtn" style="padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white;">Cancel</button>
           <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981, #059669); border:none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
             Register Student →
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Create New Class Modal -->
+  <div class="modal-overlay" id="addClassModal" role="dialog" aria-modal="true" aria-labelledby="addClassTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="addClassTitle">Create New Class / Section</h2>
+        <button type="button" class="modal-close-btn" id="closeAddClassBtn">✕</button>
+      </div>
+      <form id="addClassForm">
+        <div class="form-group">
+          <label class="form-label" for="classNameInput">Class Name *</label>
+          <input id="classNameInput" type="text" class="form-input" placeholder="e.g. Class C Section or Year 2 - Sec B" required />
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="classDeptInput">Department *</label>
+            <input id="classDeptInput" type="text" class="form-input" placeholder="e.g. Computer Science" value="Computer Science" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="classSectionInput">Section Letter *</label>
+            <input id="classSectionInput" type="text" class="form-input" placeholder="e.g. A, B, C, or D" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="classYearInput">Academic Year</label>
+          <input id="classYearInput" type="text" class="form-input" placeholder="e.g. 2024-2025" value="2024-2025" />
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" id="cancelAddClassBtn" style="padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white;">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #6366f1, #4f46e5); border:none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
+            Create Class →
           </button>
         </div>
       </form>

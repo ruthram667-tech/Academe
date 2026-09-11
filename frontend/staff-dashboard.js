@@ -45,33 +45,141 @@
   function openModal(id) { document.getElementById(id)?.classList.add('active'); }
   function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
 
-  // 5. Render Courses
+  // 4b. Initialize Wireframe Classes if Empty
+  function ensureInitialAssignments() {
+    let assignments = state.getStaffAssignments(staffSession.id);
+    if (assignments.length === 0) {
+      const allClasses = state.getClasses() || [];
+      allClasses.forEach(cls => {
+        state.assignStaffClass(staffSession.id, cls.id);
+      });
+    }
+  }
+
+  // 5. Render Classes (Home View Wireframe Cards)
+  function renderClasses() {
+    const container = document.getElementById('staffClassesGrid');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const assignments = state.getStaffAssignments(staffSession.id) || [];
+    
+    assignments.forEach(asgn => {
+      const cls = state.getClassById(asgn.classId) || {};
+      const className = cls.name || asgn.className || 'Class Section';
+      const section = cls.section || asgn.section || 'A';
+      const department = cls.department || asgn.department || 'Computer Science';
+      const courses = asgn.courses || [];
+
+      let coursesListHtml = '';
+      if (courses.length > 0) {
+        coursesListHtml = courses.map(c => `
+          <div class="course-item-tag">
+            <span><strong style="color:#fbbf24;">${c.code}</strong> - ${c.title}</span>
+            <i class="fa-solid fa-book-open" style="color:var(--text-dim); font-size:0.75rem;"></i>
+          </div>
+        `).join('');
+      } else {
+        coursesListHtml = `<span style="color:var(--text-dim); font-size:0.8rem; font-style:italic;">No course assigned yet. Click "+ Add Course" below.</span>`;
+      }
+
+      const card = document.createElement('div');
+      card.className = 'class-card';
+      card.innerHTML = `
+        <div>
+          <div class="class-card-header">
+            <h3 class="class-card-title">${className}</h3>
+            <span class="class-card-sec-badge">Sec ${section}</span>
+          </div>
+          <div class="class-card-dept">
+            <i class="fa-solid fa-building-columns" style="font-size:0.8rem; margin-right:0.3rem;"></i> ${department}
+          </div>
+          <div class="class-courses-list">
+            <div class="class-courses-header">
+              <span>Courses Taught</span>
+              <span>${courses.length} Active</span>
+            </div>
+            ${coursesListHtml}
+          </div>
+        </div>
+        <div class="class-card-actions">
+          <button type="button" class="btn-card-add-course btn-open-add-course-modal" data-class-id="${asgn.classId}" data-class-name="${className}">
+            <i class="fa-solid fa-plus"></i> Add Course
+          </button>
+          <button type="button" class="btn-card-remove-class btn-remove-class-assignment" data-class-id="${asgn.classId}" data-class-name="${className}" title="Remove class from dashboard">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    // Append the "+ Add Class" dashed action card directly matching the user's wireframe
+    const addCard = document.createElement('div');
+    addCard.className = 'class-card-add-new';
+    addCard.id = 'cardAddNewClassTrigger';
+    addCard.innerHTML = `
+      <i class="fa-solid fa-circle-plus"></i>
+      <div style="font-weight:600; font-size:1.15rem; color:#fff;">+ Add Class</div>
+      <div style="font-size:0.82rem; color:var(--text-muted);">Enroll in another class or section</div>
+    `;
+    container.appendChild(addCard);
+
+    // Event listeners for Add Course on each card
+    container.querySelectorAll('.btn-open-add-course-modal').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const classId = btn.getAttribute('data-class-id');
+        const className = btn.getAttribute('data-class-name');
+        openAddCourseToClassModal(classId, className);
+      });
+    });
+
+    // Event listeners for Remove Class
+    container.querySelectorAll('.btn-remove-class-assignment').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const classId = btn.getAttribute('data-class-id');
+        const className = btn.getAttribute('data-class-name');
+        if (confirm(`Are you sure you want to remove ${className} from your dashboard?`)) {
+          state.removeStaffClass(staffSession.id, classId);
+          state.showToast(`Removed ${className} from your classes.`, 'info');
+          renderClasses();
+        }
+      });
+    });
+
+    // Add Class trigger on the card
+    document.getElementById('cardAddNewClassTrigger')?.addEventListener('click', () => {
+      openAddClassModal();
+    });
+  }
+
+  // 6. Render Courses
   function renderCourses() {
     const tableBody = document.getElementById('staffCourseTableBody');
     if (!tableBody) return;
     const courses = state.getCourses() || [];
     tableBody.innerHTML = '';
     
-    // populate dropdown for modal
+    // populate dropdown for upload material modal
     const courseSelect = document.getElementById('materialCourseSelect');
     if (courseSelect) {
       courseSelect.innerHTML = '<option value="">Select a Course</option>';
       courses.forEach(c => {
-        courseSelect.innerHTML += `<option value="${c.id}">${c.code} - ${c.name}</option>`;
+        courseSelect.innerHTML += `<option value="${c.id}">${c.code} - ${c.name || c.title}</option>`;
       });
     }
 
     if (courses.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="4" style="padding:1rem; text-align:center; color:var(--text-muted);">No courses assigned.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="4" style="padding:1.5rem; text-align:center; color:var(--text-muted);">No courses registered yet. Add a course to any class above to get started.</td></tr>`;
       return;
     }
 
     courses.forEach(c => {
       tableBody.innerHTML += `
         <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-          <td style="padding: 1rem;"><strong>${c.code}</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">${c.name}</span></td>
-          <td style="padding: 1rem;">${c.department}</td>
-          <td style="padding: 1rem;">${c.credits}</td>
+          <td style="padding: 1rem;"><strong>${c.code}</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">${c.name || c.title}</span></td>
+          <td style="padding: 1rem;">${c.department || 'Computer Science'}</td>
+          <td style="padding: 1rem;">${c.credits || 3}</td>
           <td style="padding: 1rem;"><span class="badge-tag active">${(c.notes||[]).length} Materials</span></td>
         </tr>
       `;

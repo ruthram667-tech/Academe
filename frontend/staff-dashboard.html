@@ -77,32 +77,50 @@
     <!-- 3. Main Content Area -->
     <main class="main-content">
       
-      <!-- Course Section -->
+      <!-- Course & Classes Section (Staff Home) -->
       <section id="section-course" class="content-section active">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
           <div>
-            <h2 class="section-title">Course Management</h2>
-            <p class="section-desc">Manage your assigned courses and upload study materials.</p>
+            <h2 class="section-title" style="margin-bottom: 0.25rem;">My Classes &amp; Sections</h2>
+            <p class="section-desc" style="margin-bottom: 0;">Select your active class batches and manage assigned curriculum courses.</p>
           </div>
-          <button type="button" class="btn btn-primary" id="btnOpenAddMaterialModal">
-            <i class="fa-solid fa-cloud-arrow-up"></i> Upload Material
-          </button>
+          <div style="display: flex; gap: 0.75rem;">
+            <button type="button" class="btn btn-primary" id="btnOpenAddClassModal" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: none; padding: 0.55rem 1.1rem; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
+              <i class="fa-solid fa-plus"></i> Add Class
+            </button>
+            <button type="button" class="btn btn-secondary" id="btnOpenAddMaterialModal" style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); padding: 0.55rem 1.1rem; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Upload Material
+            </button>
+          </div>
+        </div>
+
+        <!-- Wireframe Cards Grid: "Class C Section", "Class A Sec", "Class D Sec", "+ Add Class" -->
+        <div class="classes-grid" id="staffClassesGrid">
+          <!-- Dynamically populated via JS -->
         </div>
         
-        <div class="glass-panel" style="padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.03);">
-          <table class="data-table" style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <th style="padding: 1rem; color: var(--text-muted);">Course Code & Title</th>
-                <th style="padding: 1rem; color: var(--text-muted);">Department</th>
-                <th style="padding: 1rem; color: var(--text-muted);">Credits</th>
-                <th style="padding: 1rem; color: var(--text-muted);">Uploaded Materials</th>
-              </tr>
-            </thead>
-            <tbody id="staffCourseTableBody">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
+        <!-- All Taught Courses & Materials Panel -->
+        <div style="margin-top: 2rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; color: #fff; margin: 0;">
+              All Assigned Courses &amp; Notes
+            </h3>
+          </div>
+          <div class="glass-panel" style="padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.03);">
+            <table class="data-table" style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                  <th style="padding: 1rem; color: var(--text-muted);">Course Code & Title</th>
+                  <th style="padding: 1rem; color: var(--text-muted);">Department</th>
+                  <th style="padding: 1rem; color: var(--text-muted);">Credits</th>
+                  <th style="padding: 1rem; color: var(--text-muted);">Uploaded Materials</th>
+                </tr>
+              </thead>
+              <tbody id="staffCourseTableBody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -288,6 +306,86 @@
           </div>
         </form>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal: Staff Add Class -->
+  <div class="modal-overlay" id="staffAddClassModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">Add Class to My Dashboard</h2>
+        <button type="button" class="modal-close-btn" onclick="document.getElementById('staffAddClassModal').classList.remove('active')">✕</button>
+      </div>
+      <form id="staffAddClassForm">
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0; margin-bottom: 1.25rem;">
+          Select a class created by the administration to add to your teaching dashboard.
+        </p>
+        <div class="form-group">
+          <label class="form-label" for="staffAvailableClassSelect">Available Classes &amp; Sections *</label>
+          <select id="staffAvailableClassSelect" class="form-input" required>
+            <!-- Populated dynamically from state.getClasses() -->
+          </select>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="document.getElementById('staffAddClassModal').classList.remove('active')" style="padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white;">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); border:none; padding: 0.5rem 1.25rem; border-radius: 6px; cursor: pointer; color: white; font-weight: 600;">
+            Add Class to Dashboard →
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Staff Add Course to Class -->
+  <div class="modal-overlay" id="staffAddCourseModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">Assign Course to Class</h2>
+        <button type="button" class="modal-close-btn" onclick="document.getElementById('staffAddCourseModal').classList.remove('active')">✕</button>
+      </div>
+      <form id="staffAddCourseForm">
+        <input type="hidden" id="modalTargetClassId">
+        <div style="margin-bottom: 1.25rem; padding: 0.75rem 1rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 8px;">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Assigning subject course to: </span>
+          <strong id="modalTargetClassName" style="color: #fbbf24; font-size: 1rem;">Class Section</strong>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="staffExistingCourseSelect">Select Pre-Existing Course (Optional)</label>
+          <select id="staffExistingCourseSelect" class="form-input">
+            <option value="">-- Or define new course below --</option>
+          </select>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin: 1rem 0;">
+          <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
+          <span style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">or new subject details</span>
+          <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="staffNewCourseTitle">Course Subject Name *</label>
+          <input type="text" id="staffNewCourseTitle" class="form-input" placeholder="e.g. Data Structures & Algorithms, Operating Systems" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="staffNewCourseCode">Course Code</label>
+            <input type="text" id="staffNewCourseCode" class="form-input" placeholder="e.g. CS301, CS204" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="staffNewCourseCredits">Credits</label>
+            <input type="number" id="staffNewCourseCredits" class="form-input" value="3" min="1" max="6" />
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="document.getElementById('staffAddCourseModal').classList.remove('active')" style="padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white;">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); border:none; padding: 0.5rem 1.25rem; border-radius: 6px; cursor: pointer; color: white; font-weight: 600;">
+            Assign Course →
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 

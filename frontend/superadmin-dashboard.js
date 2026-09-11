@@ -95,8 +95,30 @@
   const closeAddStudentBtn = document.getElementById('closeAddStudentBtn');
   const cancelAddStudentBtn = document.getElementById('cancelAddStudentBtn');
   const addStudentForm = document.getElementById('addStudentForm');
+  const studentClassSelect = document.getElementById('studentClassSelect');
 
-  if (openAddStudentModalBtn) openAddStudentModalBtn.addEventListener('click', () => addStudentModal.classList.add('active'));
+  function populateStudentClassOptions() {
+    if (!studentClassSelect) return;
+    const classes = state.getClasses() || [];
+    studentClassSelect.innerHTML = '';
+    if (classes.length === 0) {
+      studentClassSelect.innerHTML = '<option value="">No classes defined yet</option>';
+      return;
+    }
+    classes.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = `${c.name} (${c.department || 'CS'})`;
+      studentClassSelect.appendChild(opt);
+    });
+  }
+
+  if (openAddStudentModalBtn) {
+    openAddStudentModalBtn.addEventListener('click', () => {
+      populateStudentClassOptions();
+      addStudentModal.classList.add('active');
+    });
+  }
   if (closeAddStudentBtn) closeAddStudentBtn.addEventListener('click', () => addStudentModal.classList.remove('active'));
   if (cancelAddStudentBtn) cancelAddStudentBtn.addEventListener('click', () => addStudentModal.classList.remove('active'));
 
@@ -110,12 +132,18 @@
       const semester = document.getElementById('studentSemSelect').value;
       const pass = document.getElementById('studentPasswordInput').value;
 
+      const selectedClassId = studentClassSelect ? studentClassSelect.value : '';
+      const selectedClassObj = state.getClassById(selectedClassId);
+      const className = selectedClassObj ? selectedClassObj.name : 'General';
+
       const newStudent = state.addUser({
         name,
         regNo,
         email,
         department: dept,
         semester,
+        classId: selectedClassId,
+        className: className,
         password: pass,
         role: 'student',
         mustChangePassword: false
@@ -123,7 +151,41 @@
 
       addStudentModal.classList.remove('active');
       addStudentForm.reset();
-      state.showToast(`Student account for ${newStudent.name} (${regNo}) registered!`, 'success');
+      state.showToast(`Student ${newStudent.name} (${regNo}) registered into ${className}!`, 'success');
+      renderDashboard();
+    });
+  }
+
+  // 4b. Manage Class Modal & Form
+  const addClassModal = document.getElementById('addClassModal');
+  const openAddClassModalBtn = document.getElementById('openAddClassModalBtn');
+  const closeAddClassBtn = document.getElementById('closeAddClassBtn');
+  const cancelAddClassBtn = document.getElementById('cancelAddClassBtn');
+  const addClassForm = document.getElementById('addClassForm');
+
+  if (openAddClassModalBtn) openAddClassModalBtn.addEventListener('click', () => addClassModal.classList.add('active'));
+  if (closeAddClassBtn) closeAddClassBtn.addEventListener('click', () => addClassModal.classList.remove('active'));
+  if (cancelAddClassBtn) cancelAddClassBtn.addEventListener('click', () => addClassModal.classList.remove('active'));
+
+  if (addClassForm) {
+    addClassForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('classNameInput').value.trim();
+      const department = document.getElementById('classDeptInput').value.trim();
+      const section = document.getElementById('classSectionInput').value.trim();
+      const academicYear = document.getElementById('classYearInput').value.trim() || '2024-2025';
+
+      const newClass = state.addClass({
+        name,
+        department,
+        section,
+        academicYear
+      });
+
+      addClassModal.classList.remove('active');
+      addClassForm.reset();
+      state.showToast(`Class "${newClass.name}" created successfully!`, 'success');
+      populateStudentClassOptions();
       renderDashboard();
     });
   }
@@ -189,14 +251,42 @@
       reader.onload = (event) => {
         const data = parseCSV(event.target.result);
         let count = 0;
+        const currentClasses = state.getClasses() || [];
         data.forEach(row => {
           if (row.name && (row.regno || row.email)) {
+            // Check for class column in CSV
+            const rawClass = (row.class || row.section || row['class/section'] || row['assigned class'] || '').trim();
+            let classId = '';
+            let className = 'General';
+            if (rawClass) {
+              const matchedClass = currentClasses.find(c => 
+                c.name.toLowerCase() === rawClass.toLowerCase() || 
+                (c.section && c.section.toLowerCase() === rawClass.toLowerCase())
+              );
+              if (matchedClass) {
+                classId = matchedClass.id;
+                className = matchedClass.name;
+              } else {
+                // Auto-create class if it doesn't exist
+                const newCls = state.addClass({
+                  name: rawClass.startsWith('Class') ? rawClass : `Class ${rawClass}`,
+                  department: row.department || 'Computer Science',
+                  section: rawClass.replace(/[^a-zA-Z]/g, '').slice(-1).toUpperCase() || 'A'
+                });
+                classId = newCls.id;
+                className = newCls.name;
+                currentClasses.push(newCls);
+              }
+            }
+
             state.addUser({
               name: row.name,
               regNo: row.regno || row.email,
               email: row.email || row.regno,
               department: row.department || 'General',
               semester: row.semester || '1',
+              classId: classId,
+              className: className,
               password: row.password || 'password123',
               role: 'student',
               mustChangePassword: false
@@ -205,6 +295,7 @@
           }
         });
         state.showToast(`Imported ${count} student accounts from CSV.`, 'success');
+        populateStudentClassOptions();
         renderDashboard();
         studentCsvInput.value = '';
       };
@@ -227,6 +318,7 @@
     const tests = state.getTests();
     const submissions = state.getSubmissions();
     const auditLogs = state.getAuditLogs();
+    const classes = state.getClasses() || [];
 
     const students = users.filter(u => u.role === 'student');
     const staffMembers = users.filter(u => u.role === 'staff');
@@ -249,6 +341,35 @@
     
     const studentBadge = document.getElementById('studentRosterCountBadge');
     if (studentBadge) studentBadge.textContent = students.length;
+
+    // Render Classes Table
+    const classesTbody = document.getElementById('classesTableBody');
+    if (classesTbody) {
+      classesTbody.innerHTML = '';
+      if (classes.length === 0) {
+        classesTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-dim);">No classes defined yet. Click <strong>"+ Create New Class"</strong> above to add one.</td></tr>`;
+      } else {
+        classes.forEach(c => {
+          const studentCount = students.filter(st => st.classId === c.id || st.className === c.name).length;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <strong style="color:#fff; font-size:0.95rem;">${c.name}</strong>
+            </td>
+            <td><span style="color:var(--text-muted); font-size:0.85rem;">${c.department || 'Computer Science'}</span></td>
+            <td><span class="badge" style="background:rgba(99,102,241,0.2); color:#a5b4fc; border:1px solid rgba(99,102,241,0.4);">${c.section || 'A'}</span></td>
+            <td><span style="font-family:var(--font-mono); font-size:0.82rem; color:var(--text-dim);">${c.academicYear || '2024-2025'}</span></td>
+            <td><span class="badge badge-staff">${studentCount} Students</span></td>
+            <td style="text-align:right;">
+              <button type="button" class="btn-remove-user btn-delete-class" data-class-id="${c.id}" data-name="${c.name}">
+                Delete
+              </button>
+            </td>
+          `;
+          classesTbody.appendChild(tr);
+        });
+      }
+    }
 
     // Render Staff Table
     const staffTbody = document.getElementById('staffTableBody');
@@ -286,7 +407,7 @@
     if (studentTbody) {
       studentTbody.innerHTML = '';
       if (students.length === 0) {
-      studentTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-dim);">No student accounts enrolled yet. Click <strong>"+ Register Student"</strong> above to enroll students.</td></tr>`;
+      studentTbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">No student accounts enrolled yet. Click <strong>"+ Register Student"</strong> above to enroll students.</td></tr>`;
     } else {
       students.forEach(st => {
         const tr = document.createElement('tr');
@@ -298,6 +419,7 @@
             </div>
           </td>
           <td><span style="font-family:var(--font-mono); color:#34d399; font-weight:600; font-size:0.82rem;">${st.regNo || 'N/A'}</span></td>
+          <td><span class="badge" style="background:rgba(99,102,241,0.15); color:#818cf8; border:1px solid rgba(99,102,241,0.3); font-weight:600;">${st.className || 'General'}</span></td>
           <td><span style="font-family:var(--font-mono); color:var(--text-muted); font-size:0.82rem;">${st.email}</span></td>
           <td>${st.department || 'Computer Science'}</td>
           <td>${st.semester || 'Semester 1'}</td>
@@ -312,6 +434,25 @@
       });
     }
     }
+
+    // Attach Class Deletion Listeners
+    document.querySelectorAll('.btn-delete-class').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const classId = btn.getAttribute('data-class-id');
+        const name = btn.getAttribute('data-name');
+        if (confirm(`Are you sure you want to remove ${name}?`)) {
+          const res = state.deleteClass(classId);
+          if (res.success) {
+            state.showToast(`Class "${name}" deleted.`, 'info');
+            populateStudentClassOptions();
+            renderDashboard();
+          } else {
+            state.showToast('Error deleting class', 'error');
+          }
+        }
+      });
+    });
 
     // Attach User Deletion Listeners
     document.querySelectorAll('.btn-delete-staff, .btn-delete-student').forEach(btn => {

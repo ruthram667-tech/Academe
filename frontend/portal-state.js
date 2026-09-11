@@ -609,6 +609,139 @@
       return { success: true };
     },
 
+    // Classes & Sections Management
+    getClasses: function () {
+      return load(KEYS.CLASSES, DEFAULT_CLASSES);
+    },
+
+    getClassById: function (id) {
+      return this.getClasses().find(c => c.id === id);
+    },
+
+    addClass: function (classData) {
+      const classes = this.getClasses();
+      const newClass = {
+        id: `cls_${Date.now()}`,
+        name: classData.name,
+        department: classData.department || 'Computer Science',
+        section: classData.section || '',
+        academicYear: classData.academicYear || '2024-2025',
+        createdAt: new Date().toISOString()
+      };
+      classes.push(newClass);
+      save(KEYS.CLASSES, classes);
+      this.logAudit('Class Created', `Created class "${newClass.name}"`);
+      return newClass;
+    },
+
+    deleteClass: function (classId) {
+      const classes = this.getClasses();
+      const cls = classes.find(c => c.id === classId);
+      const filtered = classes.filter(c => c.id !== classId);
+      save(KEYS.CLASSES, filtered);
+      
+      // Cleanup staff assignments for this class
+      const asgns = this.getStaffAssignments();
+      save(KEYS.STAFF_ASSIGNMENTS, asgns.filter(a => a.classId !== classId));
+      this.logAudit('Class Removed', `Deleted class "${cls ? cls.name : classId}"`);
+      return { success: true };
+    },
+
+    // Staff Class Assignments & Subject Course Linking
+    getStaffAssignments: function (staffId) {
+      const all = load(KEYS.STAFF_ASSIGNMENTS, DEFAULT_STAFF_ASSIGNMENTS);
+      if (staffId) {
+        return all.filter(a => a.staffId === staffId);
+      }
+      return all;
+    },
+
+    assignStaffClass: function (staffId, classId) {
+      const assignments = load(KEYS.STAFF_ASSIGNMENTS, DEFAULT_STAFF_ASSIGNMENTS);
+      const existing = assignments.find(a => a.staffId === staffId && a.classId === classId);
+      if (existing) {
+        return { success: false, message: 'This class is already in your dashboard.' };
+      }
+
+      const cls = this.getClassById(classId);
+      if (!cls) return { success: false, message: 'Class not found.' };
+
+      const newAssignment = {
+        id: `asgn_${Date.now()}`,
+        staffId: staffId,
+        classId: classId,
+        className: cls.name,
+        section: cls.section || '',
+        department: cls.department || '',
+        courses: []
+      };
+      assignments.push(newAssignment);
+      save(KEYS.STAFF_ASSIGNMENTS, assignments);
+      this.logAudit('Class Assigned', `Staff joined ${cls.name}`);
+      return { success: true, assignment: newAssignment };
+    },
+
+    removeStaffClass: function (staffId, classId) {
+      const assignments = load(KEYS.STAFF_ASSIGNMENTS, DEFAULT_STAFF_ASSIGNMENTS);
+      const filtered = assignments.filter(a => !(a.staffId === staffId && a.classId === classId));
+      save(KEYS.STAFF_ASSIGNMENTS, filtered);
+      this.logAudit('Class Unassigned', `Staff left class ${classId}`);
+      return { success: true };
+    },
+
+    addCourseToClass: function (staffId, classId, courseData) {
+      const assignments = load(KEYS.STAFF_ASSIGNMENTS, DEFAULT_STAFF_ASSIGNMENTS);
+      let asgn = assignments.find(a => a.staffId === staffId && a.classId === classId);
+      if (!asgn) {
+        const cls = this.getClassById(classId);
+        asgn = {
+          id: `asgn_${Date.now()}`,
+          staffId: staffId,
+          classId: classId,
+          className: cls ? cls.name : 'Class',
+          section: cls ? cls.section : '',
+          department: cls ? cls.department : '',
+          courses: []
+        };
+        assignments.push(asgn);
+      }
+
+      if (!asgn.courses) asgn.courses = [];
+
+      // Register or update global course list
+      const courses = this.getCourses();
+      const code = (courseData.code || `CS${Math.floor(100 + Math.random() * 800)}`).toUpperCase();
+      let course = courses.find(c => c.code.toUpperCase() === code || c.title.toLowerCase() === (courseData.title || '').toLowerCase());
+      if (!course) {
+        course = {
+          id: `course-${Date.now().toString().slice(-4)}`,
+          code: code,
+          name: courseData.title || courseData.name || 'Subject Course',
+          title: courseData.title || courseData.name || 'Subject Course',
+          department: asgn.department || 'Computer Science',
+          credits: Number(courseData.credits) || 3,
+          instructor: this.getSession() ? this.getSession().name : 'Faculty',
+          instructorId: staffId,
+          notes: []
+        };
+        courses.push(course);
+        save(KEYS.COURSES, courses);
+      }
+
+      // Avoid duplicate courses within the same class card
+      if (!asgn.courses.some(c => c.code.toUpperCase() === course.code.toUpperCase())) {
+        asgn.courses.push({
+          id: course.id,
+          code: course.code,
+          title: course.title || course.name
+        });
+      }
+
+      save(KEYS.STAFF_ASSIGNMENTS, assignments);
+      this.logAudit('Course Added to Class', `Assigned ${course.code} to ${asgn.className}`);
+      return { success: true, course: course };
+    },
+
     // Toast UI notification utility
     showToast: function (message, type = 'info') {
       let container = document.getElementById('portalToastContainer');
