@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academe — Super Admin Control Console</title>
+  <meta name="description" content="Super Admin platform management, staff directory, student directory, and institutional health" />
+  <link rel="stylesheet" href="portal-common.css" />
+  <link rel="stylesheet" href="superadmin-dashboard.css" />
+</head>
+<body>
+  <div class="bg-mesh" aria-hidden="true">
+    <div class="mesh-blob mesh-blob-1" style="background: radial-gradient(circle, #ec4899 0%, transparent 70%);"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="portal-navbar">
+    <a href="superadmin-dashboard.html" class="brand-wrapper">
+      <div class="brand-icon" style="background: linear-gradient(135deg, #ec4899, #be185d)">👑</div>
+      <div class="brand-text">
+        <span class="brand-name">Academe</span>
+        <span class="brand-badge">Super Admin Console</span>
+      </div>
+    </a>
+
+    <div class="nav-user-controls">
+      <div class="user-badge">
+        <div class="user-avatar admin" id="adminAvatar">SA</div>
+        <div class="user-info">
+          <span class="user-name" id="adminName">Master Superadmin</span>
+          <span class="user-role-label">Super Administrator</span>
+        </div>
+      </div>
+      <button type="button" class="btn-logout" id="logoutBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Admin Control Banner -->
+    <section class="admin-banner">
+      <div>
+        <h1 class="admin-title">Platform Central Governance</h1>
+        <p style="color: var(--text-muted); margin-bottom: 0.75rem;">
+          Provision faculty and student accounts, oversee institutional examinations, and audit platform activity.
+        </p>
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+          <span class="badge badge-admin">Master Authorization Level</span>
+          <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">
+            ● System Health: Operational (100% Uptime)
+          </span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 0.65rem; flex-wrap: wrap; margin-top: 0.5rem;">
+        <button type="button" class="btn btn-primary" id="openAddStaffModalBtn" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: none;">
+          <span>👨‍🏫 + Register Faculty Staff</span>
+        </button>
+        <button type="button" class="btn btn-primary" id="openAddStudentModalBtn" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">
+          <span>🎓 + Register Student</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Platform High-Level KPIs -->
+    <section class="stats-grid" aria-label="Platform Statistics">
+      <div class="stat-card">
+        <div class="stat-icon emerald">🎓</div>
+        <div>
+          <div class="stat-val" id="statStudentCount">0</div>
+          <div class="stat-desc">Enrolled Students</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon amber">👨‍🏫</div>
+        <div>
+          <div class="stat-val" id="statStaffCount">0</div>
+          <div class="stat-desc">Faculty &amp; Instructors</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon indigo">📝</div>
+        <div>
+          <div class="stat-val" id="statAssessmentCount">3</div>
+          <div class="stat-desc">Active Assessments</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon rose">⚡</div>
+        <div>
+          <div class="stat-val" id="statSubmissionsCount">3</div>
+          <div class="stat-desc">Submissions Processed</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Layout: User Directories & Audit Trail -->
+    <div class="admin-grid-layout">
+      <!-- Left: Tabbed User Directories -->
+      <div>
+        <div class="admin-table-panel">
+          <!-- Directory Navigation Tabs -->
+          <div class="admin-tabs-bar">
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="button" class="admin-tab-btn active" id="tabStaffRosterBtn">
+                👨‍🏫 Faculty &amp; Staff (<span id="staffRosterCountBadge">0</span>)
+              </button>
+              <button type="button" class="admin-tab-btn" id="tabStudentRosterBtn">
+                🎓 Enrolled Students (<span id="studentRosterCountBadge">0</span>)
+              </button>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" id="directoryInfoText">
+              Manage educator credentials &amp; departments
+            </div>
+          </div>
+
+          <!-- View 1: Faculty Directory -->
+          <div id="viewStaffDirectory">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Faculty Member</th>
+                  <th>Institutional Email / ID</th>
+                  <th>Department</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="staffTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- View 2: Student Directory -->
+          <div id="viewStudentDirectory" style="display: none;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Reg No. / ID</th>
+                  <th>Email</th>
+                  <th>Department</th>
+                  <th>Semester</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- System Assessments Overview -->
+        <div class="admin-table-panel" style="margin-top: 2rem;">
+          <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-subtle);">
+            <h2 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;">Active Institutional Tests</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Global view of assessments across departments.</p>
+          </div>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Assessment Name</th>
+                <th>Department</th>
+                <th>Total Marks</th>
+                <th>Duration</th>
+              </tr>
+            </thead>
+            <tbody id="adminTestsBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right: Real-time System Audit Log -->
+      <div>
+        <div class="glass-panel" style="padding: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 700;">System Audit Log</h3>
+            <span class="badge" style="background: rgba(99, 102, 241, 0.15); color: #a5b4fc;">Live Events</span>
+          </div>
+
+          <div id="auditLogList" style="max-height: 520px; overflow-y: auto;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal 1: Register Faculty Staff Modal -->
+  <div class="modal-overlay" id="addStaffModal" role="dialog" aria-modal="true" aria-labelledby="addStaffTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="addStaffTitle">Register New Faculty Member</h2>
+        <button type="button" class="modal-close-btn" id="closeAddStaffBtn">✕</button>
+      </div>
+
+      <form id="addStaffForm">
+        <div class="form-group">
+          <label class="form-label" for="staffNameInput">Full Name *</label>
+          <input id="staffNameInput" type="text" class="form-input" placeholder="e.g. Prof. Alan Turing" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="staffEmailInput">Institutional Email / Staff ID *</label>
+          <input id="staffEmailInput" type="text" class="form-input" placeholder="e.g. alan.turing@academe.edu" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="staffDeptInput">Department *</label>
+          <input id="staffDeptInput" type="text" class="form-input" placeholder="e.g. Computer Science &amp; AI" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="staffPasswordInput">Initial Password *</label>
+          <input id="staffPasswordInput" type="password" class="form-input" placeholder="Set faculty login password" required />
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" id="cancelAddStaffBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); border:none;">
+            Register Faculty Staff →
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Register Student Modal -->
+  <div class="modal-overlay" id="addStudentModal" role="dialog" aria-modal="true" aria-labelledby="addStudentTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="addStudentTitle">Register New Student</h2>
+        <button type="button" class="modal-close-btn" id="closeAddStudentBtn">✕</button>
+      </div>
+
+      <form id="addStudentForm">
+        <div class="form-group">
+          <label class="form-label" for="studentNameInput">Full Name *</label>
+          <input id="studentNameInput" type="text" class="form-input" placeholder="e.g. Sarah Jenkins" required />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="studentRegInput">Registration No. / Student ID *</label>
+            <input id="studentRegInput" type="text" class="form-input" placeholder="e.g. 2026CS101" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="studentEmailInput">Student Email *</label>
+            <input id="studentEmailInput" type="email" class="form-input" placeholder="e.g. sarah.j@student.academe.edu" required />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="studentDeptInput">Department / Major *</label>
+            <input id="studentDeptInput" type="text" class="form-input" placeholder="e.g. Computer Science" value="Computer Science" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="studentSemSelect">Semester *</label>
+            <select id="studentSemSelect" class="form-select" style="background:#161e2e; color:#fff; border:1px solid rgba(255,255,255,0.1); padding:0.6rem 0.8rem; border-radius:8px; width:100%;">
+              <option value="Semester 1">Semester 1</option>
+              <option value="Semester 2">Semester 2</option>
+              <option value="Semester 3">Semester 3</option>
+              <option value="Semester 4">Semester 4</option>
+              <option value="Semester 5">Semester 5</option>
+              <option value="Semester 6" selected>Semester 6</option>
+              <option value="Semester 7">Semester 7</option>
+              <option value="Semester 8">Semester 8</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="studentPasswordInput">Initial Password *</label>
+          <input id="studentPasswordInput" type="password" class="form-input" placeholder="Set student login password" required />
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" id="cancelAddStudentBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981, #059669); border:none;">
+            Register Student →
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="portal-state.js"></script>
+  <script src="superadmin-dashboard.js"></script>
+</body>
+</html>

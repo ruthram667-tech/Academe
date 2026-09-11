@@ -65,77 +65,133 @@
   // ═════════════════════════════════════════════════════════════════
   // 3. Particles.js Interactive Canvas Initialization
   // ═════════════════════════════════════════════════════════════════
-  function initParticles() {
-    if (window.particlesJS && document.getElementById('particles-js')) {
-      try {
-        window.particlesJS('particles-js', {
-          particles: {
-            number: {
-              value: 42,
-              density: { enable: true, value_area: 800 }
-            },
-            color: { value: '#38bdf8' },
-            shape: {
-              type: 'circle',
-              stroke: { width: 0, color: '#000000' }
-            },
-            opacity: {
-              value: 0.45,
-              random: true,
-              anim: { enable: true, speed: 0.8, opacity_min: 0.15, sync: false }
-            },
-            size: {
-              value: 3.2,
-              random: true,
-              anim: { enable: false }
-            },
-            line_linked: {
-              enable: true,
-              distance: 140,
-              color: '#38bdf8',
-              opacity: 0.22,
-              width: 1.1
-            },
-            move: {
-              enable: true,
-              speed: 1.8,
-              direction: 'none',
-              random: true,
-              straight: false,
-              out_mode: 'out',
-              bounce: false,
-              attract: { enable: false }
-            }
-          },
-          interactivity: {
-            detect_on: 'canvas',
-            events: {
-              onhover: { enable: true, mode: 'grab' },
-              onclick: { enable: true, mode: 'push' },
-              resize: true
-            },
-            modes: {
-              grab: {
-                distance: 130,
-                line_linked: { opacity: 0.75 }
-              },
-              push: {
-                particles_nb: 3
-              }
-            }
-          },
-          retina_detect: true
-        });
-      } catch (err) {
-        console.warn('Particles.js background initialization error:', err);
+  // ═════════════════════════════════════════════════════════════════
+  // 3. High-Performance Interactive Neural Constellation & 3D Stage
+  // ═════════════════════════════════════════════════════════════════
+  function initNeuralCanvas() {
+    const canvas = document.getElementById('neuralCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const parent = canvas.parentElement;
+    let width = canvas.width = parent.clientWidth || 600;
+    let height = canvas.height = parent.clientHeight || 800;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = parent.clientWidth || 600;
+      height = canvas.height = parent.clientHeight || 800;
+    });
+
+    const mouse = { x: -1000, y: -1000, radius: 150 };
+    parent.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+
+      // 3D Parallax Tilt Reaction on Hologram Stage
+      const stage = document.getElementById('hologramStage');
+      if (stage) {
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const tiltX = ((e.clientY - rect.top - centerY) / centerY) * -10;
+        const tiltY = ((e.clientX - rect.left - centerX) / centerX) * 10;
+        stage.style.transform = `perspective(1200px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
       }
+    });
+
+    parent.addEventListener('mouseleave', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+      const stage = document.getElementById('hologramStage');
+      if (stage) {
+        stage.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+      }
+    });
+
+    const particleCount = 48;
+    const particles = [];
+    const colors = ['#38bdf8', '#818cf8', '#34d399', '#f472b6'];
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 1.1,
+        vy: (Math.random() - 0.5) * 1.1,
+        radius: Math.random() * 2.2 + 1.2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        baseAlpha: Math.random() * 0.45 + 0.35
+      });
     }
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = width;
+        else if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        else if (p.y > height) p.y = 0;
+
+        // Interaction with mouse
+        const dx = mouse.x - p.x;
+        const dy = mouse.y - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < mouse.radius && dist > 0) {
+          const force = (mouse.radius - dist) / mouse.radius;
+          p.x -= (dx / dist) * force * 3;
+          p.y -= (dy / dist) * force * 3;
+        }
+
+        // Draw glowing particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.baseAlpha;
+        ctx.fill();
+
+        // Connect nearby particles with dynamic light filaments
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const d = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (d < 125) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.globalAlpha = (1 - d / 125) * 0.28;
+            ctx.lineWidth = 0.85;
+            ctx.stroke();
+          }
+        }
+
+        // Connect particle to mouse with interactive luminous beam
+        if (dist < 135) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = '#67e8f9';
+          ctx.globalAlpha = (1 - dist / 135) * 0.55;
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+        }
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    render();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initParticles);
+    document.addEventListener('DOMContentLoaded', initNeuralCanvas);
   } else {
-    initParticles();
+    initNeuralCanvas();
   }
 
   // ═════════════════════════════════════════════════════════════════
@@ -332,55 +388,22 @@
   });
 
   // ═════════════════════════════════════════════════════════════════
-  // 8. Quick Auto-Fill Demo Pills
+  // 8. Superadmin Credentials Click-to-Fill Helper
   // ═════════════════════════════════════════════════════════════════
-  const demoStudentBtn = document.getElementById('demoStudentBtn');
-  const demoNewStudentBtn = document.getElementById('demoNewStudentBtn');
-  const demoStaffBtn = document.getElementById('demoStaffBtn');
-  const demoAdminBtn = document.getElementById('demoAdminBtn');
+  const valSuperUser = document.getElementById('valSuperUser');
+  const valSuperPass = document.getElementById('valSuperPass');
 
-  if (demoStudentBtn) {
-    demoStudentBtn.addEventListener('click', () => {
-      switchTab('user');
-      const idEl = document.getElementById('userIdInput');
-      const passEl = document.getElementById('userPasswordInput');
-      if (idEl) idEl.value = '2024CS101';
-      if (passEl) passEl.value = 'student123';
-      notify('Loaded active student: Sarah Jenkins (2024CS101)', 'info');
-    });
-  }
-
-  if (demoNewStudentBtn) {
-    demoNewStudentBtn.addEventListener('click', () => {
-      switchTab('user');
-      const idEl = document.getElementById('userIdInput');
-      const passEl = document.getElementById('userPasswordInput');
-      if (idEl) idEl.value = '2024CS999';
-      if (passEl) passEl.value = 'temp123';
-      notify('Loaded first-time student: Alex Rivera (Triggers password change)', 'warning');
-    });
-  }
-
-  if (demoStaffBtn) {
-    demoStaffBtn.addEventListener('click', () => {
-      switchTab('user');
-      const idEl = document.getElementById('userIdInput');
-      const passEl = document.getElementById('userPasswordInput');
-      if (idEl) idEl.value = 'staffa@academe.edu';
-      if (passEl) passEl.value = 'staff123';
-      notify('Loaded Faculty: Dr. Alan Turing (staffa@academe.edu)', 'info');
-    });
-  }
-
-  if (demoAdminBtn) {
-    demoAdminBtn.addEventListener('click', () => {
-      switchTab('admin');
-      const idEl = document.getElementById('adminIdInput');
-      const passEl = document.getElementById('adminPasswordInput');
-      if (idEl) idEl.value = 'admin@academe.edu';
-      if (passEl) passEl.value = 'admin123';
-      handleAdminDeptLookup();
-      notify('Loaded Administrator: Elena Vance (admin@academe.edu)', 'info');
+  if (valSuperUser && valSuperPass) {
+    [valSuperUser, valSuperPass].forEach(el => {
+      el.style.cursor = 'pointer';
+      el.title = 'Click to fill superadmin credentials';
+      el.addEventListener('click', () => {
+        const adminIdInput = document.getElementById('adminIdInput');
+        const adminPasswordInput = document.getElementById('adminPasswordInput');
+        if (adminIdInput) adminIdInput.value = 'superadmin';
+        if (adminPasswordInput) adminPasswordInput.value = 'admin123';
+        notify('Superadmin credentials applied: superadmin / admin123', 'info');
+      });
     });
   }
 

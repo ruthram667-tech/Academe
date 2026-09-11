@@ -11,62 +11,138 @@
     USERS: `${STORAGE_PREFIX}users`,
     TESTS: `${STORAGE_PREFIX}tests`,
     SUBMISSIONS: `${STORAGE_PREFIX}submissions`,
+    COURSES: `${STORAGE_PREFIX}courses`,
+    PRESENTATIONS: `${STORAGE_PREFIX}presentations`,
     AUDIT: `${STORAGE_PREFIX}audit_logs`,
     SPLASH_DONE: `${STORAGE_PREFIX}splash_ready`
   };
 
   // Migrate any previous mock storage keys
-  ['users', 'tests', 'submissions', 'audit_logs', 'session'].forEach(k => {
+  ['users', 'tests', 'submissions', 'courses', 'presentations', 'audit_logs', 'session'].forEach(k => {
     if (!localStorage.getItem(`${STORAGE_PREFIX}${k}`) && localStorage.getItem(`${OLD_PREFIX}${k}`)) {
       localStorage.setItem(`${STORAGE_PREFIX}${k}`, localStorage.getItem(`${OLD_PREFIX}${k}`));
     }
   });
 
-  // Default Seed Data
+  // Default Seed Data — Only Master Superadmin (All demo student/staff IDs removed)
   const DEFAULT_USERS = [
     {
-      id: 'usr_student_1',
-      regNo: '2024CS101',
-      name: 'Sarah Jenkins',
-      email: 'sarah.j@student.academe.edu',
-      role: 'student',
-      department: 'Computer Science',
-      semester: 'Semester 6',
-      password: 'student123',
-      mustChangePassword: false,
-      avatar: 'SJ'
-    },
-    {
-      id: 'usr_student_2',
-      regNo: '2024CS999',
-      name: 'Alex Rivera (First-Time)',
-      email: 'alex.r@student.academe.edu',
-      role: 'student',
-      department: 'Computer Science',
-      semester: 'Semester 1',
-      password: 'temp123',
-      mustChangePassword: true, // Triggers password change modal
-      avatar: 'AR'
-    },
-    {
-      id: 'usr_staff_1',
-      email: 'staffa@academe.edu',
-      name: 'Dr. Alan Turing',
-      role: 'staff',
-      department: 'Computer Science & AI',
-      password: 'staff123',
-      mustChangePassword: false,
-      avatar: 'AT'
-    },
-    {
-      id: 'usr_admin_1',
+      id: 'usr_superadmin',
+      username: 'superadmin',
       email: 'admin@academe.edu',
-      name: 'Elena Vance',
+      name: 'Master Superadmin',
       role: 'superadmin',
       department: 'Central Administration',
       password: 'admin123',
       mustChangePassword: false,
-      avatar: 'EV'
+      avatar: 'SA'
+    }
+  ];
+
+  // Purge legacy demo student & staff accounts from localStorage
+  try {
+    const rawStored = localStorage.getItem(KEYS.USERS);
+    if (rawStored) {
+      const parsed = JSON.parse(rawStored);
+      if (Array.isArray(parsed)) {
+        const cleaned = parsed.filter(u => 
+          u.id !== 'usr_student_1' && 
+          u.id !== 'usr_student_2' && 
+          u.id !== 'usr_staff_1' &&
+          u.id !== 'usr_admin_1' &&
+          u.regNo !== '2024CS101' &&
+          u.regNo !== '2024CS999' &&
+          u.email !== 'staffa@academe.edu'
+        );
+        if (!cleaned.some(u => u.role === 'superadmin')) {
+          cleaned.unshift(DEFAULT_USERS[0]);
+        }
+        localStorage.setItem(KEYS.USERS, JSON.stringify(cleaned));
+      }
+    }
+  } catch (e) {
+    console.warn('Storage purge error:', e);
+  }
+
+  const DEFAULT_COURSES = [
+    {
+      id: 'crs-101',
+      code: 'CS301',
+      name: 'Distributed Systems & Consensus Protocols',
+      department: 'Computer Science',
+      instructor: 'Dr. Alan Turing',
+      instructorId: 'usr_staff_1',
+      semester: 'Semester 6',
+      credits: 4,
+      description: 'Comprehensive study of distributed consensus, Raft, Paxos, fault tolerance, and replication.',
+      notes: [
+        {
+          id: 'note-101',
+          title: 'Unit 1: Raft Consensus Algorithm & Leader Election',
+          topic: 'Consensus Protocols',
+          description: 'Lecture breakdown of Raft state machines, randomized election timeouts, split-vote resolution, and heartbeat heartlines.',
+          fileName: 'CS301_Unit1_Raft_Consensus.pdf',
+          fileSize: '3.4 MB',
+          uploadedAt: 'Sep 05, 2026',
+          uploadedBy: 'Dr. Alan Turing'
+        },
+        {
+          id: 'note-102',
+          title: 'Unit 2: Practical Byzantine Fault Tolerance (PBFT)',
+          topic: 'BFT & Distributed Ledgers',
+          description: 'In-depth notes on 3f + 1 node quorum verification, pre-prepare, prepare, and commit phases.',
+          fileName: 'CS301_Unit2_PBFT_Mechanisms.pdf',
+          fileSize: '2.8 MB',
+          uploadedAt: 'Sep 08, 2026',
+          uploadedBy: 'Dr. Alan Turing'
+        }
+      ]
+    },
+    {
+      id: 'crs-102',
+      code: 'CS304',
+      name: 'Cloud Native Microservices Architecture',
+      department: 'Computer Science',
+      instructor: 'Dr. Alan Turing',
+      instructorId: 'usr_staff_1',
+      semester: 'Semester 6',
+      credits: 3,
+      description: 'Event-driven systems, Saga pattern, Docker containerization, and Kubernetes service meshes.',
+      notes: [
+        {
+          id: 'note-103',
+          title: 'Unit 1: Event-Driven Sagas & Distributed Transactions',
+          topic: 'Microservices Reliability',
+          description: 'Choreography vs Orchestration based Saga patterns and compensation transaction design.',
+          fileName: 'CS304_Unit1_Saga_Design_Patterns.pdf',
+          fileSize: '4.1 MB',
+          uploadedAt: 'Sep 02, 2026',
+          uploadedBy: 'Dr. Alan Turing'
+        }
+      ]
+    },
+    {
+      id: 'crs-103',
+      code: 'CS202',
+      name: 'Data Structures & Dynamic Programming',
+      department: 'Computer Science',
+      instructor: 'Dr. Alan Turing',
+      instructorId: 'usr_staff_1',
+      semester: 'Semester 6',
+      credits: 4,
+      description: 'Optimization algorithms, Matrix Chain Multiplication, graph traversals, and amortized complexity.',
+      notes: [
+        {
+          id: 'note-104',
+          title: 'Unit 3: Matrix Chain Multiplication & Tabular DP',
+          topic: 'Dynamic Programming',
+          description: 'Recurrence formulations, subchain length iterations, and memoized tabular approaches.',
+          fileName: 'CS202_Unit3_Dynamic_Programming.pdf',
+          fileSize: '1.9 MB',
+          uploadedAt: 'Aug 28, 2026',
+          uploadedBy: 'Dr. Alan Turing'
+        }
+      ]
     }
   ];
 
@@ -79,7 +155,9 @@
       totalMarks: 100,
       durationMinutes: 60,
       dueDate: 'Tomorrow at 11:59 PM',
+      status: 'ongoing',
       isUpcoming: false,
+      instructions: 'Review the problem statements below. Draft your complete analytical solutions and upload your response as a single PDF document.',
       questions: [
         {
           id: 'q1',
@@ -101,7 +179,9 @@
       totalMarks: 50,
       durationMinutes: 45,
       dueDate: 'Oct 15, 2026',
+      status: 'upcoming',
       isUpcoming: true,
+      instructions: 'Upcoming examination on Microservice Sagas and Kubernetes pod topology. PDF submission portal will activate on exam date.',
       questions: [
         {
           id: 'q1',
@@ -118,7 +198,9 @@
       totalMarks: 100,
       durationMinutes: 90,
       dueDate: 'Completed Sep 01',
+      status: 'completed',
       isUpcoming: false,
+      instructions: 'Mid-term assessment on dynamic programming matrix multiplication.',
       questions: [
         {
           id: 'q1',
@@ -126,6 +208,46 @@
           maxMarks: 100
         }
       ]
+    }
+  ];
+
+  const DEFAULT_PRESENTATIONS = [
+    {
+      id: 'pres-101',
+      title: 'Distributed Consensus & Raft Protocol Seminar',
+      subject: 'Distributed Systems & Cloud Computing (CS301)',
+      courseCode: 'CS301',
+      instructorId: 'usr_staff_1',
+      instructor: 'Dr. Alan Turing',
+      scheduledDate: 'Sep 18, 2026',
+      timeSlot: '10:00 AM - 12:30 PM',
+      durationMinutes: 15,
+      guidelines: 'Prepare a 10-slide PowerPoint presentation (.pptx or .pdf) explaining Raft leader election, split vote mitigation, and log compaction.',
+      submissions: [
+        {
+          id: 'psub-001',
+          studentId: 'usr_student_1',
+          studentName: 'Sarah Jenkins',
+          regNo: '2024CS101',
+          pptFileName: 'SarahJenkins_CS301_Consensus_Presentation.pptx',
+          pptFileSize: '5.2 MB',
+          uploadedAt: 'Sep 09, 2026, 11:30 AM',
+          status: 'Submitted'
+        }
+      ]
+    },
+    {
+      id: 'pres-102',
+      title: 'Cloud Native Saga Orchestrator Case Study',
+      subject: 'Cloud Native Microservices Architecture (CS304)',
+      courseCode: 'CS304',
+      instructorId: 'usr_staff_1',
+      instructor: 'Dr. Alan Turing',
+      scheduledDate: 'Sep 24, 2026',
+      timeSlot: '02:00 PM - 04:30 PM',
+      durationMinutes: 20,
+      guidelines: 'Present an architectural case study comparing choreography vs orchestration in e-commerce microservices with failure recovery flows.',
+      submissions: []
     }
   ];
 
@@ -142,6 +264,8 @@
       score: null,
       maxScore: 100,
       feedback: '',
+      fileName: 'SarahJenkins_CS301_Consensus_Solution.pdf',
+      fileSize: '2.4 MB',
       answers: {
         q1: 'Raft operates with three states: Follower, Candidate, and Leader. Heartbeats maintain leadership. If timed out, an election is triggered using randomized timers to prevent split votes. Unlike Multi-Paxos which is symmetric and decentralized, Raft simplifies consensus by electing a strong leader.',
         q2: 'PBFT requires 3f + 1 nodes to tolerate f arbitrary/byzantine failures through pre-prepare, prepare, and commit phases. In permissioned ledgers, node identities are known, making message-based BFT practical without Proof of Work.'
@@ -159,6 +283,8 @@
       score: 88,
       maxScore: 100,
       feedback: 'Excellent breakdown of randomized election timers and log replication mechanics.',
+      fileName: 'DavidMiller_CS301_Distributed_Systems.pdf',
+      fileSize: '1.8 MB',
       answers: {
         q1: 'Raft breaks consensus into leader election, log replication, and safety. Raft guarantees that leader logs are authoritative.',
         q2: 'BFT consensus prevents malicious nodes from propagating false state transitions.'
@@ -176,6 +302,8 @@
       score: 94,
       maxScore: 100,
       feedback: 'Outstanding algorithmic complexity analysis (O(n^3) time and O(n^2) auxiliary table space).',
+      fileName: 'SarahJenkins_CS202_DP_Matrix.pdf',
+      fileSize: '3.1 MB',
       answers: {
         q1: 'Tabular DP approach computes optimal split point k for all subchain lengths L from 2 to n. Recurrence: m[i,j] = min(m[i,k] + m[k+1,j] + p[i-1]*p[k]*p[j]).'
       }
@@ -184,7 +312,7 @@
 
   const DEFAULT_AUDIT_LOGS = [
     { time: '10:15 AM', action: 'Evaluation Saved', detail: 'Dr. Alan Turing scored David Miller on CS301 (88/100)' },
-    { time: '09:42 AM', action: 'Assessment Submission', detail: 'Sarah Jenkins (2024CS101) submitted CS301' },
+    { time: '09:42 AM', action: 'Assessment Submission', detail: 'Sarah Jenkins (2024CS101) submitted CS301 PDF' },
     { time: '08:00 AM', action: 'Platform Health Check', detail: 'All services, Redis cache, and database online' }
   ];
 
@@ -208,7 +336,9 @@
 
   // Initialize DB if not present
   if (!localStorage.getItem(KEYS.USERS)) save(KEYS.USERS, DEFAULT_USERS);
+  if (!localStorage.getItem(KEYS.COURSES)) save(KEYS.COURSES, DEFAULT_COURSES);
   if (!localStorage.getItem(KEYS.TESTS)) save(KEYS.TESTS, DEFAULT_TESTS);
+  if (!localStorage.getItem(KEYS.PRESENTATIONS)) save(KEYS.PRESENTATIONS, DEFAULT_PRESENTATIONS);
   if (!localStorage.getItem(KEYS.SUBMISSIONS)) save(KEYS.SUBMISSIONS, DEFAULT_SUBMISSIONS);
   if (!localStorage.getItem(KEYS.AUDIT)) save(KEYS.AUDIT, DEFAULT_AUDIT_LOGS);
 
@@ -267,10 +397,20 @@
       }
 
       // 2. Try Staff / Admin Auth
-      const staffOrAdmin = users.find(u => 
-        (u.role === 'staff' || u.role === 'superadmin') && 
-        u.email.toLowerCase() === cleanId
-      );
+      const staffOrAdmin = users.find(u => {
+        if (u.role === 'superadmin') {
+          return (u.email && u.email.toLowerCase() === cleanId) || 
+                 (u.username && u.username.toLowerCase() === cleanId) || 
+                 cleanId === 'superadmin' || 
+                 cleanId === 'admin';
+        }
+        if (u.role === 'staff') {
+          return (u.email && u.email.toLowerCase() === cleanId) || 
+                 (u.username && u.username.toLowerCase() === cleanId) || 
+                 (u.id && u.id.toLowerCase() === cleanId);
+        }
+        return false;
+      });
 
       if (staffOrAdmin) {
         if (staffOrAdmin.password === cleanPass) {
@@ -283,18 +423,22 @@
             return { success: true, redirect: 'staff-dashboard.html', user: staffOrAdmin };
           }
         } else {
-          return { success: false, message: 'Incorrect credentials for staff account.' };
+          return { success: false, message: 'Incorrect credentials.' };
         }
       }
 
-      return { success: false, message: 'No registered student or staff account found with this ID.' };
+      return { success: false, message: 'No registered user account found with this ID.' };
     },
 
     // Role-specific Logins (for alternative direct login pages)
     studentLogin: function (regNo, password) {
       const users = load(KEYS.USERS, DEFAULT_USERS);
-      const student = users.find(u => u.role === 'student' && u.regNo.toLowerCase() === String(regNo).trim().toLowerCase());
-      if (!student) return { success: false, message: 'Student registration number not found.' };
+      const clean = String(regNo).trim().toLowerCase();
+      const student = users.find(u => u.role === 'student' && (
+        (u.regNo && u.regNo.toLowerCase() === clean) ||
+        (u.email && u.email.toLowerCase() === clean)
+      ));
+      if (!student) return { success: false, message: 'Student account not found.' };
       if (student.password !== password) return { success: false, message: 'Incorrect password.' };
       if (student.mustChangePassword) return { success: true, mustChangePassword: true, user: student };
       this.setSession(student);
@@ -303,18 +447,28 @@
 
     staffLogin: function (email, password) {
       const users = load(KEYS.USERS, DEFAULT_USERS);
-      const staff = users.find(u => u.role === 'staff' && u.email.toLowerCase() === String(email).trim().toLowerCase());
-      if (!staff) return { success: false, message: 'Staff email not found.' };
+      const clean = String(email).trim().toLowerCase();
+      const staff = users.find(u => u.role === 'staff' && (
+        (u.email && u.email.toLowerCase() === clean) ||
+        (u.username && u.username.toLowerCase() === clean)
+      ));
+      if (!staff) return { success: false, message: 'Staff account not found.' };
       if (staff.password !== password) return { success: false, message: 'Incorrect password.' };
       this.setSession(staff);
       return { success: true, redirect: 'staff-dashboard.html', user: staff };
     },
 
-    superadminLogin: function (email, password) {
+    superadminLogin: function (identifier, password) {
       const users = load(KEYS.USERS, DEFAULT_USERS);
-      const admin = users.find(u => u.role === 'superadmin' && u.email.toLowerCase() === String(email).trim().toLowerCase());
+      const clean = String(identifier).trim().toLowerCase();
+      const admin = users.find(u => u.role === 'superadmin' && (
+        (u.email && u.email.toLowerCase() === clean) ||
+        (u.username && u.username.toLowerCase() === clean) ||
+        clean === 'superadmin' ||
+        clean === 'admin'
+      ));
       if (!admin) return { success: false, message: 'Superadmin account not found.' };
-      if (admin.password !== password) return { success: false, message: 'Incorrect password.' };
+      if (admin.password !== password) return { success: false, message: 'Incorrect master password.' };
       this.setSession(admin);
       return { success: true, redirect: 'superadmin-dashboard.html', user: admin };
     },
@@ -378,7 +532,122 @@
       return session;
     },
 
-    // Data Accessors
+    // Courses & Notes
+    getCourses: function () {
+      return load(KEYS.COURSES, DEFAULT_COURSES);
+    },
+
+    getCourseById: function (id) {
+      return this.getCourses().find(c => c.id === id || c.code === id);
+    },
+
+    addCourseNote: function (courseId, noteData) {
+      const courses = this.getCourses();
+      const course = courses.find(c => c.id === courseId || c.code === courseId);
+      if (!course) return { success: false, message: 'Course not found' };
+
+      if (!course.notes) course.notes = [];
+      const session = this.getSession();
+      const staffName = session ? session.name : (course.instructor || 'Faculty');
+
+      const newNote = {
+        id: `note-${Date.now().toString().slice(-4)}`,
+        title: noteData.title,
+        topic: noteData.topic || 'General Lecture Notes',
+        description: noteData.description || '',
+        fileName: noteData.fileName || `${course.code}_Lecture_Notes.pdf`,
+        fileSize: noteData.fileSize || '2.5 MB',
+        fileUrl: noteData.fileUrl || '#',
+        uploadedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        uploadedBy: staffName
+      };
+
+      course.notes.unshift(newNote);
+      save(KEYS.COURSES, courses);
+      this.logAudit('Note Added', `Notes "${newNote.title}" added to ${course.code}`);
+      return { success: true, note: newNote, course: course };
+    },
+
+    deleteCourseNote: function (courseId, noteId) {
+      const courses = this.getCourses();
+      const course = courses.find(c => c.id === courseId || c.code === courseId);
+      if (!course || !course.notes) return { success: false, message: 'Course not found' };
+
+      course.notes = course.notes.filter(n => n.id !== noteId);
+      save(KEYS.COURSES, courses);
+      this.logAudit('Note Removed', `Removed note from ${course.code}`);
+      return { success: true };
+    },
+
+    // Presentations
+    getPresentations: function () {
+      return load(KEYS.PRESENTATIONS, DEFAULT_PRESENTATIONS);
+    },
+
+    getPresentationById: function (id) {
+      return this.getPresentations().find(p => p.id === id);
+    },
+
+    createPresentation: function (presData) {
+      const presentations = this.getPresentations();
+      const session = this.getSession();
+      const staffName = session ? session.name : 'Faculty';
+
+      const newPres = {
+        id: `pres-${Date.now().toString().slice(-4)}`,
+        title: presData.title,
+        subject: presData.subject,
+        courseCode: presData.courseCode || 'CS301',
+        instructor: staffName,
+        instructorId: session ? session.id : 'usr_staff_1',
+        scheduledDate: presData.scheduledDate,
+        timeSlot: presData.timeSlot || '10:00 AM - 01:00 PM',
+        durationMinutes: Number(presData.durationMinutes) || 15,
+        guidelines: presData.guidelines || 'Upload PowerPoint slide presentation (.pptx or .pdf) before the scheduled date.',
+        submissions: []
+      };
+
+      presentations.unshift(newPres);
+      save(KEYS.PRESENTATIONS, presentations);
+      this.logAudit('Presentation Scheduled', `Scheduled presentation "${newPres.title}"`);
+      return { success: true, presentation: newPres };
+    },
+
+    uploadPresentationPPT: function (presId, fileData) {
+      const session = this.getSession();
+      if (!session || session.role !== 'student') return { success: false, message: 'Student login required' };
+
+      const presentations = this.getPresentations();
+      const pres = presentations.find(p => p.id === presId);
+      if (!pres) return { success: false, message: 'Presentation not found' };
+
+      if (!pres.submissions) pres.submissions = [];
+      const existingIdx = pres.submissions.findIndex(s => s.studentId === session.id);
+
+      const submissionRecord = {
+        id: existingIdx >= 0 ? pres.submissions[existingIdx].id : `psub-${Date.now().toString().slice(-4)}`,
+        studentId: session.id,
+        studentName: session.name,
+        regNo: session.regNo || '2024CS101',
+        pptFileName: fileData.fileName || `${session.name.replace(/\s+/g, '_')}_Presentation.pptx`,
+        pptFileSize: fileData.fileSize || '3.5 MB',
+        uploadedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        status: 'Submitted',
+        fileUrl: fileData.fileUrl || '#'
+      };
+
+      if (existingIdx >= 0) {
+        pres.submissions[existingIdx] = submissionRecord;
+      } else {
+        pres.submissions.unshift(submissionRecord);
+      }
+
+      save(KEYS.PRESENTATIONS, presentations);
+      this.logAudit('Presentation PPT Uploaded', `${session.name} uploaded slides for ${pres.title}`);
+      return { success: true, submission: submissionRecord };
+    },
+
+    // Data Accessors - Tests
     getTests: function () {
       return load(KEYS.TESTS, DEFAULT_TESTS);
     },
@@ -389,6 +658,7 @@
 
     createTest: function (testData) {
       const tests = this.getTests();
+      const isUpcoming = testData.isUpcoming !== undefined ? testData.isUpcoming : (testData.status === 'upcoming');
       const newTest = {
         id: `test-${Date.now().toString().slice(-4)}`,
         title: testData.title,
@@ -397,7 +667,9 @@
         totalMarks: Number(testData.totalMarks) || 100,
         durationMinutes: Number(testData.durationMinutes) || 60,
         dueDate: testData.dueDate || 'In 3 days',
-        isUpcoming: false,
+        status: testData.status || (isUpcoming ? 'upcoming' : 'ongoing'),
+        isUpcoming: isUpcoming,
+        instructions: testData.instructions || 'Review the problem statements below. Draft your complete analytical solutions and upload your response as a single PDF document.',
         questions: testData.questions || [
           { id: 'q1', prompt: testData.prompt || 'Answer the assigned problem statement.', maxMarks: Number(testData.totalMarks) || 100 }
         ]
@@ -489,6 +761,10 @@
       return { success: true, submission: subRecord };
     },
 
+    uploadTestPDF: function (testId, docData) {
+      return this.submitStudentDocument(testId, docData);
+    },
+
     updateUserProfile: function (userId, data) {
       const users = load(KEYS.USERS, DEFAULT_USERS);
       const idx = users.findIndex(u => u.id === userId);
@@ -569,6 +845,18 @@
       save(KEYS.USERS, users);
       this.logAudit('User Added', `Added ${newUser.name} with role ${newUser.role}`);
       return newUser;
+    },
+
+    deleteUser: function (userId) {
+      const users = this.getUsers();
+      const user = users.find(u => u.id === userId);
+      if (!user) return { success: false, message: 'User not found' };
+      if (user.role === 'superadmin') return { success: false, message: 'Cannot delete master superadmin account' };
+
+      const updated = users.filter(u => u.id !== userId);
+      save(KEYS.USERS, updated);
+      this.logAudit('User Removed', `Removed ${user.name} (${user.role})`);
+      return { success: true };
     },
 
     // Toast UI notification utility

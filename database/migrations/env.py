@@ -1,21 +1,39 @@
+import os
 import sys
 from pathlib import Path
 from logging.config import fileConfig
 
-# Ensure project root is in sys.path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+# Ensure project root and subpackages are in sys.path
+current_dir = Path(__file__).resolve().parent
+database_dir = current_dir.parent
+root_dir = database_dir.parent
+
+for p in [str(database_dir), str(root_dir), str(root_dir / "api")]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from app.config import get_settings
-from app.models import Base  # noqa: F401 — import so all models are registered
+try:
+    from app.config import get_settings
+    settings = get_settings()
+    db_sync_url = settings.database_url_sync
+except Exception:
+    db_sync_url = os.getenv(
+        "DATABASE_URL_SYNC",
+        "postgresql://postgres:academe_dev_password@localhost:5432/academe",
+    )
+
+try:
+    from database.models import Base  # noqa: F401
+except ImportError:
+    from app.models import Base  # noqa: F401
 
 config = context.config
-settings = get_settings()
 
-# Override sqlalchemy.url from our settings
-config.set_main_option("sqlalchemy.url", settings.database_url_sync)
+# Override sqlalchemy.url from settings or environment
+config.set_main_option("sqlalchemy.url", db_sync_url)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

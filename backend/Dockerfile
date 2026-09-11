@@ -4,7 +4,7 @@ WORKDIR /app
 
 ENV PYTHONPATH=/app:/app/api:/app/database:/app/backend
 
-# System dependencies for argon2 and postgres
+# System dependencies for postgres and libmagic
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libpq-dev \
@@ -12,13 +12,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY api/requirements.txt /app/requirements.txt
+COPY backend/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy application code
 COPY . /app
 
-EXPOSE 8000
-
-# Default command: run with uvicorn and hot reload
-CMD ["uvicorn", "api.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Default command: run Celery worker
+CMD ["celery", "-A", "backend.celery_app", "worker", "--loglevel=info", "--concurrency=4"]

@@ -5,14 +5,14 @@ Multi-tenant assessment platform — React + FastAPI + PostgreSQL.
 ## Quick Start
 
 ```bash
-cd infra
 docker compose up --build
 ```
 
 Then open:
-- **App**: http://localhost:5173
-- **API docs**: http://localhost:8000/docs
-- **MinIO console**: http://localhost:9001 (minioadmin / minioadmin)
+- **App (Frontend)**: http://localhost:80
+- **API Docs (Swagger)**: http://localhost:8000/docs (or http://localhost/docs)
+- **MinIO Console**: http://localhost:9001 (minioadmin / minioadmin)
+- **API Health**: http://localhost:8000/health
 
 ## Project Layout
 

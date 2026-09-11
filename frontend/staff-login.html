@@ -32,16 +32,10 @@
           <p class="login-subtitle">Teacher Assessment Management</p>
         </header>
 
-        <div style="margin-bottom: 1.5rem; text-align: center;">
-          <button type="button" class="btn btn-secondary" id="fillStaffDemoBtn" style="font-size: 0.8rem; width: 100%;">
-            ⚡ Auto-Fill Staff Credentials (staffa@academe.edu)
-          </button>
-        </div>
-
-        <form id="staffLoginForm">
+        <form id="staffLoginForm" style="margin-top: 1rem;">
           <div class="form-group">
-            <label class="form-label" for="staffEmail">Faculty Email</label>
-            <input id="staffEmail" type="email" class="form-input" placeholder="staffa@academe.edu" required />
+            <label class="form-label" for="staffEmail">Faculty Email / Staff ID</label>
+            <input id="staffEmail" type="text" class="form-input" placeholder="e.g. faculty@academe.edu" required />
           </div>
 
           <div class="form-group">
@@ -70,12 +64,6 @@
       const emailInput = document.getElementById('staffEmail');
       const passInput = document.getElementById('staffPassword');
       const submitBtn = document.getElementById('staffSubmitBtn');
-
-      document.getElementById('fillStaffDemoBtn').addEventListener('click', () => {
-        emailInput.value = 'staffa@academe.edu';
-        passInput.value = 'staff123';
-        state.showToast('Pre-filled Staff credentials', 'info');
-      });
 
       form.addEventListener('submit', (e) => {
         e.preventDefault();

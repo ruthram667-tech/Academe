@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academe — Smart ERP &amp; Management Platform</title>
+  <meta name="description" content="Academe is a modern, intelligent institutional management and assessment ERP platform." />
+
+  <!-- Google Fonts: Poppins & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+  <!-- Font Awesome 6.5.2 CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- AlertifyJS CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css" />
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="portal-common.css" />
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+
+  <div class="split-screen-wrapper">
+    <!-- ════════════════════════════════════════════════════════════════
+         LEFT PANEL (~52% Width, High-Level Interactive Animated Visual Stage)
+         ════════════════════════════════════════════════════════════════ -->
+    <aside class="left-branding-panel">
+      <!-- Animated Ambient Mesh Overlay -->
+      <div class="mesh-overlay" aria-hidden="true"></div>
+
+      <!-- Floating Animated Glow Spheres -->
+      <div class="glow-orb orb-1" aria-hidden="true"></div>
+      <div class="glow-orb orb-2" aria-hidden="true"></div>
+      <div class="glow-orb orb-3" aria-hidden="true"></div>
+
+      <!-- High-Performance Interactive Constellation Canvas -->
+      <canvas id="neuralCanvas" class="neural-canvas" aria-hidden="true"></canvas>
+
+      <!-- Left Panel High-Level Animation Stage Content -->
+      <div class="left-panel-content">
+        <!-- System Badge -->
+        <div class="tech-pill-badge">
+          <span class="live-dot-pulse"></span>
+          <span>ACADEME CORE • HIGH-PERFORMANCE ACADEMIC OS</span>
+        </div>
+
+        <!-- Main Animated Heading & Tagline -->
+        <div class="brand-text-header">
+          <h1 class="brand-title">Next-Generation <span class="gradient-text-animated">Academic Intelligence</span></h1>
+          <p class="brand-tagline">Dynamic digital ecosystem powering collaborative lecture notes, examination assessments, and seminar presentations.</p>
+        </div>
+
+        <!-- 3D Holographic Orbit Stage with Floating Nodes -->
+        <div class="hologram-stage" id="hologramStage">
+          <!-- Concentric Gyroscope Orbital Rings -->
+          <div class="orbit-ring-outer"></div>
+          <div class="orbit-ring-middle"></div>
+          <div class="orbit-ring-inner"></div>
+
+          <!-- Central Refractive Hologram Core -->
+          <div class="hologram-core">
+            <div class="core-glow-burst"></div>
+            <div class="core-icon-box">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div class="core-rings"></div>
+          </div>
+
+          <!-- 4 Floating Glassmorphic Orbital Nodes -->
+          <!-- Node 1: Course Repositories -->
+          <div class="orbital-node node-1" style="--node-delay: 0s;">
+            <div class="orbital-node-icon cyan">
+              <i class="fa-solid fa-book-open"></i>
+            </div>
+            <div class="orbital-node-content">
+              <div class="node-title">Course Repositories</div>
+              <div class="node-sub">Live Notes &amp; Syllabus Modules</div>
+            </div>
+            <span class="node-pulse-indicator cyan"></span>
+          </div>
+
+          <!-- Node 2: PDF Assessment Engine -->
+          <div class="orbital-node node-2" style="--node-delay: 1.5s;">
+            <div class="orbital-node-icon emerald">
+              <i class="fa-solid fa-file-shield"></i>
+            </div>
+            <div class="orbital-node-content">
+              <div class="node-title">PDF Assessment Engine</div>
+              <div class="node-sub">Student Solution Pipelines</div>
+            </div>
+            <span class="node-pulse-indicator emerald"></span>
+          </div>
+
+          <!-- Node 3: Seminar Presentations -->
+          <div class="orbital-node node-3" style="--node-delay: 3s;">
+            <div class="orbital-node-icon amber">
+              <i class="fa-solid fa-chalkboard-user"></i>
+            </div>
+            <div class="orbital-node-content">
+              <div class="node-title">Seminar Presentations</div>
+              <div class="node-sub">PowerPoint Review Hub</div>
+            </div>
+            <span class="node-pulse-indicator amber"></span>
+          </div>
+
+          <!-- Node 4: Master Governance -->
+          <div class="orbital-node node-4" style="--node-delay: 4.5s;">
+            <div class="orbital-node-icon purple">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="orbital-node-content">
+              <div class="node-title">Central Governance</div>
+              <div class="node-sub">Master Superadmin Control</div>
+            </div>
+            <span class="node-pulse-indicator purple"></span>
+          </div>
+        </div>
+
+        <!-- Left Footer Indicator -->
+        <div class="left-panel-footer">
+          <span><i class="fa-solid fa-circle-check text-success me-1"></i> System Operational • Zero Legacy Demo</span>
+          <span>Version 2.4.0</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         RIGHT PANEL (~48% Width, Light / Glass Theme, Login Form)
+         ════════════════════════════════════════════════════════════════ -->
+    <main class="right-login-panel">
+      <!-- Soft Floating Drifting Colorful Bubbles -->
+      <div class="drift-bubble bubble-1" aria-hidden="true"></div>
+      <div class="drift-bubble bubble-2" aria-hidden="true"></div>
+      <div class="drift-bubble bubble-3" aria-hidden="true"></div>
+      <div class="drift-bubble bubble-4" aria-hidden="true"></div>
+
+      <div class="login-card-wrapper">
+        <!-- Main Glass Card -->
+        <div class="auth-card">
+          
+          <!-- Top App Logo & Header -->
+          <div class="auth-header text-center">
+            <div class="auth-app-badge">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h2 class="auth-heading">Sign In to <span class="text-primary-custom">Academe</span></h2>
+            <p class="auth-subtext">Select your destination portal below to access your workspace</p>
+          </div>
+
+          <!-- Pill-Style Tab Switcher ("User" vs "Admin") -->
+          <div class="auth-tabs-container mb-4" id="authTabsGroup">
+            <button type="button" class="auth-tab-pill active" id="tabUserBtn" data-target="user">
+              <i class="fa-solid fa-user me-2"></i> Student / Faculty
+            </button>
+            <button type="button" class="auth-tab-pill" id="tabAdminBtn" data-target="admin">
+              <i class="fa-solid fa-crown me-2"></i> Super Admin
+            </button>
+          </div>
+
+          <!-- ════════════════════════════════════════
+               CONTAINER A: USER LOGIN FORM (Students & Faculty)
+               ════════════════════════════════════════ -->
+          <div class="auth-form-pane active" id="userFormPane">
+            <form id="userLoginForm" novalidate>
+              <!-- ID Field -->
+              <div class="form-group-custom mb-3">
+                <label class="form-label-custom" for="userIdInput">Registration No. or Institutional Email</label>
+                <div class="input-icon-group">
+                  <span class="input-icon"><i class="fa-solid fa-id-card"></i></span>
+                  <input 
+                    type="text" 
+                    class="form-control-custom" 
+                    id="userIdInput" 
+                    placeholder="e.g. 2026CS101 or faculty@academe.edu" 
+                    required 
+                    autocomplete="username"
+                  />
+                </div>
+              </div>
+
+              <!-- Password Field -->
+              <div class="form-group-custom mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label class="form-label-custom mb-0" for="userPasswordInput">Password</label>
+                  <a href="#" class="forgot-link" id="userForgotPassBtn">Forgot Password?</a>
+                </div>
+                <div class="input-icon-group">
+                  <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+                  <input 
+                    type="password" 
+                    class="form-control-custom" 
+                    id="userPasswordInput" 
+                    placeholder="Enter account password" 
+                    required 
+                    autocomplete="current-password"
+                  />
+                  <button type="button" class="toggle-password-btn" data-input="userPasswordInput" aria-label="Toggle password visibility">
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Remember & Security Row -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="userRememberMe" checked />
+                  <span class="checkmark"></span>
+                  <span class="checkbox-label">Keep me signed in</span>
+                </label>
+                <span class="badge-secure"><i class="fa-solid fa-shield-check"></i> 256-Bit SSL</span>
+              </div>
+
+              <!-- Gradient Submit Button with Ripple Effect -->
+              <button type="submit" class="btn-gradient-submit" id="userSubmitBtn">
+                <span class="btn-text">Sign In to Portal</span>
+                <i class="fa-solid fa-arrow-right-long ms-2"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- ════════════════════════════════════════
+               CONTAINER B: ADMIN LOGIN FORM (Superadmin Only)
+               ════════════════════════════════════════ -->
+          <div class="auth-form-pane" id="adminFormPane">
+            <!-- Master Superadmin Callout -->
+            <div class="superadmin-credential-callout mb-3">
+              <div class="callout-header">
+                <span class="callout-badge"><i class="fa-solid fa-crown"></i> Master Superadmin</span>
+                <span class="callout-status"><span class="status-pulse-dot"></span> Active Key</span>
+              </div>
+              <div class="callout-body">
+                <div class="callout-field">
+                  <span class="callout-lbl">Username:</span>
+                  <code class="callout-val" id="valSuperUser">superadmin</code>
+                </div>
+                <div class="callout-field">
+                  <span class="callout-lbl">Password:</span>
+                  <code class="callout-val" id="valSuperPass">admin123</code>
+                </div>
+              </div>
+              <div class="callout-hint">
+                <i class="fa-solid fa-info-circle me-1"></i> Log in as master superadmin to register faculty staff and enroll students.
+              </div>
+            </div>
+
+            <form id="adminLoginForm" novalidate>
+              <!-- Admin ID Field -->
+              <div class="form-group-custom mb-3">
+                <label class="form-label-custom" for="adminIdInput">Super Administrator ID or Master Email</label>
+                <div class="input-icon-group">
+                  <span class="input-icon"><i class="fa-solid fa-user-shield"></i></span>
+                  <input 
+                    type="text" 
+                    class="form-control-custom" 
+                    id="adminIdInput" 
+                    placeholder="superadmin or admin@academe.edu" 
+                    value="superadmin"
+                    required 
+                    autocomplete="username"
+                  />
+                </div>
+              </div>
+
+              <!-- Admin Password Field -->
+              <div class="form-group-custom mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label class="form-label-custom mb-0" for="adminPasswordInput">Master Key / Password</label>
+                  <button type="button" class="btn-link-raw forgot-link" id="adminLostPassBtn">Lost Password?</button>
+                </div>
+                <div class="input-icon-group">
+                  <span class="input-icon"><i class="fa-solid fa-key"></i></span>
+                  <input 
+                    type="password" 
+                    class="form-control-custom" 
+                    id="adminPasswordInput" 
+                    placeholder="admin123" 
+                    value="admin123"
+                    required 
+                    autocomplete="current-password"
+                  />
+                  <button type="button" class="toggle-password-btn" data-input="adminPasswordInput" aria-label="Toggle password visibility">
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Admin Security Check -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="adminAuditing" checked />
+                  <span class="checkmark"></span>
+                  <span class="checkbox-label">Log session in audit trail</span>
+                </label>
+                <span class="badge-role-admin"><i class="fa-solid fa-crown me-1"></i> Root Access</span>
+              </div>
+
+              <!-- Gradient Submit Button -->
+              <button type="submit" class="btn-gradient-submit btn-admin-gradient" id="adminSubmitBtn">
+                <span class="btn-text">Authenticate Master Session</span>
+                <i class="fa-solid fa-shield-check ms-2"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- ════════════════════════════════════════
+               CONTAINER C: PASSWORD RECOVERY SUB-FORM
+               ════════════════════════════════════════ -->
+          <div class="auth-form-pane" id="recoveryFormPane">
+            <div class="recovery-header mb-3">
+              <button type="button" class="btn-back-link" id="recoveryBackBtn">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Sign In
+              </button>
+              <h3 class="recovery-title mt-2">Account Recovery</h3>
+              <p class="recovery-desc">Enter your registered ID and institutional email to receive reset instructions.</p>
+            </div>
+
+            <form id="recoveryForm" novalidate>
+              <div class="form-group-custom mb-3">
+                <label class="form-label-custom" for="recoveryIdInput">User ID or Registration No.</label>
+                <div class="input-icon-group">
+                  <span class="input-icon"><i class="fa-solid fa-id-badge"></i></span>
+                  <input 
+                    type="text" 
+                    class="form-control-custom" 
+                    id="recoveryIdInput" 
+                    placeholder="e.g. 2026CS101 or faculty@academe.edu" 
+                    required 
+                  />
+                </div>
+              </div>
+
+              <div class="form-group-custom mb-4">
+                <label class="form-label-custom" for="recoveryEmailInput">Institutional Email Address</label>
+                <div class="input-icon-group">
+                  <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
+                  <input 
+                    type="email" 
+                    class="form-control-custom" 
+                    id="recoveryEmailInput" 
+                    placeholder="user@academe.edu" 
+                    required 
+                  />
+                </div>
+              </div>
+
+              <button type="submit" class="btn-gradient-submit" id="recoverySubmitBtn">
+                <span class="btn-text">Send Password Reset Instructions</span>
+                <i class="fa-solid fa-paper-plane ms-2"></i>
+              </button>
+            </form>
+          </div>
+
+          <!-- Card Footer -->
+          <div class="auth-card-footer mt-4 pt-3 border-top text-center">
+            <p class="footer-copyright mb-0">
+              &copy; 2026 <strong>Academe Assessment Platform</strong>. All Rights Reserved.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- External Libraries -->
+  <!-- Bootstrap 5.3.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- AlertifyJS JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+
+  <!-- State & Logic Scripts -->
+  <script src="portal-state.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

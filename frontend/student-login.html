@@ -32,16 +32,10 @@
           <p class="login-subtitle">Assessment &amp; Grading Access</p>
         </header>
 
-        <div style="margin-bottom: 1.5rem; text-align: center;">
-          <button type="button" class="btn btn-secondary" id="fillStudentDemoBtn" style="font-size: 0.8rem; width: 100%;">
-            ⚡ Auto-Fill Student Credentials (2024CS101)
-          </button>
-        </div>
-
-        <form id="studentLoginForm">
+        <form id="studentLoginForm" style="margin-top: 1rem;">
           <div class="form-group">
-            <label class="form-label" for="studentReg">Registration Number</label>
-            <input id="studentReg" type="text" class="form-input" placeholder="e.g. 2024CS101" required />
+            <label class="form-label" for="studentReg">Registration Number / Student ID</label>
+            <input id="studentReg" type="text" class="form-input" placeholder="e.g. 2026CS101" required />
           </div>
 
           <div class="form-group">
@@ -70,12 +64,6 @@
       const regInput = document.getElementById('studentReg');
       const passInput = document.getElementById('studentPassword');
       const submitBtn = document.getElementById('studentSubmitBtn');
-
-      document.getElementById('fillStudentDemoBtn').addEventListener('click', () => {
-        regInput.value = '2024CS101';
-        passInput.value = 'student123';
-        state.showToast('Pre-filled Student credentials', 'info');
-      });
 
       form.addEventListener('submit', (e) => {
         e.preventDefault();

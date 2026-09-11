@@ -105,7 +105,7 @@
     <div class="content-container">
       <div class="cards-grid">
 
-        <!-- Card 1: Courses -->
+        <!-- Card 1: Courses & Notes -->
         <div class="action-card" id="cardCourses" role="button" tabindex="0">
           <div class="card-illustration">
             <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -123,18 +123,18 @@
             </svg>
           </div>
           <div class="card-body">
-            <p>Click here to view all your enrolled courses and subjects.</p>
+            <p>Access your enrolled subjects and study notes uploaded by your teachers.</p>
           </div>
           <button type="button" class="card-footer-btn" id="btnCourses">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
               <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
               <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
             </svg>
-            Courses
+            Courses &amp; Notes
           </button>
         </div>
 
-        <!-- Card 2: Tests & Assessments -->
+        <!-- Card 2: Tests & PDF Submissions -->
         <div class="action-card" id="cardTests" role="button" tabindex="0">
           <div class="card-illustration">
             <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -154,7 +154,7 @@
             </svg>
           </div>
           <div class="card-body">
-            <p>Click here to view all your scheduled, active, and completed tests.</p>
+            <p>View upcoming and ongoing tests, question instructions, and submit your PDF answers.</p>
           </div>
           <button type="button" class="card-footer-btn" id="btnTests">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -162,102 +162,40 @@
               <polyline points="14 2 14 8 20 8"></polyline>
               <line x1="16" y1="13" x2="8" y2="13"></line>
               <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
-            Tests
+            Tests &amp; Assessments
           </button>
         </div>
 
-        <!-- Card 3: Programming Labs -->
-        <div class="action-card" id="cardLabs" role="button" tabindex="0">
+        <!-- Card 3: Presentations -->
+        <div class="action-card" id="cardPresentations" role="button" tabindex="0">
           <div class="card-illustration">
             <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="15" y="25" width="90" height="65" rx="6" fill="#2C3E50"/>
-              <rect x="19" y="29" width="82" height="53" rx="3" fill="#0F172A"/>
-              <rect x="25" y="36" width="8" height="3" rx="1" fill="#10B981"/>
-              <rect x="36" y="36" width="20" height="3" rx="1" fill="#818CF8"/>
-              <rect x="59" y="36" width="12" height="3" rx="1" fill="#F59E0B"/>
-              <rect x="30" y="43" width="14" height="3" rx="1" fill="#38BDF8"/>
-              <rect x="47" y="43" width="24" height="3" rx="1" fill="#F1F5F9" opacity="0.6"/>
-              <rect x="30" y="50" width="18" height="3" rx="1" fill="#FB923C"/>
-              <rect x="51" y="50" width="16" height="3" rx="1" fill="#F1F5F9" opacity="0.4"/>
-              <rect x="25" y="57" width="8" height="3" rx="1" fill="#10B981"/>
-              <rect x="36" y="57" width="28" height="3" rx="1" fill="#94A3B8"/>
-              <rect x="25" y="64" width="30" height="3" rx="1" fill="#64748B"/>
-              <rect x="25" y="71" width="5" height="3" rx="1" fill="#10B981" opacity="0.5"/>
-              <rect x="33" y="71" width="15" height="3" rx="1" fill="#818CF8" opacity="0.5"/>
-              <path d="M40 95l-7-5h-4l-3 5h14z" fill="#94A3B8"/>
-              <path d="M80 95l7-5h4l3 5H80z" fill="#94A3B8"/>
-              <rect x="30" y="95" width="60" height="4" rx="2" fill="#CBD5E1"/>
+              <rect x="22" y="24" width="76" height="52" rx="4" fill="#2C3E50"/>
+              <rect x="26" y="28" width="68" height="44" rx="2" fill="#0F172A"/>
+              <circle cx="44" cy="50" r="10" fill="#10B981" opacity="0.3"/>
+              <path d="M44 40 A10 10 0 0 1 54 50 L44 50 Z" fill="#10B981"/>
+              <rect x="62" y="42" width="24" height="4" rx="2" fill="#94A3B8"/>
+              <rect x="62" y="50" width="18" height="4" rx="2" fill="#64748B"/>
+              <rect x="62" y="58" width="14" height="4" rx="2" fill="#64748B"/>
+              <path d="M60 76 L60 92 M48 92 L72 92" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
             </svg>
           </div>
           <div class="card-body">
-            <p>Click here to access interactive programming labs and IDE.</p>
+            <p>View scheduled presentation dates, seminar topics, and upload your PowerPoint slides.</p>
           </div>
-          <button type="button" class="card-footer-btn" id="btnLabs">
+          <button type="button" class="card-footer-btn" id="btnPresentations">
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="16 18 22 12 16 6"></polyline>
-              <polyline points="8 6 2 12 8 18"></polyline>
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
             </svg>
-            Programming Labs
+            Presentations
           </button>
         </div>
 
-        <!-- Card 4: Tools -->
-        <div class="action-card" id="cardTools" role="button" tabindex="0">
-          <div class="card-illustration">
-            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="60" cy="55" r="28" fill="#E2E8F0"/>
-              <circle cx="60" cy="55" r="20" fill="#F8FAFC"/>
-              <circle cx="60" cy="55" r="10" fill="#CBD5E1"/>
-              <circle cx="60" cy="55" r="4" fill="#2C3E50"/>
-              <rect x="56" y="22" width="8" height="12" rx="2" fill="#10B981"/>
-              <rect x="56" y="76" width="8" height="12" rx="2" fill="#10B981"/>
-              <rect x="28" y="51" width="12" height="8" rx="2" fill="#10B981"/>
-              <rect x="80" y="51" width="12" height="8" rx="2" fill="#10B981"/>
-              <rect x="35" y="31" width="10" height="8" rx="2" fill="#94A3B8" transform="rotate(-45 40 35)"/>
-              <rect x="76" y="72" width="10" height="8" rx="2" fill="#94A3B8" transform="rotate(-45 81 76)"/>
-              <rect x="76" y="31" width="10" height="8" rx="2" fill="#94A3B8" transform="rotate(45 81 35)"/>
-              <rect x="35" y="72" width="10" height="8" rx="2" fill="#94A3B8" transform="rotate(45 40 76)"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <p>Click here to access developer utilities and learning tools.</p>
-          </div>
-          <button type="button" class="card-footer-btn" id="btnTools">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-            Tools
-          </button>
-        </div>
-
-        <!-- Card 5: Help & Support -->
-        <div class="action-card" id="cardHelp" role="button" tabindex="0">
-          <div class="card-illustration">
-            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="60" cy="50" r="30" fill="#E2E8F0"/>
-              <circle cx="60" cy="50" r="22" fill="#F8FAFC"/>
-              <path d="M52 44c0-4.42 3.58-8 8-8s8 3.58 8 8c0 3-1.65 5.6-4.1 6.98-.72.41-1.4.88-1.9 1.52V55" stroke="#2C3E50" stroke-width="3" stroke-linecap="round"/>
-              <circle cx="60" cy="61" r="2" fill="#2C3E50"/>
-              <path d="M42 85c0-2 1-4 3-5l10-5c3-1.5 7-1.5 10 0l10 5c2 1 3 3 3 5" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="60" cy="75" r="5" fill="#10B981" opacity="0.3"/>
-              <circle cx="60" cy="75" r="3" fill="#10B981"/>
-              <path d="M35 92h50" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
-              <path d="M40 97h40" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="card-body">
-            <p>Reach out to technical support and view troubleshooting guides.</p>
-          </div>
-          <button type="button" class="card-footer-btn" id="btnHelp">
-            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-            Help &amp; Support
-          </button>
-        </div>
+      </div>
+    </div>
 
       </div>
     </div>
@@ -281,95 +219,18 @@
        4. INTERACTIVE MODALS
        ═══════════════════════════════════════ -->
 
-  <!-- Modal 1: Enrolled Courses -->
+  <!-- Modal 1: Enrolled Courses & Notes Viewer -->
   <div class="modal-backdrop" id="modalCourses">
     <div class="modal-box modal-lg">
       <div class="modal-header">
         <div class="modal-header-text">
-          <h3>Enrolled Courses &amp; Curriculum</h3>
-          <p>Academic Term: Spring 2026 • 4 Registered Subjects</p>
+          <h3>Enrolled Subjects &amp; Course Notes</h3>
+          <p>Select any subject below to view and download study materials shared by your professors</p>
         </div>
         <button type="button" class="modal-close-btn" data-close="modalCourses">&times;</button>
       </div>
-      <div class="modal-body">
-        <div class="modal-item-card">
-          <div class="modal-item-header">
-            <div>
-              <div class="modal-item-title">CS301: Advanced Distributed Consensus</div>
-              <div class="modal-item-meta">
-                <span>👨‍🏫 Dr. Alan Turing</span>
-                <span>📚 4 Credits</span>
-                <span>🏛️ Dept of Computer Science</span>
-              </div>
-            </div>
-            <span class="badge-tag active">In Progress</span>
-          </div>
-          <p style="font-size: 0.82rem; color: #475569; margin-bottom: 0.5rem;">
-            Covers leader election, Byzantine Fault Tolerance, Raft, Paxos, and distributed commit protocols.
-          </p>
-          <div class="keyword-chips-row">
-            <span class="keyword-chip">Consensus</span>
-            <span class="keyword-chip">Raft</span>
-            <span class="keyword-chip">PBFT</span>
-            <span class="keyword-chip">Replication</span>
-          </div>
-        </div>
-
-        <div class="modal-item-card">
-          <div class="modal-item-header">
-            <div>
-              <div class="modal-item-title">CS202: Data Structures &amp; Dynamic Programming</div>
-              <div class="modal-item-meta">
-                <span>👩‍🏫 Dr. Ada Lovelace</span>
-                <span>📚 4 Credits</span>
-                <span>🏛️ Dept of Algorithms</span>
-              </div>
-            </div>
-            <span class="badge-tag active">In Progress</span>
-          </div>
-          <p style="font-size: 0.82rem; color: #475569; margin-bottom: 0.5rem;">
-            Advanced algorithmic paradigms, memoization tables, DAG shortest paths, and matrix optimization.
-          </p>
-          <div class="keyword-chips-row">
-            <span class="keyword-chip">Dynamic Programming</span>
-            <span class="keyword-chip">Matrix Chain</span>
-            <span class="keyword-chip">Complexity Analysis</span>
-          </div>
-        </div>
-
-        <div class="modal-item-card">
-          <div class="modal-item-header">
-            <div>
-              <div class="modal-item-title">CS304: Cloud Native Systems &amp; Microservices</div>
-              <div class="modal-item-meta">
-                <span>👨‍🏫 Dr. Linus Torvalds</span>
-                <span>📚 3 Credits</span>
-                <span>🏛️ Systems Engineering</span>
-              </div>
-            </div>
-            <span class="badge-tag active">Upcoming</span>
-          </div>
-          <p style="font-size: 0.82rem; color: #475569; margin-bottom: 0.5rem;">
-            Container orchestration, service meshes, distributed saga pattern, and idempotent message queues.
-          </p>
-        </div>
-
-        <div class="modal-item-card">
-          <div class="modal-item-header">
-            <div>
-              <div class="modal-item-title">MA201: Discrete Mathematics &amp; Graph Theory</div>
-              <div class="modal-item-meta">
-                <span>👨‍🏫 Dr. John von Neumann</span>
-                <span>📚 3 Credits</span>
-                <span>🏛️ Applied Mathematics</span>
-              </div>
-            </div>
-            <span class="badge-tag active">In Progress</span>
-          </div>
-          <p style="font-size: 0.82rem; color: #475569; margin-bottom: 0.5rem;">
-            Combinatorics, graph colorings, Eulerian circuits, recurrence relations, and Boolean logic.
-          </p>
-        </div>
+      <div class="modal-body" id="coursesListContainer">
+        <!-- Rendered dynamically by student.js -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-modal-secondary" data-close="modalCourses">Close</button>
@@ -377,18 +238,29 @@
     </div>
   </div>
 
-  <!-- Modal 2: Tests, Question Prompts & PDF/PPT Upload -->
+  <!-- Modal 2: Tests, Question Prompts & PDF Upload -->
   <div class="modal-backdrop" id="modalTests">
     <div class="modal-box modal-lg">
       <div class="modal-header">
         <div class="modal-header-text">
-          <h3>Assessments &amp; Document Submissions</h3>
-          <p>Review questions posted by faculty and upload your PDF or PPT solution documents</p>
+          <h3>Assessments &amp; PDF Submissions</h3>
+          <p>View upcoming and ongoing examinations, review problem statements, and upload PDF solutions</p>
         </div>
         <button type="button" class="modal-close-btn" data-close="modalTests">&times;</button>
       </div>
-      <div class="modal-body" id="testsListContainer">
-        <!-- Rendered dynamically by student.js -->
+      <div class="modal-body">
+        <!-- Test Type Tabs: Ongoing vs Upcoming -->
+        <div class="tools-nav-tabs mb-3" style="display:flex; gap:0.5rem; border-bottom:1px solid #E2E8F0; padding-bottom:0.75rem; margin-bottom:1rem;">
+          <button type="button" class="tool-tab-btn active" id="tabOngoingTestsBtn" style="padding:0.5rem 1rem; border-radius:8px; font-weight:600; font-size:0.85rem; border:1px solid #CBD5E1; background:#F1F5F9; cursor:pointer;">
+            Ongoing Tests
+          </button>
+          <button type="button" class="tool-tab-btn" id="tabUpcomingTestsBtn" style="padding:0.5rem 1rem; border-radius:8px; font-weight:600; font-size:0.85rem; border:1px solid transparent; background:transparent; cursor:pointer;">
+            Upcoming Tests
+          </button>
+        </div>
+        <div id="testsListContainer">
+          <!-- Rendered dynamically by student.js -->
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-modal-secondary" data-close="modalTests">Close</button>
@@ -396,13 +268,13 @@
     </div>
   </div>
 
-  <!-- Modal 2b: Document Upload Sub-Modal -->
+  <!-- Modal 2b: Test Solution PDF Upload Modal -->
   <div class="modal-backdrop" id="modalUploadDocument">
     <div class="modal-box">
       <div class="modal-header">
         <div class="modal-header-text">
-          <h3 id="uploadModalTitle">Upload Assessment Document</h3>
-          <p id="uploadModalSubtitle">Accepts PDF, PPT, or PPTX format (Max 25MB)</p>
+          <h3 id="uploadModalTitle">Upload Test Solution PDF</h3>
+          <p id="uploadModalSubtitle">Upload your written/typed answers in PDF format</p>
         </div>
         <button type="button" class="modal-close-btn" data-close="modalUploadDocument">&times;</button>
       </div>
@@ -413,21 +285,21 @@
           </div>
 
           <div class="file-dropzone" id="fileDropzone">
-            <input type="file" id="fileInputHidden" accept=".pdf,.ppt,.pptx" style="display:none;" />
+            <input type="file" id="fileInputHidden" accept=".pdf" style="display:none;" />
             <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            <div class="dropzone-title">Drop your solution document here, or <span style="color:#10B981; text-decoration:underline;">browse files</span></div>
-            <div class="dropzone-hint">Supported extensions: .pdf, .ppt, .pptx (Clean readable format for keyword highlighting)</div>
+            <div class="dropzone-title">Drop your solution PDF here, or <span style="color:#10B981; text-decoration:underline;">browse files</span></div>
+            <div class="dropzone-hint">Format accepted: .pdf (Single compiled answer sheet)</div>
           </div>
 
           <div class="file-preview-card" id="filePreviewCard" style="display:none;">
             <div class="file-preview-info">
               <div class="file-preview-icon" id="previewIcon">PDF</div>
               <div>
-                <div class="file-preview-name" id="previewFileName">Document.pdf</div>
+                <div class="file-preview-name" id="previewFileName">Solution.pdf</div>
                 <div class="file-preview-size" id="previewFileSize">1.8 MB</div>
               </div>
             </div>
@@ -435,90 +307,86 @@
           </div>
 
           <div class="form-group" style="margin-top: 1.15rem;">
-            <label class="form-label">Optional Student Remarks / Submission Summary</label>
-            <textarea class="form-textarea" id="uploadRemarks" rows="2" placeholder="e.g. Solutions to Section A and Section B included in slides 1-14..."></textarea>
+            <label class="form-label">Optional Student Notes / Answers Summary</label>
+            <textarea class="form-textarea" id="uploadRemarks" rows="2" placeholder="e.g. Completed Part A &amp; Part B with diagrams..."></textarea>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn-modal-secondary" data-close="modalUploadDocument">Cancel</button>
           <button type="submit" class="btn-modal-accent" id="btnConfirmUpload">
-            <span>Upload &amp; Submit Document</span>
+            <span>Upload &amp; Submit PDF</span>
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal 3: Programming Labs & Online IDE -->
-  <div class="modal-backdrop" id="modalLabs">
+  <!-- Modal 3: Scheduled Presentations & Student PPT Upload -->
+  <div class="modal-backdrop" id="modalPresentations">
     <div class="modal-box modal-lg">
       <div class="modal-header">
         <div class="modal-header-text">
-          <h3>Interactive Programming Sandbox</h3>
-          <p>Online code editor, multi-language runner, and execution console</p>
+          <h3>Scheduled Presentations</h3>
+          <p>View seminar presentation schedules, deadlines, and upload your presentation slides</p>
         </div>
-        <button type="button" class="modal-close-btn" data-close="modalLabs">&times;</button>
+        <button type="button" class="modal-close-btn" data-close="modalPresentations">&times;</button>
       </div>
-      <div class="modal-body">
-        <div class="code-sandbox-box">
-          <div class="code-sandbox-toolbar">
-            <select class="code-lang-select" id="labLanguageSelect">
-              <option value="python">Python 3.11</option>
-              <option value="javascript">JavaScript (Node.js)</option>
-              <option value="cpp">C++ 17</option>
-              <option value="java">Java 21</option>
-            </select>
-            <button type="button" class="btn-run-code" id="btnRunCode">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-              <span>Run Code</span>
-            </button>
-          </div>
-          <textarea class="code-textarea" id="labCodeArea" spellcheck="false"># Distributed Systems — Raft Leader Election State Machine
-class Node:
-    def __init__(self, node_id):
-        self.node_id = node_id
-        self.state = "Follower"
-        self.current_term = 0
-        self.voted_for = None
-
-    def start_election(self):
-        self.state = "Candidate"
-        self.current_term += 1
-        self.voted_for = self.node_id
-        print(f"[Node {self.node_id}] Initiating election for Term {self.current_term}")
-        return True
-
-cluster = [Node(i) for i in range(1, 4)]
-cluster[0].start_election()
-print("Cluster State: Election quorum established (2/3 votes).")
-</textarea>
-          <div class="code-terminal" id="labConsoleOutput">Ready for execution. Click 'Run Code' above.</div>
-        </div>
+      <div class="modal-body" id="presentationsListContainer">
+        <!-- Rendered dynamically by student.js -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn-modal-secondary" data-close="modalLabs">Close Sandbox</button>
+        <button type="button" class="btn-modal-secondary" data-close="modalPresentations">Close</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal 4: Developer Tools -->
-  <div class="modal-backdrop" id="modalTools">
+  <!-- Modal 3b: Presentation PPT Upload Modal -->
+  <div class="modal-backdrop" id="modalUploadPPT">
     <div class="modal-box">
       <div class="modal-header">
         <div class="modal-header-text">
-          <h3>Developer &amp; Learning Utilities</h3>
-          <p>Quick utilities for computer science coursework</p>
+          <h3 id="uploadPPTModalTitle">Upload Presentation Slides</h3>
+          <p id="uploadPPTModalSubtitle">Submit your presentation deck (.pptx, .ppt, or .pdf)</p>
         </div>
-        <button type="button" class="modal-close-btn" data-close="modalTools">&times;</button>
+        <button type="button" class="modal-close-btn" data-close="modalUploadPPT">&times;</button>
       </div>
-      <div class="modal-body">
-        <div class="tools-nav-tabs">
-          <button type="button" class="tool-tab-btn active" data-tab="tabCalc">Calculator</button>
-          <button type="button" class="tool-tab-btn" data-tab="tabCounter">Word Counter</button>
-          <button type="button" class="tool-tab-btn" data-tab="tabBase64">Base64 Encoder</button>
+      <form id="uploadPPTForm">
+        <div class="modal-body">
+          <div class="modal-item-prompt" id="uploadPPTGuidelines">
+            <!-- Guidelines text -->
+          </div>
+
+          <div class="file-dropzone" id="fileDropzonePPT">
+            <input type="file" id="fileInputPPTHidden" accept=".ppt,.pptx,.pdf" style="display:none;" />
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <div class="dropzone-title">Drop your PPT slides here, or <span style="color:#10B981; text-decoration:underline;">browse files</span></div>
+            <div class="dropzone-hint">Supported formats: .pptx, .ppt, .pdf (Max 50MB)</div>
+          </div>
+
+          <div class="file-preview-card" id="filePreviewCardPPT" style="display:none;">
+            <div class="file-preview-info">
+              <div class="file-preview-icon" id="previewIconPPT">PPT</div>
+              <div>
+                <div class="file-preview-name" id="previewFileNamePPT">Presentation.pptx</div>
+                <div class="file-preview-size" id="previewFileSizePPT">4.2 MB</div>
+              </div>
+            </div>
+            <button type="button" class="btn-modal-secondary" id="btnRemoveFilePPT" style="padding:0.35rem 0.75rem; font-size:0.78rem;">Remove</button>
+          </div>
         </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-modal-secondary" data-close="modalUploadPPT">Cancel</button>
+          <button type="submit" class="btn-modal-accent" id="btnConfirmUploadPPT">
+            <span>Upload &amp; Submit Presentation</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
         <!-- Tab 1: Calculator -->
         <div class="tool-tab-pane active" id="tabCalc">
