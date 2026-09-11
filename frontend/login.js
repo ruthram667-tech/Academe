@@ -35,11 +35,8 @@
     }
   }
 
-  // Direct open protection (optional skip if splash bypass param provided)
-  if (!cameFromSplash && !document.referrer.includes('splash.html')) {
-    window.location.replace('splash.html');
-    return;
-  }
+  // Always set splash ready flag so users and logouts land smoothly on login.html
+  sessionStorage.setItem('academe_splash_ready', '1');
 
   // ═════════════════════════════════════════════════════════════════
   // 2. AlertifyJS Notification Helper

@@ -831,6 +831,9 @@
         state.showToast(`${link.textContent} documentation will open in university handbook.`, 'info');
       });
     }
-  });
+  // 14. Initial Data Render
+  renderCoursesList();
+  renderTestsList('ongoing');
+  renderPresentationsList();
 
 })();

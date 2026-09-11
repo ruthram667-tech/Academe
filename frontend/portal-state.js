@@ -229,30 +229,49 @@
       return { success: true, redirect: 'superadmin-dashboard.html', user: admin };
     },
 
-    // First time password change & forced update
-    changeUserPassword: function (identifierOrId, newPassword) {
+    // Unified Password Change: supports both direct forced reset (userId, newPass) and authenticated profile update (userId, oldPass, newPass)
+    changeUserPassword: function (identifierOrId, oldPassOrNewPass, optionalNewPass) {
       const users = load(KEYS.USERS, DEFAULT_USERS);
       const clean = String(identifierOrId || '').trim().toLowerCase();
       const userIndex = users.findIndex(u => 
         u.id === identifierOrId || 
         (u.regNo && u.regNo.toLowerCase() === clean) || 
-        (u.email && u.email.toLowerCase() === clean)
+        (u.email && u.email.toLowerCase() === clean) ||
+        (u.username && u.username.toLowerCase() === clean)
       );
       if (userIndex === -1) return { success: false, message: 'User account not found' };
 
-      users[userIndex].password = newPassword;
-      users[userIndex].mustChangePassword = false;
+      const user = users[userIndex];
+
+      // If 3 arguments provided: (userId, oldPass, newPass)
+      if (optionalNewPass !== undefined) {
+        const oldPass = oldPassOrNewPass;
+        const newPass = optionalNewPass;
+        if (user.password !== oldPass) {
+          return { success: false, message: 'Current password is incorrect.' };
+        }
+        user.password = newPass;
+      } else {
+        // Direct reset: (userId, newPass)
+        user.password = oldPassOrNewPass;
+      }
+
+      user.mustChangePassword = false;
       save(KEYS.USERS, users);
 
-      const updatedUser = users[userIndex];
-      this.setSession(updatedUser);
-      this.logAudit('Password Updated', `${updatedUser.name} updated account password.`);
+      const session = this.getSession();
+      if (session && (session.id === user.id || session.regNo === user.regNo || session.email === user.email)) {
+        this.setSession({ ...session, password: user.password, mustChangePassword: false });
+      } else {
+        this.setSession(user);
+      }
+      this.logAudit('Password Updated', `${user.name} updated account password.`);
 
       let redirect = 'index.html';
-      if (updatedUser.role === 'staff') redirect = 'staff-dashboard.html';
-      else if (updatedUser.role === 'superadmin') redirect = 'superadmin-dashboard.html';
+      if (user.role === 'staff') redirect = 'staff-dashboard.html';
+      else if (user.role === 'superadmin') redirect = 'superadmin-dashboard.html';
 
-      return { success: true, redirect: redirect, user: updatedUser };
+      return { success: true, redirect: redirect, user: user };
     },
 
     updateStudentPassword: function (userId, newPassword) {
@@ -531,26 +550,6 @@
       return { success: true, user: users[idx] };
     },
 
-    changeUserPassword: function (userId, oldPass, newPass) {
-      const users = load(KEYS.USERS, DEFAULT_USERS);
-      const idx = users.findIndex(u => u.id === userId);
-      if (idx === -1) return { success: false, message: 'User not found' };
-
-      if (users[idx].password !== oldPass) {
-        return { success: false, message: 'Current password is incorrect.' };
-      }
-
-      users[idx].password = newPass;
-      users[idx].mustChangePassword = false;
-      save(KEYS.USERS, users);
-
-      const session = this.getSession();
-      if (session && session.id === userId) {
-        this.setSession({ ...session, password: newPass, mustChangePassword: false });
-      }
-      this.logAudit('Password Changed', `${users[idx].name} updated account password.`);
-      return { success: true, user: users[idx] };
-    },
 
     saveGrade: function (subId, score, feedback) {
       const submissions = this.getSubmissions();

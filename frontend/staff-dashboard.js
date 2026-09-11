@@ -234,7 +234,7 @@
 
     document.querySelectorAll('.btn-grade-sub').forEach(btn => {
       btn.addEventListener('click', (e) => {
-         const ds = e.target.dataset;
+         const ds = e.currentTarget.dataset;
          openGradeModal(ds.subid, ds.testid, ds.studentid, ds.filename);
       });
     });
@@ -404,9 +404,20 @@
       const file = fileInput.files[0];
       if (!courseId || !title || !file) return;
 
-      const res = state.addCourseNote(courseId, { title: title, description: 'Uploaded via Staff Portal', fileObj: file, topic: 'General' });
+      const fileSizeStr = file.size > 1048576 
+        ? `${(file.size / (1024 * 1024)).toFixed(1)} MB` 
+        : `${Math.round(file.size / 1024)} KB`;
+
+      const res = state.addCourseNote(courseId, { 
+        title: title, 
+        fileName: file.name,
+        fileSize: fileSizeStr,
+        description: 'Uploaded via Staff Portal', 
+        fileObj: file, 
+        topic: 'General' 
+      });
       if (res.success) {
-         if (state.showToast) state.showToast('Material uploaded successfully!', 'success');
+         if (state.showToast) state.showToast(`Material "${file.name}" uploaded successfully!`, 'success');
          closeModal('addCourseMaterialModal');
          e.target.reset();
          renderCourses();

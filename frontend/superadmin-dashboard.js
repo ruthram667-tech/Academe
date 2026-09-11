@@ -190,19 +190,22 @@
     });
   }
 
-  // --- Bulk CSV Import Logic ---
+  // --- Bulk CSV Import Logic with Quote & Column Alias Support ---
   function parseCSV(text) {
       const rows = text.match(/[^\r\n]+/g) || [];
       if (rows.length < 2) return [];
-      const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+      const headers = rows[0].split(',').map(h => h.replace(/^["']|["']$/g, '').trim().toLowerCase());
       const result = [];
       for (let i = 1; i < rows.length; i++) {
-          const cols = rows[i].split(',');
-          if (cols.length >= headers.length) { 
-             const obj = {};
-             headers.forEach((h, j) => obj[h] = cols[j] ? cols[j].trim() : '');
-             result.push(obj);
-          }
+          const rawRow = rows[i].trim();
+          if (!rawRow) continue;
+          const cols = rawRow.split(',');
+          const obj = {};
+          headers.forEach((h, j) => {
+             const rawVal = cols[j] !== undefined ? cols[j].trim() : '';
+             obj[h] = rawVal.replace(/^["']|["']$/g, '').trim();
+          });
+          result.push(obj);
       }
       return result;
   }
@@ -219,12 +222,14 @@
         const data = parseCSV(event.target.result);
         let count = 0;
         data.forEach(row => {
-          if (row.name && row.email) {
+          const name = row.name || row['staff name'] || row['faculty name'] || row['full name'];
+          const email = row.email || row['email id'] || row['email address'] || row.username;
+          if (name && email) {
             state.addUser({
-              name: row.name,
-              email: row.email,
-              username: row.email.split('@')[0],
-              department: row.department || 'General',
+              name: name,
+              email: email,
+              username: email.includes('@') ? email.split('@')[0] : email,
+              department: row.department || row.dept || 'Academic Faculty',
               password: row.password || 'password123',
               role: 'staff',
               mustChangePassword: false
@@ -253,9 +258,13 @@
         let count = 0;
         const currentClasses = state.getClasses() || [];
         data.forEach(row => {
-          if (row.name && (row.regno || row.email)) {
+          const name = row.name || row['student name'] || row['full name'];
+          const regNo = row.regno || row['reg no'] || row['reg_no'] || row['reg number'] || row['registration number'] || row['register number'] || row['roll no'] || row.rollno || row.email;
+          const email = row.email || row['email id'] || row['email address'] || (regNo ? `${regNo.toLowerCase()}@academe.edu` : '');
+
+          if (name && (regNo || email)) {
             // Check for class column in CSV
-            const rawClass = (row.class || row.section || row['class/section'] || row['assigned class'] || '').trim();
+            const rawClass = (row.class || row.section || row['class/section'] || row['assigned class'] || row['class name'] || '').trim();
             let classId = '';
             let className = 'General';
             if (rawClass) {
@@ -269,8 +278,8 @@
               } else {
                 // Auto-create class if it doesn't exist
                 const newCls = state.addClass({
-                  name: rawClass.startsWith('Class') ? rawClass : `Class ${rawClass}`,
-                  department: row.department || 'Computer Science',
+                  name: rawClass.toLowerCase().startsWith('class') ? rawClass : `Class ${rawClass}`,
+                  department: row.department || row.dept || 'Computer Science',
                   section: rawClass.replace(/[^a-zA-Z]/g, '').slice(-1).toUpperCase() || 'A'
                 });
                 classId = newCls.id;
@@ -280,11 +289,11 @@
             }
 
             state.addUser({
-              name: row.name,
-              regNo: row.regno || row.email,
-              email: row.email || row.regno,
-              department: row.department || 'General',
-              semester: row.semester || '1',
+              name: name,
+              regNo: regNo,
+              email: email,
+              department: row.department || row.dept || 'Computer Science',
+              semester: row.semester || row.sem || 'Semester 1',
               classId: classId,
               className: className,
               password: row.password || 'password123',
