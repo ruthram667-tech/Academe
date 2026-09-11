@@ -128,6 +128,90 @@
     });
   }
 
+  // --- Bulk CSV Import Logic ---
+  function parseCSV(text) {
+      const rows = text.match(/[^\r\n]+/g) || [];
+      if (rows.length < 2) return [];
+      const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+      const result = [];
+      for (let i = 1; i < rows.length; i++) {
+          const cols = rows[i].split(',');
+          if (cols.length >= headers.length) { 
+             const obj = {};
+             headers.forEach((h, j) => obj[h] = cols[j] ? cols[j].trim() : '');
+             result.push(obj);
+          }
+      }
+      return result;
+  }
+
+  const btnBulkImportStaff = document.getElementById('btnBulkImportStaff');
+  const staffCsvInput = document.getElementById('staffCsvInput');
+  if (btnBulkImportStaff && staffCsvInput) {
+    btnBulkImportStaff.addEventListener('click', () => staffCsvInput.click());
+    staffCsvInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = parseCSV(event.target.result);
+        let count = 0;
+        data.forEach(row => {
+          if (row.name && row.email) {
+            state.addUser({
+              name: row.name,
+              email: row.email,
+              username: row.email.split('@')[0],
+              department: row.department || 'General',
+              password: row.password || 'password123',
+              role: 'staff',
+              mustChangePassword: false
+            });
+            count++;
+          }
+        });
+        state.showToast(`Imported ${count} staff accounts from CSV.`, 'success');
+        renderDashboard();
+        staffCsvInput.value = '';
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  const btnBulkImportStudents = document.getElementById('btnBulkImportStudents');
+  const studentCsvInput = document.getElementById('studentCsvInput');
+  if (btnBulkImportStudents && studentCsvInput) {
+    btnBulkImportStudents.addEventListener('click', () => studentCsvInput.click());
+    studentCsvInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = parseCSV(event.target.result);
+        let count = 0;
+        data.forEach(row => {
+          if (row.name && (row.regno || row.email)) {
+            state.addUser({
+              name: row.name,
+              regNo: row.regno || row.email,
+              email: row.email || row.regno,
+              department: row.department || 'General',
+              semester: row.semester || '1',
+              password: row.password || 'password123',
+              role: 'student',
+              mustChangePassword: false
+            });
+            count++;
+          }
+        });
+        state.showToast(`Imported ${count} student accounts from CSV.`, 'success');
+        renderDashboard();
+        studentCsvInput.value = '';
+      };
+      reader.readAsText(file);
+    });
+  }
+
   // Close modals on overlay backdrop click
   document.querySelectorAll('.modal-overlay').forEach((overlay) => {
     overlay.addEventListener('click', (e) => {

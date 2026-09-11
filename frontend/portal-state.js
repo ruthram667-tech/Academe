@@ -14,7 +14,9 @@
     COURSES: `${STORAGE_PREFIX}courses`,
     PRESENTATIONS: `${STORAGE_PREFIX}presentations`,
     AUDIT: `${STORAGE_PREFIX}audit_logs`,
-    SPLASH_DONE: `${STORAGE_PREFIX}splash_ready`
+    SPLASH_DONE: `${STORAGE_PREFIX}splash_ready`,
+    CLASSES: `${STORAGE_PREFIX}classes`,
+    STAFF_ASSIGNMENTS: `${STORAGE_PREFIX}staff_assignments`
   };
 
   // Default Seed Data — Only Master Superadmin (All demo student/staff IDs removed)
@@ -32,6 +34,13 @@
     }
   ];
 
+  const DEFAULT_CLASSES = [
+    { id: 'cls_c_sec', name: 'Class C Section', department: 'Computer Science', section: 'C', academicYear: '2024-2025' },
+    { id: 'cls_a_sec', name: 'Class A Sec', department: 'Computer Science', section: 'A', academicYear: '2024-2025' },
+    { id: 'cls_d_sec', name: 'Class D Sec', department: 'Computer Science', section: 'D', academicYear: '2024-2025' }
+  ];
+
+  const DEFAULT_STAFF_ASSIGNMENTS = [];
   const DEFAULT_COURSES = [];
   const DEFAULT_TESTS = [];
   const DEFAULT_PRESENTATIONS = [];
@@ -58,6 +67,8 @@
 
   // Initialize DB if not present
   if (!localStorage.getItem(KEYS.USERS)) save(KEYS.USERS, DEFAULT_USERS);
+  if (!localStorage.getItem(KEYS.CLASSES)) save(KEYS.CLASSES, DEFAULT_CLASSES);
+  if (!localStorage.getItem(KEYS.STAFF_ASSIGNMENTS)) save(KEYS.STAFF_ASSIGNMENTS, DEFAULT_STAFF_ASSIGNMENTS);
   if (!localStorage.getItem(KEYS.COURSES)) save(KEYS.COURSES, DEFAULT_COURSES);
   if (!localStorage.getItem(KEYS.TESTS)) save(KEYS.TESTS, DEFAULT_TESTS);
   if (!localStorage.getItem(KEYS.PRESENTATIONS)) save(KEYS.PRESENTATIONS, DEFAULT_PRESENTATIONS);
