@@ -279,23 +279,22 @@ body {
 }
 
 .class-card {
-  background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: none;
   border-radius: 14px;
-  padding: 1.5rem;
+  padding: 0;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
 .class-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(245, 158, 11, 0.4);
-  box-shadow: 0 8px 25px -5px rgba(245, 158, 11, 0.15);
+  box-shadow: var(--shadow-md);
 }
 
 .class-card-header {
@@ -414,8 +413,8 @@ body {
 
 /* The "+ Add Class" wireframe card */
 .class-card-add-new {
-  border: 2px dashed rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.02);
+  border: 2px dashed #D1D5DB;
+  background: transparent;
   border-radius: 14px;
   min-height: 220px;
   display: flex;
@@ -425,19 +424,13 @@ body {
   cursor: pointer;
   transition: all 0.25s ease;
   color: var(--text-muted);
-  gap: 0.75rem;
+  gap: 0.25rem;
   padding: 1.5rem;
   text-align: center;
 }
 
 .class-card-add-new:hover {
-  border-color: var(--accent);
-  color: #fff;
-  background: rgba(245, 158, 11, 0.05);
+  border-color: var(--faculty);
+  background: #F9FAFB;
   transform: translateY(-4px);
-}
-
-.class-card-add-new i {
-  font-size: 2rem;
-  color: var(--accent);
 }

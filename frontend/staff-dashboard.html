@@ -25,54 +25,54 @@
     }
   </script>
 </head>
-<body>
+<body class="light-theme">
+  <!-- Background Mesh Blobs -->
+  <div class="bg-mesh">
+    <div class="mesh-blob mesh-blob-1"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+    <div class="mesh-blob mesh-blob-3"></div>
+  </div>
 
   <!-- 1. Top Header -->
-  <header class="top-header">
+  <header class="top-header" style="background:white; border-bottom:1px solid var(--border-subtle); z-index:100; position:relative;">
     <div class="header-left">
-      <a href="index.html" class="brand">
-        <i class="fa-solid fa-graduation-cap"></i> Academe
+      <a href="index.html" class="brand" style="color:var(--ink);">
+        <div style="background:var(--staff-accent); color:white; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-right:0.25rem;">
+          <i class="fa-solid fa-graduation-cap" style="color:white; font-size:1rem;"></i>
+        </div>
+        Academe
       </a>
-      <a href="staff-dashboard.html" class="nav-home">Home</a>
+      <a href="staff-dashboard.html" class="nav-home" style="margin-left:1.5rem; color:var(--muted); font-size:0.9rem;">Home</a>
     </div>
     <div class="header-right">
       <div class="user-info">
-        <span class="username" id="displayUsername">Loading...</span>
-        <button type="button" class="btn-logout" id="logoutBtn">
+        <span class="username" id="displayUsername" style="color:var(--ink); font-weight:500; font-size:0.9rem;">Loading...</span>
+        <button type="button" class="btn-logout" id="logoutBtn" style="background:rgba(239, 68, 68, 0.08); color:#EF4444; border:none; padding:0.4rem 1rem; border-radius:8px; font-weight:500;">
           <i class="fa-solid fa-right-from-bracket"></i> Logout
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Layout Wrapper (Sidebar + Main Content) -->
-  <div class="dashboard-wrapper">
-    
-    <!-- 2. Left Sidebar -->
-    <aside class="sidebar">
-      <nav class="sidebar-nav">
-        <!-- Course Tab -->
-        <a class="nav-item active" data-target="section-course">
-          <i class="fa-solid fa-book"></i>
-          <span class="nav-label">Course</span>
-        </a>
-        <!-- CIA & AL Tab -->
-        <a class="nav-item" data-target="section-cia">
-          <i class="fa-solid fa-clipboard-list"></i>
-          <span class="nav-label">CIA &amp; AL</span>
-        </a>
-        <!-- Presentation Tab -->
-        <a class="nav-item" data-target="section-presentation">
-          <i class="fa-solid fa-person-chalkboard"></i>
-          <span class="nav-label">Presentation</span>
-        </a>
-        <!-- Test Tab -->
-        <a class="nav-item" data-target="section-test">
-          <i class="fa-solid fa-file-signature"></i>
-          <span class="nav-label">Test</span>
-        </a>
-      </nav>
-    </aside>
+  <!-- 2. Sub Navigation (Horizontal Tabs) -->
+  <nav class="sub-nav">
+    <a class="nav-item active" data-target="section-course">
+      <i class="fa-solid fa-book"></i> Course
+    </a>
+    <a class="nav-item" data-target="section-cia">
+      <i class="fa-solid fa-clipboard-list"></i> CIA &amp; AL
+    </a>
+    <a class="nav-item" data-target="section-presentation">
+      <i class="fa-solid fa-person-chalkboard"></i> Presentation
+    </a>
+    <a class="nav-item" data-target="section-test">
+      <i class="fa-solid fa-file-signature"></i> Test
+    </a>
+  </nav>
+
+  <!-- Layout Wrapper (Main Content) -->
+  <div class="dashboard-wrapper" style="position:relative; z-index:1;">
+
 
     <!-- 3. Main Content Area -->
     <main class="main-content">
@@ -81,15 +81,15 @@
       <section id="section-course" class="content-section active">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
           <div>
-            <h2 class="section-title" style="margin-bottom: 0.25rem;">My Classes &amp; Sections</h2>
-            <p class="section-desc" style="margin-bottom: 0;">Select your active class batches and manage assigned curriculum courses.</p>
+            <h2 class="section-title" style="margin-bottom: 0.35rem; color:var(--ink); font-weight:700;">My Classes &amp; Sections</h2>
+            <p class="section-desc" style="margin-bottom: 0; color:var(--muted); font-size:0.9rem;">Select your active class batches and manage assigned curriculum courses.</p>
           </div>
           <div style="display: flex; gap: 0.75rem;">
-            <button type="button" class="btn btn-primary" id="btnOpenAddClassModal" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: none; padding: 0.55rem 1.1rem; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
+            <button type="button" class="btn btn-primary" id="btnOpenAddClassModal" style="background: var(--staff-accent); border: none; padding: 0.55rem 1.1rem; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
               <i class="fa-solid fa-plus"></i> Add Class
             </button>
-            <button type="button" class="btn btn-secondary" id="btnOpenAddMaterialModal" style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); padding: 0.55rem 1.1rem; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; gap: 0.5rem;">
-              <i class="fa-solid fa-cloud-arrow-up"></i> Upload Material
+            <button type="button" class="btn btn-secondary" id="btnOpenAddMaterialModal" style="background: white; border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm); padding: 0.55rem 1.1rem; border-radius: 8px; cursor: pointer; color: var(--ink); display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
+               Upload Material
             </button>
           </div>
         </div>
@@ -169,22 +169,22 @@
       <section id="section-course" class="content-section">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
           <div>
-            <h2 class="section-title">Course Materials</h2>
-            <p class="section-desc">Upload notes and study guides for enrolled students.</p>
+            <h2 class="section-title" style="color:var(--ink); font-weight:700;">All Assigned Courses &amp; Notes</h2>
+            <p class="section-desc" style="color:var(--muted);">Upload notes and study guides for enrolled students.</p>
           </div>
-          <button type="button" class="btn btn-primary" id="btnOpenAddMaterialModal" style="background: linear-gradient(135deg, #10b981, #059669); border:none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
-            <i class="fa-solid fa-cloud-arrow-up"></i> Upload Note
+          <button type="button" class="btn btn-primary" id="btnOpenAddMaterialModal" style="background: var(--student-accent); border:none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
+             Upload Note
           </button>
         </div>
 
-        <div class="glass-panel" style="padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.03);">
+        <div class="glass-panel" style="padding: 1.5rem; border-radius: 12px; background: #ffffff; box-shadow: var(--shadow-sm);">
           <table class="data-table" style="width: 100%; border-collapse: collapse;">
             <thead>
-              <tr style="text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <th style="padding: 1rem; color: var(--text-muted);">Course Code & Title</th>
-                <th style="padding: 1rem; color: var(--text-muted);">Department</th>
-                <th style="padding: 1rem; color: var(--text-muted);">Credits</th>
-                <th style="padding: 1rem; color: var(--text-muted);">Materials</th>
+              <tr style="text-align: left; border-bottom: 1px solid var(--border-subtle);">
+                <th style="padding: 1rem; color: var(--muted); font-size:0.85rem;">Course Code & Title</th>
+                <th style="padding: 1rem; color: var(--muted); font-size:0.85rem;">Department</th>
+                <th style="padding: 1rem; color: var(--muted); font-size:0.85rem;">Credits</th>
+                <th style="padding: 1rem; color: var(--muted); font-size:0.85rem;">Uploaded Materials</th>
               </tr>
             </thead>
             <tbody id="staffCourseTableBody">
@@ -198,15 +198,15 @@
       <section id="section-presentation" class="content-section">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
           <div>
-            <h2 class="section-title">Presentations</h2>
-            <p class="section-desc">Schedule and evaluate student seminar slide decks.</p>
+            <h2 class="section-title" style="color:var(--ink); font-weight:700;">Presentations</h2>
+            <p class="section-desc" style="color:var(--muted);">Schedule and evaluate student seminar slide decks.</p>
           </div>
-          <button type="button" class="btn btn-primary" id="btnOpenAddPresentationModal" style="background: linear-gradient(135deg, #f59e0b, #d97706); border:none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
+          <button type="button" class="btn btn-primary" id="btnOpenAddPresentationModal" style="background: var(--staff-accent); border:none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
             <i class="fa-solid fa-plus"></i> Schedule Presentation
           </button>
         </div>
         
-        <div class="glass-panel" style="padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.03);">
+        <div class="glass-panel" style="padding: 1.5rem; border-radius: 12px; background: #ffffff; box-shadow: var(--shadow-sm);">
           <div id="staffPresentationCards" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
             <!-- Rendered via JS -->
           </div>
@@ -217,21 +217,21 @@
       <section id="section-test" class="content-section">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
           <div>
-            <h2 class="section-title">Tests &amp; Assessments</h2>
-            <p class="section-desc">Create new tests, manage active exams, and grade student submissions.</p>
+            <h2 class="section-title" style="color:var(--ink); font-weight:700;">Tests &amp; Assessments</h2>
+            <p class="section-desc" style="color:var(--muted);">Create new tests, manage active exams, and grade student submissions.</p>
           </div>
-          <button type="button" class="btn btn-primary" id="btnOpenAddTestModal" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); border:none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
+          <button type="button" class="btn btn-primary" id="btnOpenAddTestModal" style="background: #EC4899; border:none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
             <i class="fa-solid fa-file-pen"></i> Create New Test
           </button>
         </div>
         
-        <div class="glass-panel" style="padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.03);">
+        <div class="glass-panel" style="padding: 1.5rem; border-radius: 12px; background: #ffffff; box-shadow: var(--shadow-sm);">
           <table class="data-table" style="width: 100%; border-collapse: collapse;">
             <thead>
-              <tr style="text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <th style="padding: 1rem; color: var(--text-muted);">Test Code & Title</th>
-                <th style="padding: 1rem; color: var(--text-muted);">Subject</th>
-                <th style="padding: 1rem; color: var(--text-muted);">Submissions</th>
+              <tr style="text-align: left; border-bottom: 1px solid var(--border-subtle);">
+                <th style="padding: 1rem; color: var(--muted); font-size:0.85rem;">Test Code & Title</th>
+                <th style="padding: 1rem; color: var(--muted); font-size:0.85rem;">Subject</th>
+                <th style="padding: 1rem; color: var(--muted); font-size:0.85rem;">Submissions</th>
               </tr>
             </thead>
             <tbody id="staffTestTableBody">

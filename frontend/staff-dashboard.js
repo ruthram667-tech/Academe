@@ -74,39 +74,38 @@
       let coursesListHtml = '';
       if (courses.length > 0) {
         coursesListHtml = courses.map(c => `
-          <div class="course-item-tag">
-            <span><strong style="color:#fbbf24;">${c.code}</strong> - ${c.title}</span>
-            <i class="fa-solid fa-book-open" style="color:var(--text-dim); font-size:0.75rem;"></i>
+          <div class="course-item-tag" style="font-size:0.85rem; margin-top:0.3rem;">
+            <strong style="color:var(--student-accent);">${c.code}</strong> <span style="color:var(--ink);">— ${c.title}</span>
           </div>
         `).join('');
       } else {
-        coursesListHtml = `<span style="color:var(--text-dim); font-size:0.8rem; font-style:italic;">No course assigned yet. Click "+ Add Course" below.</span>`;
+        coursesListHtml = `<span style="color:var(--text-dim); font-size:0.8rem; font-style:italic;">No course assigned yet.</span>`;
       }
 
       const card = document.createElement('div');
       card.className = 'class-card';
       card.innerHTML = `
-        <div>
-          <div class="class-card-header">
-            <h3 class="class-card-title">${className}</h3>
-            <span class="class-card-sec-badge">Sec ${section}</span>
+        <div style="padding:1.5rem;">
+          <div class="class-card-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <h3 class="class-card-title" style="margin:0; font-size:1.15rem; color:var(--ink);">${className}</h3>
+            <span class="class-card-sec-badge" style="background:#FEF3C7; color:#D97706; padding:0.2rem 0.6rem; border-radius:12px; font-size:0.75rem; font-weight:600;">Sec ${section}</span>
           </div>
-          <div class="class-card-dept">
-            <i class="fa-solid fa-building-columns" style="font-size:0.8rem; margin-right:0.3rem;"></i> ${department}
+          <div class="class-card-dept" style="color:var(--muted); font-size:0.85rem; margin-bottom:1.2rem;">
+            <i class="fa-solid fa-building-columns" style="margin-right:0.3rem;"></i> ${department}
           </div>
-          <div class="class-courses-list">
-            <div class="class-courses-header">
+          <div class="class-courses-list" style="background:#F8FAFC; padding:1rem; border-radius:12px;">
+            <div class="class-courses-header" style="display:flex; justify-content:space-between; font-size:0.7rem; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:0.5rem;">
               <span>Courses Taught</span>
-              <span>${courses.length} Active</span>
+              <span style="color:#10B981;">${courses.length} active</span>
             </div>
             ${coursesListHtml}
           </div>
         </div>
-        <div class="class-card-actions">
-          <button type="button" class="btn-card-add-course btn-open-add-course-modal" data-class-id="${asgn.classId}" data-class-name="${className}">
-            <i class="fa-solid fa-plus"></i> Add Course
+        <div class="class-card-actions" style="display:flex; gap:0.5rem; padding:0 1.5rem 1.5rem;">
+          <button type="button" class="btn-card-add-course btn-open-add-course-modal" data-class-id="${asgn.classId}" data-class-name="${className}" style="flex:1; background:var(--faculty-soft); color:var(--faculty); border:none; padding:0.6rem; border-radius:8px; font-weight:600; cursor:pointer;">
+            + Add Course
           </button>
-          <button type="button" class="btn-card-remove-class btn-remove-class-assignment" data-class-id="${asgn.classId}" data-class-name="${className}" title="Remove class from dashboard">
+          <button type="button" class="btn-card-remove-class btn-remove-class-assignment" data-class-id="${asgn.classId}" data-class-name="${className}" title="Remove class" style="background:#FEE2E2; color:#EF4444; border:none; padding:0.6rem 1rem; border-radius:8px; cursor:pointer;">
             <i class="fa-solid fa-trash-can"></i>
           </button>
         </div>
@@ -119,9 +118,11 @@
     addCard.className = 'class-card-add-new';
     addCard.id = 'cardAddNewClassTrigger';
     addCard.innerHTML = `
-      <i class="fa-solid fa-circle-plus"></i>
-      <div style="font-weight:600; font-size:1.15rem; color:#fff;">+ Add Class</div>
-      <div style="font-size:0.82rem; color:var(--text-muted);">Enroll in another class or section</div>
+      <div style="background:var(--faculty); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:1rem;">
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <div style="font-weight:700; font-size:1.1rem; color:var(--ink); margin-bottom:0.2rem;">Add Class</div>
+      <div style="font-size:0.85rem; color:var(--muted);">Enrol in another class or section</div>
     `;
     container.appendChild(addCard);
 
@@ -177,10 +178,10 @@
     courses.forEach(c => {
       tableBody.innerHTML += `
         <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-          <td style="padding: 1rem;"><strong>${c.code}</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">${c.name || c.title}</span></td>
-          <td style="padding: 1rem;">${c.department || 'Computer Science'}</td>
-          <td style="padding: 1rem;">${c.credits || 3}</td>
-          <td style="padding: 1rem;"><span class="badge-tag active">${(c.notes||[]).length} Materials</span></td>
+          <td style="padding: 1rem;"><strong style="color:var(--ink);">${c.code}</strong><br><span style="font-size:0.85rem; color:var(--muted);">${c.name || c.title}</span></td>
+          <td style="padding: 1rem; color:var(--ink);">${c.department || 'Computer Science'}</td>
+          <td style="padding: 1rem; color:var(--ink);">${c.credits || 3}</td>
+          <td style="padding: 1rem;"><span class="badge-tag active" style="background:#D1FAE5; color:#059669; border:none; padding:0.3rem 0.6rem; border-radius:12px; font-weight:600; font-size:0.75rem;">${(c.notes||[]).length} Material</span></td>
         </tr>
       `;
     });
