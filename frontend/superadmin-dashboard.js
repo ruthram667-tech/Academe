@@ -219,7 +219,27 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (event) => {
-        const data = parseCSV(event.target.result);
+        let data = [];
+        try {
+          if (file.name.match(/\.xlsx?$|\.xls$/i) && window.XLSX) {
+            const workbook = window.XLSX.read(event.target.result, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const json = window.XLSX.utils.sheet_to_json(sheet, { defval: '' });
+            data = json.map(row => {
+              const lowerRow = {};
+              for (let key in row) {
+                lowerRow[key.trim().toLowerCase()] = typeof row[key] === 'string' ? row[key].trim() : String(row[key]);
+              }
+              return lowerRow;
+            });
+          } else {
+            const text = new TextDecoder().decode(event.target.result);
+            data = parseCSV(text);
+          }
+        } catch (err) {
+          state.showToast("Error reading file: " + err.message, "error");
+          return;
+        }
         let count = 0;
         data.forEach(row => {
           const name = row.name || row['staff name'] || row['faculty name'] || row['full name'];
@@ -237,11 +257,11 @@
             count++;
           }
         });
-        state.showToast(`Imported ${count} staff accounts from CSV.`, 'success');
+        state.showToast(`Imported ${count} staff accounts.`, 'success');
         renderDashboard();
         staffCsvInput.value = '';
       };
-      reader.readAsText(file);
+      reader.readAsArrayBuffer(file);
     });
   }
 
@@ -254,7 +274,27 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (event) => {
-        const data = parseCSV(event.target.result);
+        let data = [];
+        try {
+          if (file.name.match(/\.xlsx?$|\.xls$/i) && window.XLSX) {
+            const workbook = window.XLSX.read(event.target.result, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const json = window.XLSX.utils.sheet_to_json(sheet, { defval: '' });
+            data = json.map(row => {
+              const lowerRow = {};
+              for (let key in row) {
+                lowerRow[key.trim().toLowerCase()] = typeof row[key] === 'string' ? row[key].trim() : String(row[key]);
+              }
+              return lowerRow;
+            });
+          } else {
+            const text = new TextDecoder().decode(event.target.result);
+            data = parseCSV(text);
+          }
+        } catch (err) {
+          state.showToast("Error reading file: " + err.message, "error");
+          return;
+        }
         let count = 0;
         const currentClasses = state.getClasses() || [];
         data.forEach(row => {
@@ -303,12 +343,12 @@
             count++;
           }
         });
-        state.showToast(`Imported ${count} student accounts from CSV.`, 'success');
+        state.showToast(`Imported ${count} student accounts.`, 'success');
         populateStudentClassOptions();
         renderDashboard();
         studentCsvInput.value = '';
       };
-      reader.readAsText(file);
+      reader.readAsArrayBuffer(file);
     });
   }
 
