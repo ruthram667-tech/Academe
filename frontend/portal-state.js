@@ -217,10 +217,12 @@
       const users = load(KEYS.USERS, DEFAULT_USERS);
 
       // 1. Try Student Auth first (Registration Number or Email match)
-      const student = users.find(u => 
-        u.role === 'student' && 
-        (u.regNo.toLowerCase() === cleanId || u.email.toLowerCase() === cleanId)
-      );
+      const student = users.find(u => {
+        if (u.role !== 'student') return false;
+        const uReg = u.regNo ? String(u.regNo).toLowerCase() : '';
+        const uEmail = u.email ? String(u.email).toLowerCase() : '';
+        return (uReg === cleanId || uEmail === cleanId);
+      });
 
       if (student) {
         if (student.password === cleanPass) {
@@ -700,15 +702,42 @@
 
     addUser: function (userData) {
       const users = this.getUsers();
-      const newUser = {
-        id: `usr_${Date.now()}`,
-        ...userData,
-        avatar: (userData.name || 'U').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
-      };
-      users.push(newUser);
+      
+      // Check if user already exists (by regNo or email) to prevent duplicates
+      const existingIdx = users.findIndex(u => {
+        const uReg = u.regNo ? String(u.regNo).toLowerCase() : '';
+        const dataReg = userData.regNo ? String(userData.regNo).toLowerCase() : '';
+        const uEmail = u.email ? String(u.email).toLowerCase() : '';
+        const dataEmail = userData.email ? String(userData.email).toLowerCase() : '';
+        
+        return (dataReg && uReg === dataReg) || (dataEmail && uEmail === dataEmail);
+      });
+
+      const avatar = (userData.name || 'U').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+      
+      let userObj;
+      if (existingIdx !== -1) {
+        // Update existing user
+        userObj = {
+          ...users[existingIdx],
+          ...userData,
+          avatar: avatar
+        };
+        users[existingIdx] = userObj;
+        this.logAudit('User Updated', `Updated ${userObj.name} with role ${userObj.role}`);
+      } else {
+        // Create new user
+        userObj = {
+          id: `usr_${Date.now()}_${Math.floor(Math.random()*1000)}`,
+          ...userData,
+          avatar: avatar
+        };
+        users.push(userObj);
+        this.logAudit('User Added', `Added ${userObj.name} with role ${userObj.role}`);
+      }
+      
       save(KEYS.USERS, users);
-      this.logAudit('User Added', `Added ${newUser.name} with role ${newUser.role}`);
-      return newUser;
+      return userObj;
     },
 
     deleteUser: function (userId) {

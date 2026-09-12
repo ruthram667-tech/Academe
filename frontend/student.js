@@ -192,14 +192,14 @@
                 </div>
                 ${note.description ? `<p style="font-size:0.8rem; color:#475569; margin-top:0.35rem; line-height:1.4;">${note.description}</p>` : ''}
               </div>
-              <button type="button" class="btn-modal-primary btn-download-note" style="padding:0.35rem 0.75rem; font-size:0.76rem;" data-file="${note.fileName}">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                <span>${note.fileName}</span>
-              </button>
+              <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;">
+                <button type="button" class="btn-modal-primary btn-view-note" style="padding:0.35rem 0.75rem; font-size:0.76rem; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.25); color:#3b82f6;" data-file="${note.fileName}" data-url="${note.fileUrl || '#'}">
+                  <i class="fa-solid fa-eye"></i> View
+                </button>
+                <button type="button" class="btn-modal-primary btn-download-note" style="padding:0.35rem 0.75rem; font-size:0.76rem;" data-file="${note.fileName}" data-url="${note.fileUrl || '#'}">
+                  <i class="fa-solid fa-download"></i> Download
+                </button>
+              </div>
             </div>
           </div>
         `).join('');
@@ -240,13 +240,45 @@
       container.appendChild(card);
     });
 
-    // Attach click listeners to download buttons
-    container.querySelectorAll('.btn-download-note').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    // Global Event Delegation for Course Notes
+    container.addEventListener('click', (e) => {
+      const viewBtn = e.target.closest('.btn-view-note');
+      const downloadBtn = e.target.closest('.btn-download-note');
+
+      if (viewBtn) {
         e.stopPropagation();
-        const fileName = btn.getAttribute('data-file');
+        const fileName = viewBtn.getAttribute('data-file');
+        let fileUrl = viewBtn.getAttribute('data-url');
+        
+        if (!fileUrl || fileUrl === '#') {
+          // Fallback dummy view behavior
+          const blob = new Blob([`Dummy content for ${fileName}`], { type: 'text/plain' });
+          fileUrl = URL.createObjectURL(blob);
+        }
+        
+        state.showToast(`Opening ${fileName} in new tab...`, 'info');
+        window.open(fileUrl, '_blank');
+      }
+
+      if (downloadBtn) {
+        e.stopPropagation();
+        const fileName = downloadBtn.getAttribute('data-file');
+        let fileUrl = downloadBtn.getAttribute('data-url');
+
+        if (!fileUrl || fileUrl === '#') {
+          // Fallback dummy download behavior
+          const blob = new Blob([`Dummy content for ${fileName}`], { type: 'text/plain' });
+          fileUrl = URL.createObjectURL(blob);
+        }
+
         state.showToast(`Downloading study material: ${fileName}`, 'success');
-      });
+        const a = document.createElement('a');
+        a.href = fileUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
     });
   }
 

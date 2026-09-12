@@ -1,291 +1,474 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Academe — Smart ERP &amp; Management Platform</title>
-  <meta name="description" content="Academe is a modern, intelligent institutional management and assessment ERP platform." />
-
-  <!-- Google Fonts: Poppins & Outfit -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-
-  <!-- Bootstrap 5.3.3 CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
-
-  <!-- Font Awesome 6.5.2 CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-
-  <!-- AlertifyJS CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/themes/default.min.css" />
-
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="portal-common.css" />
-  <link rel="stylesheet" href="login.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — Academe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- AlertifyJS for notifications -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+  :root{
+    --bg-a: #EAF1FF;
+    --bg-b: #F6F1FF;
+    --surface: #FFFFFF;
+    --ink: #1C2340;
+    --muted: #70759A;
+    --primary: #3D5AFE;
+    --primary-dark: #2A3FC9;
+    --mint: #22C79A;
+    --mint-soft: #E3FBF3;
+    --faculty: #7B61FF;
+    --faculty-soft: #EFEBFF;
+    --rule: #E9EAF7;
+  }
+ 
+  *{ box-sizing: border-box; }
+ 
+  body{
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: radial-gradient(circle at 20% 15%, var(--bg-a), transparent 55%),
+                radial-gradient(circle at 85% 85%, var(--bg-b), transparent 55%),
+                #F3F5FC;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+ 
+  .stage{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1400px;
+  }
+ 
+  /* ---------- floating background shapes ---------- */
+  .shape{
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .sphere-a{
+    width: 130px; height: 130px;
+    top: 12%; left: 12%;
+    background: radial-gradient(circle at 32% 28%, #ffffff, #B9CBFF 45%, #6E8CF7 100%);
+    box-shadow: 0 30px 50px -20px rgba(61,90,254,0.45);
+    animation: float1 9s ease-in-out infinite;
+  }
+  .sphere-b{
+    width: 70px; height: 70px;
+    bottom: 16%; left: 18%;
+    background: radial-gradient(circle at 32% 28%, #ffffff, #DCD3FF 45%, #9B85FF 100%);
+    box-shadow: 0 20px 34px -14px rgba(123,97,255,0.4);
+    animation: float2 7s ease-in-out infinite;
+  }
+  .sphere-c{
+    width: 46px; height: 46px;
+    top: 20%; right: 16%;
+    background: radial-gradient(circle at 32% 28%, #ffffff, #B7F3E1 45%, #34D9AE 100%);
+    box-shadow: 0 18px 30px -12px rgba(34,199,154,0.4);
+    animation: float3 8s ease-in-out infinite;
+  }
+  .ring{
+    width: 200px; height: 200px;
+    bottom: 8%; right: 10%;
+    border-radius: 50%;
+    border: 16px solid transparent;
+    border-top-color: #C9D6FF;
+    border-right-color: #D9CBFF;
+    filter: blur(0.3px);
+    opacity: 0.7;
+    animation: spin 22s linear infinite;
+  }
+ 
+  @keyframes float1{
+    0%,100%{ transform: translate3d(0,0,0) rotate(0deg); }
+    50%{ transform: translate3d(10px,-22px,0) rotate(10deg); }
+  }
+  @keyframes float2{
+    0%,100%{ transform: translate3d(0,0,0) rotate(0deg); }
+    50%{ transform: translate3d(-14px,14px,0) rotate(-12deg); }
+  }
+  @keyframes float3{
+    0%,100%{ transform: translate3d(0,0,0) rotate(0deg); }
+    50%{ transform: translate3d(-8px,-16px,0) rotate(14deg); }
+  }
+  @keyframes spin{
+    to{ transform: rotate(360deg); }
+  }
+ 
+  /* ---------- brand ---------- */
+  .brand{
+    position: absolute;
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 3;
+  }
+  .brand .name{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+  .brand .name span{ color: var(--primary); }
+  .brand .tag{
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+ 
+  /* ---------- portal switch ---------- */
+  .switch{
+    position: relative;
+    display: flex;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 4px;
+    width: 320px;
+    margin: 0 auto 1.6rem;
+    box-shadow: 0 8px 20px -12px rgba(28,35,64,0.15);
+    z-index: 3;
+  }
+  .switch button{
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    appearance: none;
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.6rem 0.4rem;
+    cursor: pointer;
+    color: var(--muted);
+    transition: color 0.3s ease;
+  }
+  .switch button.active{ color: #fff; }
+  .switch .pill{
+    position: absolute;
+    top: 4px; bottom: 4px; left: 4px;
+    width: calc(50% - 4px);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: 999px;
+    z-index: 1;
+    transition: transform 0.4s cubic-bezier(.65,.05,.36,1);
+  }
+  .switch.on-faculty .pill{
+    transform: translateX(100%);
+    background: linear-gradient(135deg, var(--faculty), #5C40E0);
+  }
+ 
+  /* ---------- 3D flip card ---------- */
+  .tilt-wrap{
+    width: 400px;
+    max-width: 90vw;
+    z-index: 3;
+  }
+  .card-3d{
+    position: relative;
+    width: 100%;
+    height: 470px;
+    transform-style: preserve-3d;
+    transition: transform 0.9s cubic-bezier(.65,.05,.36,1);
+  }
+  .card-3d.flipped{ transform: rotateY(180deg); }
+ 
+  .face{
+    position: absolute;
+    inset: 0;
+    background: var(--surface);
+    border-radius: 22px;
+    padding: 2.2rem 2rem;
+    box-shadow: 0 40px 70px -30px rgba(28,35,64,0.35);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .face.back{ transform: rotateY(180deg); }
+ 
+  .face .accent-bar{
+    width: 46px; height: 5px;
+    border-radius: 999px;
+    margin-bottom: 1.3rem;
+  }
+  .face.front .accent-bar{ background: var(--mint); }
+  .face.back .accent-bar{ background: var(--faculty); }
+ 
+  .face h2{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1.35rem;
+    margin: 0 0 0.35rem;
+  }
+  .face .sub{
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 0 0 1.6rem;
+    line-height: 1.5;
+  }
+ 
+  .field{ margin-bottom: 1.15rem; }
+  .field label{
+    display: block;
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .field-box{
+    position: relative;
+    background: #F5F6FB;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .field-box:focus-within{
+    border-color: var(--primary);
+    background: #fff;
+  }
+  .face.back .field-box:focus-within{ border-color: var(--faculty); }
+  .field-box input{
+    width: 100%;
+    border: none;
+    background: none;
+    font-size: 0.9rem;
+    padding: 0.7rem 2.2rem 0.7rem 0.85rem;
+    outline: none;
+    color: var(--ink);
+  }
+  .field-box input::placeholder{ color: #A7ABC6; }
+  .field-box .eye{
+    position: absolute;
+    right: 0.7rem; top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.68rem;
+    color: var(--muted);
+    cursor: pointer;
+  }
+ 
+  .remember{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.76rem;
+    color: var(--muted);
+    margin: 0.2rem 0 1.3rem;
+    cursor: pointer;
+  }
+  .remember input{ display:none; }
+  .remember .box{
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--rule);
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    background: #fff;
+  }
+  .face.front .remember input:checked + .box{ background: var(--mint); border-color: var(--mint); }
+  .face.back .remember input:checked + .box{ background: var(--faculty); border-color: var(--faculty); }
+  .remember input:checked + .box::after{
+    content: '';
+    width: 3px; height: 6px;
+    border: solid #fff;
+    border-width: 0 1.4px 1.4px 0;
+    transform: rotate(45deg) translate(-1px,-1px);
+  }
+ 
+  .go-btn{
+    margin-top: auto;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .face.front .go-btn{
+    background: linear-gradient(135deg, var(--mint), #17A883);
+    box-shadow: 0 14px 24px -10px rgba(34,199,154,0.55);
+  }
+  .face.back .go-btn{
+    background: linear-gradient(135deg, var(--faculty), #5C40E0);
+    box-shadow: 0 14px 24px -10px rgba(123,97,255,0.55);
+  }
+  .go-btn:hover{ transform: translateY(-2px); }
+  .go-btn:active{ transform: translateY(0); }
+ 
+  .flip-hint{
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 0.7rem;
+  }
+  .preview-flag{
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 0.6rem;
+    min-height: 1rem;
+  }
+ 
+  @media (max-width: 480px){
+    .card-3d{ height: 500px; }
+  }
+</style>
 </head>
 <body>
-
-  <div class="split-screen-wrapper">
-    <!-- ════════════════════════════════════════════════════════════════
-         LEFT PANEL (~52% Width, High-Level Interactive Animated Visual Stage)
-         ════════════════════════════════════════════════════════════════ -->
-    <aside class="left-branding-panel">
-      <!-- High-Performance Academic OS Logo/Brand (Minimalist) -->
-      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; color: white; text-align: center; padding: 2rem;">
-        <i class="fa-solid fa-graduation-cap" style="font-size: 4rem; margin-bottom: 1rem; color: rgba(255,255,255,0.9);"></i>
-        <h1 style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 2.5rem; letter-spacing: -1px; margin: 0;">Academe</h1>
-      </div>
-    </aside>
-
-    <!-- ════════════════════════════════════════════════════════════════
-         RIGHT PANEL (~48% Width, Light / Glass Theme, Login Form)
-         ════════════════════════════════════════════════════════════════ -->
-    <main class="right-login-panel">
-      <!-- Soft Floating Drifting Colorful Bubbles -->
-      <div class="drift-bubble bubble-1" aria-hidden="true"></div>
-      <div class="drift-bubble bubble-2" aria-hidden="true"></div>
-      <div class="drift-bubble bubble-3" aria-hidden="true"></div>
-      <div class="drift-bubble bubble-4" aria-hidden="true"></div>
-
-      <div class="login-card-wrapper">
-        <!-- Main Glass Card -->
-        <div class="auth-card">
-          
-          <!-- Top App Logo & Header -->
-          <div class="auth-header text-center">
-            <div class="auth-app-badge">
-              <i class="fa-solid fa-graduation-cap"></i>
-            </div>
-            <h2 class="auth-heading">Sign In to <span class="text-primary-custom">Academe</span></h2>
-            <p class="auth-subtext">Select your destination portal below to access your workspace</p>
-          </div>
-
-          <!-- Pill-Style Tab Switcher ("User" vs "Admin") -->
-          <div class="auth-tabs-container mb-4" id="authTabsGroup">
-            <button type="button" class="auth-tab-pill active" id="tabUserBtn" data-target="user">
-              <i class="fa-solid fa-user me-2"></i> Student / Faculty
-            </button>
-            <button type="button" class="auth-tab-pill" id="tabAdminBtn" data-target="admin">
-              <i class="fa-solid fa-crown me-2"></i> Super Admin
-            </button>
-          </div>
-
-          <!-- ════════════════════════════════════════
-               CONTAINER A: USER LOGIN FORM (Students & Faculty)
-               ════════════════════════════════════════ -->
-          <div class="auth-form-pane active" id="userFormPane">
-            <form id="userLoginForm" novalidate>
-              <!-- ID Field -->
-              <div class="form-group-custom mb-3">
-                <label class="form-label-custom" for="userIdInput">Registration No. or Institutional Email</label>
-                <div class="input-icon-group">
-                  <span class="input-icon"><i class="fa-solid fa-id-card"></i></span>
-                  <input 
-                    type="text" 
-                    class="form-control-custom" 
-                    id="userIdInput" 
-                    placeholder="e.g. 2026CS101 or faculty@academe.edu" 
-                    required 
-                    autocomplete="username"
-                  />
-                </div>
-              </div>
-
-              <!-- Password Field -->
-              <div class="form-group-custom mb-3">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                  <label class="form-label-custom mb-0" for="userPasswordInput">Password</label>
-                  <a href="#" class="forgot-link" id="userForgotPassBtn">Forgot Password?</a>
-                </div>
-                <div class="input-icon-group">
-                  <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
-                  <input 
-                    type="password" 
-                    class="form-control-custom" 
-                    id="userPasswordInput" 
-                    placeholder="Enter account password" 
-                    required 
-                    autocomplete="current-password"
-                  />
-                  <button type="button" class="toggle-password-btn" data-input="userPasswordInput" aria-label="Toggle password visibility">
-                    <i class="fa-regular fa-eye"></i>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Remember & Security Row -->
-              <div class="d-flex justify-content-between align-items-center mb-4">
-                <label class="custom-checkbox">
-                  <input type="checkbox" id="userRememberMe" checked />
-                  <span class="checkmark"></span>
-                  <span class="checkbox-label">Keep me signed in</span>
-                </label>
-                <span class="badge-secure"><i class="fa-solid fa-shield-check"></i> 256-Bit SSL</span>
-              </div>
-
-              <!-- Gradient Submit Button with Ripple Effect -->
-              <button type="submit" class="btn-gradient-submit" id="userSubmitBtn">
-                <span class="btn-text">Sign In to Portal</span>
-                <i class="fa-solid fa-arrow-right-long ms-2"></i>
-              </button>
-            </form>
-          </div>
-
-          <!-- ════════════════════════════════════════
-               CONTAINER B: ADMIN LOGIN FORM (Superadmin Only)
-               ════════════════════════════════════════ -->
-          <div class="auth-form-pane" id="adminFormPane">
-            <!-- Master Superadmin Callout -->
-            <div class="superadmin-credential-callout mb-3">
-              <div class="callout-header">
-                <span class="callout-badge"><i class="fa-solid fa-crown"></i> Master Superadmin</span>
-                <span class="callout-status"><span class="status-pulse-dot"></span> Active Key</span>
-              </div>
-              <div class="callout-body">
-                <div class="callout-field">
-                  <span class="callout-lbl">Username:</span>
-                  <code class="callout-val" id="valSuperUser">RM</code>
-                </div>
-                <div class="callout-field">
-                  <span class="callout-lbl">Password:</span>
-                  <code class="callout-val" id="valSuperPass">RK</code>
-                </div>
-              </div>
-              <div class="callout-hint">
-                <i class="fa-solid fa-info-circle me-1"></i> Log in as master superadmin to register faculty staff and enroll students.
-              </div>
-            </div>
-
-            <form id="adminLoginForm" novalidate>
-              <!-- Admin ID Field -->
-              <div class="form-group-custom mb-3">
-                <label class="form-label-custom" for="adminIdInput">Super Administrator ID or Master Email</label>
-                <div class="input-icon-group">
-                  <span class="input-icon"><i class="fa-solid fa-user-shield"></i></span>
-                  <input 
-                    type="text" 
-                    class="form-control-custom" 
-                    id="adminIdInput" 
-                    placeholder="RM or rm@academe.edu" 
-                    value="RM"
-                    required 
-                    autocomplete="username"
-                  />
-                </div>
-              </div>
-
-              <!-- Admin Password Field -->
-              <div class="form-group-custom mb-3">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                  <label class="form-label-custom mb-0" for="adminPasswordInput">Master Key / Password</label>
-                  <button type="button" class="btn-link-raw forgot-link" id="adminLostPassBtn">Lost Password?</button>
-                </div>
-                <div class="input-icon-group">
-                  <span class="input-icon"><i class="fa-solid fa-key"></i></span>
-                  <input 
-                    type="password" 
-                    class="form-control-custom" 
-                    id="adminPasswordInput" 
-                    placeholder="RK" 
-                    value="RK"
-                    required 
-                    autocomplete="current-password"
-                  />
-                  <button type="button" class="toggle-password-btn" data-input="adminPasswordInput" aria-label="Toggle password visibility">
-                    <i class="fa-regular fa-eye"></i>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Admin Security Check -->
-              <div class="d-flex justify-content-between align-items-center mb-4">
-                <label class="custom-checkbox">
-                  <input type="checkbox" id="adminAuditing" checked />
-                  <span class="checkmark"></span>
-                  <span class="checkbox-label">Log session in audit trail</span>
-                </label>
-                <span class="badge-role-admin"><i class="fa-solid fa-crown me-1"></i> Root Access</span>
-              </div>
-
-              <!-- Gradient Submit Button -->
-              <button type="submit" class="btn-gradient-submit btn-admin-gradient" id="adminSubmitBtn">
-                <span class="btn-text">Authenticate Master Session</span>
-                <i class="fa-solid fa-shield-check ms-2"></i>
-              </button>
-            </form>
-          </div>
-
-          <!-- ════════════════════════════════════════
-               CONTAINER C: PASSWORD RECOVERY SUB-FORM
-               ════════════════════════════════════════ -->
-          <div class="auth-form-pane" id="recoveryFormPane">
-            <div class="recovery-header mb-3">
-              <button type="button" class="btn-back-link" id="recoveryBackBtn">
-                <i class="fa-solid fa-arrow-left me-1"></i> Back to Sign In
-              </button>
-              <h3 class="recovery-title mt-2">Account Recovery</h3>
-              <p class="recovery-desc">Enter your registered ID and institutional email to receive reset instructions.</p>
-            </div>
-
-            <form id="recoveryForm" novalidate>
-              <div class="form-group-custom mb-3">
-                <label class="form-label-custom" for="recoveryIdInput">User ID or Registration No.</label>
-                <div class="input-icon-group">
-                  <span class="input-icon"><i class="fa-solid fa-id-badge"></i></span>
-                  <input 
-                    type="text" 
-                    class="form-control-custom" 
-                    id="recoveryIdInput" 
-                    placeholder="e.g. 2026CS101 or faculty@academe.edu" 
-                    required 
-                  />
-                </div>
-              </div>
-
-              <div class="form-group-custom mb-4">
-                <label class="form-label-custom" for="recoveryEmailInput">Institutional Email Address</label>
-                <div class="input-icon-group">
-                  <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
-                  <input 
-                    type="email" 
-                    class="form-control-custom" 
-                    id="recoveryEmailInput" 
-                    placeholder="user@academe.edu" 
-                    required 
-                  />
-                </div>
-              </div>
-
-              <button type="submit" class="btn-gradient-submit" id="recoverySubmitBtn">
-                <span class="btn-text">Send Password Reset Instructions</span>
-                <i class="fa-solid fa-paper-plane ms-2"></i>
-              </button>
-            </form>
-          </div>
-
-          <!-- Card Footer -->
-          <div class="auth-card-footer mt-4 pt-3 border-top text-center">
-            <p class="footer-copyright mb-0">
-              &copy; 2026 <strong>Academe Assessment Platform</strong>. All Rights Reserved.
-            </p>
-          </div>
-
-        </div>
-      </div>
-    </main>
+ 
+<div class="stage" id="stage">
+ 
+  <div class="shape sphere-a"></div>
+  <div class="shape sphere-b"></div>
+  <div class="shape sphere-c"></div>
+  <div class="shape ring"></div>
+ 
+  <div class="brand">
+    <div class="name">A<span>c</span>ademe</div>
+    <div class="tag">Flip the card to switch portals</div>
   </div>
+ 
+  <div style="display:flex; flex-direction:column; align-items:center;">
+    <div class="switch" id="switchEl">
+      <div class="pill"></div>
+      <button type="button" class="active" data-target="student">Student</button>
+      <button type="button" data-target="faculty">Faculty</button>
+    </div>
+ 
+    <div class="tilt-wrap" id="tiltWrap">
+      <div class="card-3d" id="card3d">
+ 
+        <!-- FRONT: student -->
+        <div class="face front">
+          <div class="accent-bar"></div>
+          <h2>Student sign-in</h2>
+          <p class="sub">Use your enrolment ID to reach your workspace.</p>
+ 
+          <form id="userLoginForm">
+            <div class="field">
+              <label>Enrolment ID or email</label>
+              <div class="field-box"><input type="text" id="userIdInput" placeholder="e.g. 21ad045@mkce.ac.in" required></div>
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <div class="field-box">
+                <input type="password" id="userPasswordInput" class="pw" placeholder="••••••••" required>
+                <span class="eye">show</span>
+              </div>
+            </div>
+            <label class="remember">
+              <input type="checkbox" checked><span class="box"></span>
+              Keep me signed in
+            </label>
+            <button class="go-btn" type="submit" id="userSubmitBtn">Enter workspace</button>
+          </form>
+        </div>
+ 
+        <!-- BACK: faculty -->
+        <div class="face back">
+          <div class="accent-bar"></div>
+          <h2>Faculty sign-in</h2>
+          <p class="sub">Use your staff ID or institute email to reach your workspace.</p>
+ 
+          <form id="adminLoginForm">
+            <div class="field">
+              <label>Staff ID or email</label>
+              <div class="field-box"><input type="text" id="adminIdInput" placeholder="e.g. faculty.karur@academe.edu" required></div>
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <div class="field-box">
+                <input type="password" id="adminPasswordInput" class="pw" placeholder="••••••••••" required>
+                <span class="eye">show</span>
+              </div>
+            </div>
+            <label class="remember">
+              <input type="checkbox" checked><span class="box"></span>
+              Keep me signed in
+            </label>
+            <button class="go-btn" type="submit" id="adminSubmitBtn">Enter workspace</button>
+          </form>
+        </div>
+ 
+      </div>
+    </div>
+ 
+    <div class="flip-hint">Tap a portal above, or click the card to flip it</div>
+    <div class="preview-flag" id="flag"></div>
+  </div>
+ 
+</div>
+ 
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+<script src="portal-state.js?v=20260912l"></script>
+<script src="login.js?v=20260912l"></script>
 
-  <!-- External Libraries -->
-  <!-- Bootstrap 5.3.3 JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- AlertifyJS JavaScript -->
-  <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
-
-  <!-- State & Logic Scripts -->
-  <script src="portal-state.js"></script>
-  <script src="login.js"></script>
+<script>
+  const switchEl = document.getElementById('switchEl');
+  const card = document.getElementById('card3d');
+  const buttons = switchEl.querySelectorAll('button');
+  const flag = document.getElementById('flag');
+ 
+  function setPortal(target){
+    buttons.forEach(b => b.classList.toggle('active', b.dataset.target === target));
+    switchEl.classList.toggle('on-faculty', target === 'faculty');
+    card.classList.toggle('flipped', target === 'faculty');
+    flag.textContent = '';
+  }
+ 
+  buttons.forEach(btn => btn.addEventListener('click', () => setPortal(btn.dataset.target)));
+ 
+  card.addEventListener('click', (e) => {
+    // Avoid flipping when interacting with form elements
+    if (e.target.closest('input, .eye, .go-btn, label, form')) return;
+    setPortal(card.classList.contains('flipped') ? 'student' : 'faculty');
+  });
+ 
+  // Toggle password visibility
+  document.querySelectorAll('.eye').forEach(eye=>{
+    eye.addEventListener('click', () => {
+      const input = eye.previousElementSibling;
+      const isPw = input.type === 'password';
+      input.type = isPw ? 'text' : 'password';
+      eye.textContent = isPw ? 'hide' : 'show';
+    });
+  });
+ 
+  // mouse-parallax tilt on the whole card
+  const tiltWrap = document.getElementById('tiltWrap');
+  const stage = document.getElementById('stage');
+  stage.addEventListener('mousemove', (e) => {
+    const rect = tiltWrap.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
+    const rotY = Math.max(-1, Math.min(1, dx)) * 8;
+    const rotX = Math.max(-1, Math.min(1, dy)) * -8;
+    const base = card.classList.contains('flipped') ? 180 : 0;
+    card.style.transform = `rotateX(${rotX}deg) rotateY(${base + rotY}deg)`;
+  });
+  stage.addEventListener('mouseleave', () => {
+    const base = card.classList.contains('flipped') ? 180 : 0;
+    card.style.transform = `rotateX(0deg) rotateY(${base}deg)`;
+  });
+</script>
+ 
 </body>
 </html>

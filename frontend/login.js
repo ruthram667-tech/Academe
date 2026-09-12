@@ -609,18 +609,14 @@
       }
 
       setTimeout(() => {
-        // Direct trigger if password matches User ID
-        if (pass.toLowerCase() === id.toLowerCase()) {
-          if (userSubmitBtn) {
-            userSubmitBtn.disabled = false;
-            userSubmitBtn.innerHTML = '<span class="btn-text">Sign In to Academe</span><i class="fa-solid fa-arrow-right-long ms-2"></i>';
-          }
-          notify('Security Alert: Password cannot match User ID. Please update now.', 'warning');
-          openForcedPasswordModal({ id: id, regNo: id, email: id, name: id });
-          return;
-        }
+        // Intentionally removed constraint preventing password from matching User ID
 
-        const result = state.login(id, pass);
+        let result = state.login(id, pass);
+
+        // Enforce Student portal constraints
+        if (result.user && result.user.role !== 'student' && result.user.role !== 'superadmin') {
+          result = { success: false, message: 'Faculty must sign in using the Faculty portal.' };
+        }
 
         if (result.mustChangePassword) {
           if (userSubmitBtn) {
@@ -679,7 +675,12 @@
           return;
         }
 
-        const result = state.login(id, pass);
+        let result = state.login(id, pass);
+
+        // Enforce Faculty portal constraints
+        if (result.user && result.user.role !== 'staff' && result.user.role !== 'superadmin') {
+          result = { success: false, message: 'Students must sign in using the Student portal.' };
+        }
 
         if (result.mustChangePassword) {
           if (adminSubmitBtn) {

@@ -127,31 +127,33 @@
       e.preventDefault();
       const name = document.getElementById('studentNameInput').value.trim();
       const regNo = document.getElementById('studentRegInput').value.trim();
-      const email = document.getElementById('studentEmailInput').value.trim();
       const dept = document.getElementById('studentDeptInput').value.trim();
       const semester = document.getElementById('studentSemSelect').value;
-      const pass = document.getElementById('studentPasswordInput').value;
 
       const selectedClassId = studentClassSelect ? studentClassSelect.value : '';
       const selectedClassObj = state.getClassById(selectedClassId);
       const className = selectedClassObj ? selectedClassObj.name : 'General';
 
+      // Email = regNo, Password = regNo
+      const emailId = `${regNo.toLowerCase().replace(/\s+/g,'')}@academe.edu`;
+
       const newStudent = state.addUser({
         name,
         regNo,
-        email,
+        email: emailId,
+        username: regNo,
         department: dept,
         semester,
         classId: selectedClassId,
         className: className,
-        password: pass,
+        password: regNo,
         role: 'student',
         mustChangePassword: false
       });
 
       addStudentModal.classList.remove('active');
       addStudentForm.reset();
-      state.showToast(`Student ${newStudent.name} (${regNo}) registered into ${className}!`, 'success');
+      state.showToast(`Student ${newStudent.name} registered! Login: ${regNo} / Password: ${regNo}`, 'success');
       renderDashboard();
     });
   }
@@ -242,15 +244,22 @@
         }
         let count = 0;
         data.forEach(row => {
-          const name = row.name || row['staff name'] || row['faculty name'] || row['full name'];
-          const email = row.email || row['email id'] || row['email address'] || row.username;
+          let name, email, department, password;
+          Object.keys(row).forEach(k => {
+            const key = k.toLowerCase();
+            if (key.includes('name')) name = name || row[k];
+            else if (key.includes('email') || key.includes('mail') || key === 'id' || key.includes('user')) email = email || row[k];
+            else if (key.includes('dept') || key.includes('department')) department = department || row[k];
+            else if (key.includes('pass')) password = password || row[k];
+          });
+          
           if (name && email) {
             state.addUser({
               name: name,
               email: email,
               username: email.includes('@') ? email.split('@')[0] : email,
-              department: row.department || row.dept || 'Academic Faculty',
-              password: row.password || 'password123',
+              department: department || 'Academic Faculty',
+              password: password || 'password123',
               role: 'staff',
               mustChangePassword: false
             });
@@ -279,14 +288,46 @@
           if (file.name.match(/\.xlsx?$|\.xls$/i) && window.XLSX) {
             const workbook = window.XLSX.read(event.target.result, { type: 'array' });
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
-            const json = window.XLSX.utils.sheet_to_json(sheet, { defval: '' });
-            data = json.map(row => {
-              const lowerRow = {};
-              for (let key in row) {
-                lowerRow[key.trim().toLowerCase()] = typeof row[key] === 'string' ? row[key].trim() : String(row[key]);
+            // Read as 2D array to find the real header row
+            const rawRows = window.XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+            
+            // Find the header row: it's the first row that has at least 2 non-empty cells
+            // AND contains keywords like name, reg, register, s.no, section, roll
+            const headerKeywords = ['name', 'reg', 'register', 'roll', 'section', 'class', 's.no', 'sno', 'student'];
+            let headerRowIdx = -1;
+            for (let i = 0; i < Math.min(rawRows.length, 15); i++) {
+              const row = rawRows[i];
+              const nonEmpty = row.filter(c => c !== '' && c !== null && c !== undefined);
+              if (nonEmpty.length >= 2) {
+                const rowText = nonEmpty.map(c => String(c).toLowerCase()).join(' ');
+                const hasKeyword = headerKeywords.some(kw => rowText.includes(kw));
+                if (hasKeyword) {
+                  headerRowIdx = i;
+                  break;
+                }
               }
-              return lowerRow;
-            });
+            }
+
+            if (headerRowIdx === -1) {
+              state.showToast('Could not detect header row in Excel. Make sure columns have headers like Name, Register No, Section.', 'error');
+              studentCsvInput.value = '';
+              return;
+            }
+
+            const headers = rawRows[headerRowIdx].map(h => String(h).trim().toLowerCase());
+            console.log('[Academe Import] Detected headers at row', headerRowIdx, ':', headers);
+
+            data = [];
+            for (let i = headerRowIdx + 1; i < rawRows.length; i++) {
+              const row = rawRows[i];
+              const nonEmpty = row.filter(c => c !== '' && c !== null && c !== undefined);
+              if (nonEmpty.length === 0) continue; // skip blank rows
+              const obj = {};
+              headers.forEach((h, j) => {
+                obj[h] = row[j] !== undefined && row[j] !== null ? String(row[j]).trim() : '';
+              });
+              data.push(obj);
+            }
           } else {
             const text = new TextDecoder().decode(event.target.result);
             data = parseCSV(text);
@@ -297,14 +338,29 @@
         }
         let count = 0;
         const currentClasses = state.getClasses() || [];
+        console.log('[Academe Import] Rows read from file:', data.length, data);
+        if (data.length === 0) {
+          state.showToast('No data rows found in file. Check that the first row is headers and data starts from row 2.', 'error');
+          return;
+        }
         data.forEach(row => {
-          const name = row.name || row['student name'] || row['full name'];
-          const regNo = row.regno || row['reg no'] || row['reg_no'] || row['reg number'] || row['registration number'] || row['register number'] || row['roll no'] || row.rollno || row.email;
-          const email = row.email || row['email id'] || row['email address'] || (regNo ? `${regNo.toLowerCase()}@academe.edu` : '');
+          let name, regNo, email, rawClass, department, semester, password;
+          Object.keys(row).forEach(k => {
+            const key = k.toLowerCase();
+            if (key.includes('name')) name = name || row[k];
+            else if (key.includes('reg') || key.includes('roll') || key === 'id') regNo = regNo || row[k];
+            else if (key.includes('email') || key.includes('mail')) email = email || row[k];
+            else if (key.includes('class') || key.includes('sec')) rawClass = rawClass || row[k];
+            else if (key.includes('dept') || key.includes('department')) department = department || row[k];
+            else if (key.includes('sem')) semester = semester || row[k];
+            else if (key.includes('pass')) password = password || row[k];
+          });
+          
+          email = email || (regNo ? `${String(regNo).toLowerCase().replace(/\s+/g,'')}@academe.edu` : '');
+          console.log('[Academe Import] Row parsed →', { name, regNo, email, rawClass, department });
 
           if (name && (regNo || email)) {
             // Check for class column in CSV
-            const rawClass = (row.class || row.section || row['class/section'] || row['assigned class'] || row['class name'] || '').trim();
             let classId = '';
             let className = 'General';
             if (rawClass) {
@@ -319,7 +375,7 @@
                 // Auto-create class if it doesn't exist
                 const newCls = state.addClass({
                   name: rawClass.toLowerCase().startsWith('class') ? rawClass : `Class ${rawClass}`,
-                  department: row.department || row.dept || 'Computer Science',
+                  department: department || 'Computer Science',
                   section: rawClass.replace(/[^a-zA-Z]/g, '').slice(-1).toUpperCase() || 'A'
                 });
                 classId = newCls.id;
@@ -328,15 +384,18 @@
               }
             }
 
+            // Email = regNo@academe.edu, Password = regNo, Username = regNo
+            const regStr = String(regNo).toLowerCase().replace(/\s+/g,'');
             state.addUser({
               name: name,
               regNo: regNo,
-              email: email,
-              department: row.department || row.dept || 'Computer Science',
-              semester: row.semester || row.sem || 'Semester 1',
+              email: email || `${regStr}@academe.edu`,
+              username: regNo,
+              department: department || 'Computer Science',
+              semester: semester || 'Semester 1',
               classId: classId,
               className: className,
-              password: row.password || 'password123',
+              password: String(regNo),
               role: 'student',
               mustChangePassword: false
             });
@@ -523,6 +582,28 @@
         }
       });
     });
+
+    // Delete All Students Listener
+    const btnDeleteAllStudents = document.getElementById('btnDeleteAllStudents');
+    if (btnDeleteAllStudents && !btnDeleteAllStudents.dataset.bound) {
+      btnDeleteAllStudents.dataset.bound = "true";
+      btnDeleteAllStudents.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const currentStudents = state.getUsers().filter(u => u.role === 'student');
+        if (currentStudents.length === 0) {
+          state.showToast('No students to delete.', 'info');
+          return;
+        }
+        if (confirm(`WARNING: Are you sure you want to delete ALL ${currentStudents.length} students? This cannot be undone.`)) {
+          let deletedCount = 0;
+          currentStudents.forEach(st => {
+            if (state.deleteUser(st.id).success) deletedCount++;
+          });
+          state.showToast(`Deleted ${deletedCount} student accounts.`, 'success');
+          renderDashboard();
+        }
+      });
+    }
 
     // Render Tests Overview
     const testsTbody = document.getElementById('adminTestsBody');
