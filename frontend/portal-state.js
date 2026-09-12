@@ -19,7 +19,7 @@
     STAFF_ASSIGNMENTS: `${STORAGE_PREFIX}staff_assignments`
   };
 
-  // Default Seed Data — Only Master Superadmin (All demo student/staff IDs removed)
+  // Default Seed Data
   const DEFAULT_USERS = [
     {
       id: 'usr_superadmin',
@@ -31,6 +31,29 @@
       password: 'RK',
       mustChangePassword: false,
       avatar: 'RM'
+    },
+    {
+      id: 'usr_staff_demo',
+      username: 'faculty@academe.edu',
+      email: 'faculty@academe.edu',
+      name: 'Dr. Jane Smith',
+      role: 'staff',
+      department: 'Computer Science',
+      password: 'password',
+      mustChangePassword: false,
+      avatar: 'JS'
+    },
+    {
+      id: 'usr_student_demo',
+      username: '2026CS101',
+      email: 'student@academe.edu',
+      name: 'Alice Johnson',
+      regNo: '2026CS101',
+      role: 'student',
+      department: 'Computer Science',
+      password: 'password',
+      mustChangePassword: false,
+      avatar: 'AJ'
     }
   ];
 
@@ -40,11 +63,76 @@
     { id: 'cls_d_sec', name: 'Class D Sec', department: 'Computer Science', section: 'D', academicYear: '2024-2025' }
   ];
 
-  const DEFAULT_STAFF_ASSIGNMENTS = [];
-  const DEFAULT_COURSES = [];
-  const DEFAULT_TESTS = [];
+  const DEFAULT_STAFF_ASSIGNMENTS = [
+    {
+      id: 'asgn_demo1',
+      staffId: 'usr_staff_demo',
+      classId: 'cls_c_sec',
+      className: 'Class C Section',
+      section: 'C',
+      department: 'Computer Science',
+      courses: [
+        { id: 'course-demo1', code: 'CS101', title: 'Intro to CS' }
+      ]
+    }
+  ];
+  const DEFAULT_COURSES = [
+    {
+      id: 'course-demo1',
+      code: 'CS101',
+      name: 'Intro to CS',
+      title: 'Intro to CS',
+      department: 'Computer Science',
+      credits: 3,
+      instructor: 'Dr. Jane Smith',
+      instructorId: 'usr_staff_demo',
+      notes: []
+    }
+  ];
+  const DEFAULT_TESTS = [
+    {
+      id: 'test-demo1',
+      title: 'Midterm Exam: Algorithms',
+      code: 'CS101',
+      department: 'Computer Science',
+      totalMarks: 100,
+      durationMinutes: 60,
+      dueDate: 'In 3 days',
+      status: 'ongoing',
+      isUpcoming: false,
+      instructions: 'Upload your solution.',
+      keywords: ['Raft', 'Paxos', 'Consensus', 'Fault Tolerance'],
+      questions: [
+        { id: 'q1', prompt: 'Answer the assigned problem statement.', maxMarks: 100 }
+      ]
+    }
+  ];
   const DEFAULT_PRESENTATIONS = [];
-  const DEFAULT_SUBMISSIONS = [];
+  const DEFAULT_SUBMISSIONS = [
+    {
+      id: 'sub-demo1',
+      testId: 'test-demo1',
+      testTitle: 'Midterm Exam: Algorithms',
+      studentId: 'usr_student_demo',
+      studentName: 'Alice Johnson',
+      regNo: '2026CS101',
+      submittedAt: 'Just now',
+      status: 'pending',
+      score: null,
+      maxScore: 100,
+      feedback: '',
+      answers: {},
+      fileName: 'Alice_Midterm.pdf',
+      fileType: 'application/pdf',
+      fileSize: '1.2 MB',
+      extractedText: '',
+      pages: [],
+      pageCount: 1,
+      isHandwritten: false,
+      fileData: null,
+      keywords: ['Raft', 'Paxos', 'Consensus', 'Fault Tolerance']
+    }
+  ];
   const DEFAULT_AUDIT_LOGS = [];
 
   // Helper functions for LocalStorage
@@ -428,6 +516,14 @@
     createTest: function (testData) {
       const tests = this.getTests();
       const isUpcoming = testData.isUpcoming !== undefined ? testData.isUpcoming : (testData.status === 'upcoming');
+      let keywords = testData.keywords;
+      if (typeof keywords === 'string') {
+        keywords = keywords.split(/[,;\n]+/).map(k => k.trim()).filter(Boolean);
+      }
+      if (!keywords || keywords.length === 0) {
+        keywords = ['Raft', 'Paxos', 'Consensus', 'Fault Tolerance', 'Leader Election'];
+      }
+
       const newTest = {
         id: `test-${Date.now().toString().slice(-4)}`,
         title: testData.title,
@@ -439,6 +535,7 @@
         status: testData.status || (isUpcoming ? 'upcoming' : 'ongoing'),
         isUpcoming: isUpcoming,
         instructions: testData.instructions || 'Review the problem statements below. Draft your complete analytical solutions and upload your response as a single PDF document.',
+        keywords: keywords,
         questions: testData.questions || [
           { id: 'q1', prompt: testData.prompt || 'Answer the assigned problem statement.', maxMarks: Number(testData.totalMarks) || 100 }
         ]
@@ -453,8 +550,8 @@
       return load(KEYS.SUBMISSIONS, DEFAULT_SUBMISSIONS);
     },
 
-    getSubmissionById: function (subId) {
-      return this.getSubmissions().find(s => s.id === subId);
+    getSubmissionById: function (id) {
+      return this.getSubmissions().find(s => s.id === id);
     },
 
     getStudentSubmissions: function (studentId) {
@@ -498,6 +595,10 @@
       const submissions = this.getSubmissions();
       const existingIdx = submissions.findIndex(s => s.testId === testId && s.studentId === session.id);
 
+      const subKeywords = (docData.keywords && docData.keywords.length > 0)
+        ? docData.keywords
+        : (test.keywords || ['Raft', 'Paxos', 'Consensus', 'Fault Tolerance', 'Leader Election']);
+
       const subRecord = {
         id: existingIdx >= 0 ? submissions[existingIdx].id : `sub-${Date.now().toString().slice(-4)}`,
         testId: test.id,
@@ -516,7 +617,12 @@
         fileName: docData.fileName || 'Solution_Document.pdf',
         fileType: docData.fileType || 'application/pdf',
         fileSize: docData.fileSize || '1.8 MB',
-        keywords: test.keywords || ['consensus', 'fault tolerance', 'algorithm', 'system']
+        extractedText: docData.extractedText || '',
+        pages: docData.pages || [],
+        pageCount: docData.pageCount || (docData.pages ? docData.pages.length : 1),
+        isHandwritten: Boolean(docData.isHandwritten),
+        fileData: docData.fileData || null,
+        keywords: subKeywords
       };
 
       if (existingIdx >= 0) {
@@ -528,6 +634,15 @@
       save(KEYS.SUBMISSIONS, submissions);
       this.logAudit('Document Uploaded', `${session.name} uploaded ${docData.fileName || 'document'} for ${test.title}`);
       return { success: true, submission: subRecord };
+    },
+
+    updateSubmissionData: function (subId, data) {
+      const submissions = this.getSubmissions();
+      const idx = submissions.findIndex(s => s.id === subId);
+      if (idx === -1) return { success: false, message: 'Submission not found' };
+      submissions[idx] = { ...submissions[idx], ...data };
+      save(KEYS.SUBMISSIONS, submissions);
+      return { success: true, submission: submissions[idx] };
     },
 
     uploadTestPDF: function (testId, docData) {

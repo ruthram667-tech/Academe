@@ -455,65 +455,172 @@
     });
   }
 
-  function handleFileSelect(file) {
-    const ext = file.name.split('.').pop().toLowerCase();
-    if (ext !== 'pdf') {
-      state.showToast('Please select a valid PDF document.', 'warning');
-      return;
-    }
+    let extractedDocResult = null;
+    let cachedFileDataUrl = null;
 
-    selectedFileObject = file;
-    const sizeStr = file.size > 1024 * 1024
-      ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
-      : `${Math.round(file.size / 1024)} KB`;
-
-    if (previewFileName) previewFileName.textContent = file.name;
-    if (previewFileSize) previewFileSize.textContent = sizeStr;
-    if (previewIcon) previewIcon.textContent = 'PDF';
-
-    if (dropzone) dropzone.style.display = 'none';
-    if (previewCard) previewCard.style.display = 'flex';
-  }
-
-  if (btnRemoveFile) {
-    btnRemoveFile.addEventListener('click', () => {
+    function resetUploadState() {
       selectedFileObject = null;
+      extractedDocResult = null;
+      cachedFileDataUrl = null;
       if (fileInput) fileInput.value = '';
       if (dropzone) dropzone.style.display = 'block';
       if (previewCard) previewCard.style.display = 'none';
-    });
-  }
+      const statusBox = document.getElementById('uploadExtractStatus');
+      if (statusBox) statusBox.style.display = 'none';
+      const btnSubmit = document.getElementById('btnSubmitDoc');
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'Upload & Submit PDF';
+      }
+    }
 
-  // Handle Form Submission for PDF Upload
-  const uploadDocForm = document.getElementById('uploadDocForm');
-  if (uploadDocForm) {
-    uploadDocForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!targetTestForUpload) {
-        state.showToast('No assessment selected.', 'error');
+    async function processSelectedFile(file) {
+      const statusBox = document.getElementById('uploadExtractStatus');
+      const statusText = document.getElementById('uploadStatusText');
+      const statusPercent = document.getElementById('uploadStatusPercent');
+      const progressBar = document.getElementById('uploadProgressBar');
+      const btnSubmit = document.getElementById('btnSubmitDoc');
+
+      if (statusBox) statusBox.style.display = 'block';
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = 'Processing PDF...';
+      }
+
+      const isHandwritten = document.getElementById('docTypeHandwritten')?.checked;
+
+      // Cache small base64 preview if < 2.5MB
+      if (file.size < 2.5 * 1024 * 1024) {
+        const reader = new FileReader();
+        reader.onload = (e) => { cachedFileDataUrl = e.target.result; };
+        reader.readAsDataURL(file);
+      }
+
+      try {
+        if (window.AcademeEngine) {
+          const result = await window.AcademeEngine.extractTextFromPDF(file, {
+            forceOCR: Boolean(isHandwritten),
+            maxPages: 6
+          }, (p) => {
+            if (statusText) statusText.textContent = p.message;
+            if (statusPercent) statusPercent.textContent = `${p.percent}%`;
+            if (progressBar) progressBar.style.width = `${p.percent}%`;
+          });
+
+          extractedDocResult = result;
+          if (result.success) {
+            const wordCount = (result.text || '').split(/\s+/).filter(Boolean).length;
+            const typeLabel = result.isHandwritten ? '✍️ Handwriting recognized via OCR' : '⚡ Digital text parsed';
+            if (statusText) statusText.innerHTML = `✓ Ready (${typeLabel} • ${result.pageCount || 1} pages, ~${wordCount} words)`;
+            if (statusPercent) statusPercent.textContent = '100%';
+            if (progressBar) progressBar.style.width = '100%';
+          } else {
+            if (statusText) statusText.textContent = '⚠️ Text extraction notice: Document will be reviewed by instructor.';
+          }
+        }
+      } catch (err) {
+        console.warn('Document processing exception:', err);
+        if (statusText) statusText.textContent = 'Ready for submission.';
+      } finally {
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.textContent = 'Upload & Submit PDF';
+        }
+      }
+    }
+
+    function handleFileSelect(file) {
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (ext !== 'pdf') {
+        state.showToast('Please select a valid PDF document.', 'warning');
         return;
       }
 
-      const fileName = selectedFileObject ? selectedFileObject.name : `${student.name.replace(/\s+/g, '_')}_${targetTestForUpload.code}_Solution.pdf`;
-      const fileSize = selectedFileObject ? `${(selectedFileObject.size / (1024 * 1024)).toFixed(1)} MB` : '2.1 MB';
-      const remarks = document.getElementById('uploadRemarks').value.trim();
+      selectedFileObject = file;
+      const sizeStr = file.size > 1024 * 1024
+        ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+        : `${Math.round(file.size / 1024)} KB`;
 
-      const res = state.uploadTestPDF(targetTestForUpload.id, {
-        fileName: fileName,
-        fileSize: fileSize,
-        fileType: 'application/pdf',
-        summary: remarks || 'Student solution document uploaded.'
-      });
+      if (previewFileName) previewFileName.textContent = file.name;
+      if (previewFileSize) previewFileSize.textContent = sizeStr;
+      if (previewIcon) previewIcon.textContent = 'PDF';
 
-      if (res && res.success) {
-        state.showToast(`Solution PDF uploaded successfully for ${targetTestForUpload.code}!`, 'success');
-        closeModal('modalUploadDocument');
-        renderTestsList(currentTestFilter);
-      } else {
-        state.showToast(res ? res.message : 'Submission failed', 'error');
+      if (dropzone) dropzone.style.display = 'none';
+      if (previewCard) previewCard.style.display = 'flex';
+
+      // Trigger extraction
+      processSelectedFile(file);
+    }
+
+    // Allow re-processing if user toggles Handwritten mode
+    const docTypeAuto = document.getElementById('docTypeAuto');
+    const docTypeHandwritten = document.getElementById('docTypeHandwritten');
+    [docTypeAuto, docTypeHandwritten].forEach(el => {
+      if (el) {
+        el.addEventListener('change', () => {
+          if (selectedFileObject) {
+            processSelectedFile(selectedFileObject);
+          }
+        });
       }
     });
-  }
+
+    if (btnRemoveFile) {
+      btnRemoveFile.addEventListener('click', resetUploadState);
+    }
+
+    // Handle Form Submission for PDF Upload
+    const uploadDocForm = document.getElementById('uploadDocForm');
+    if (uploadDocForm) {
+      uploadDocForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!targetTestForUpload) {
+          state.showToast('No assessment selected.', 'error');
+          return;
+        }
+
+        const fileName = selectedFileObject ? selectedFileObject.name : `${student.name.replace(/\s+/g, '_')}_${targetTestForUpload.code}_Solution.pdf`;
+        const fileSize = selectedFileObject ? `${(selectedFileObject.size / (1024 * 1024)).toFixed(1)} MB` : '2.1 MB';
+        const remarks = document.getElementById('uploadRemarks').value.trim();
+
+        // If extraction is somehow not done yet, do a quick pass
+        if (!extractedDocResult && selectedFileObject && window.AcademeEngine) {
+          try {
+            extractedDocResult = await window.AcademeEngine.extractTextFromPDF(selectedFileObject, {
+              forceOCR: document.getElementById('docTypeHandwritten')?.checked
+            });
+          } catch (err) {
+            console.warn('Quick extract error:', err);
+          }
+        }
+
+        const finalExtractedText = (extractedDocResult && extractedDocResult.text)
+          ? extractedDocResult.text
+          : (remarks ? `Student notes: ${remarks}` : '');
+
+        const res = state.uploadTestPDF(targetTestForUpload.id, {
+          fileName: fileName,
+          fileSize: fileSize,
+          fileType: 'application/pdf',
+          summary: remarks || 'Student solution document uploaded.',
+          extractedText: finalExtractedText,
+          pages: extractedDocResult ? extractedDocResult.pages : [],
+          pageCount: extractedDocResult ? (extractedDocResult.pageCount || 1) : 1,
+          isHandwritten: extractedDocResult ? Boolean(extractedDocResult.isHandwritten) : false,
+          fileData: cachedFileDataUrl,
+          keywords: targetTestForUpload.keywords
+        });
+
+        if (res && res.success) {
+          state.showToast(`Solution PDF uploaded successfully for ${targetTestForUpload.code}!`, 'success');
+          resetUploadState();
+          closeModal('modalUploadDocument');
+          renderTestsList(currentTestFilter);
+        } else {
+          state.showToast(res ? res.message : 'Submission failed', 'error');
+        }
+      });
+    }
 
   // 9. Presentations & PPT Upload Workflow
   let targetPresentationForUpload = null;
@@ -831,6 +938,8 @@
         state.showToast(`${link.textContent} documentation will open in university handbook.`, 'info');
       });
     }
+  });
+
   // 14. Initial Data Render
   renderCoursesList();
   renderTestsList('ongoing');

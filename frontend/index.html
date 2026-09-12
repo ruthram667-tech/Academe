@@ -306,9 +306,21 @@
       </div>
       <form id="uploadDocForm">
         <div class="form-group" style="margin-top: 1rem;">
+          <div style="display: flex; gap: 1rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+            <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: #e2e8f0; cursor: pointer;">
+              <input type="radio" name="uploadDocType" value="auto" checked id="docTypeAuto">
+              <span>⚡ Auto-Detect (Typed / Scanned)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: #e2e8f0; cursor: pointer;">
+              <input type="radio" name="uploadDocType" value="handwritten" id="docTypeHandwritten">
+              <span>✍️ Handwritten Answer Sheet (Force OCR)</span>
+            </label>
+          </div>
+
           <div id="fileDropzone" style="border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; color: var(--text-muted);">
             <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; margin-bottom: 0.5rem; color: #f472b6;"></i>
             <p>Drag and drop your PDF here, or click to browse</p>
+            <span style="font-size:0.75rem; color:#94a3b8;">Supports typed text &amp; photographed/handwritten submissions</span>
           </div>
           <input type="file" id="fileInputHidden" accept=".pdf" style="display: none;" />
         </div>
@@ -324,14 +336,24 @@
           <button type="button" id="btnRemoveFile" style="background: transparent; border: none; color: #ef4444; cursor: pointer;"><i class="fa-solid fa-trash"></i></button>
         </div>
 
+        <div id="uploadExtractStatus" style="display: none; margin-bottom: 1rem; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 6px; padding: 0.75rem; font-size: 0.82rem; color: #93c5fd;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+            <span id="uploadStatusText">Processing document...</span>
+            <span id="uploadStatusPercent" style="font-weight: 700;">0%</span>
+          </div>
+          <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+            <div id="uploadProgressBar" style="width: 0%; height: 100%; background: #3b82f6; transition: width 0.2s;"></div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="form-label" for="uploadRemarks">Remarks / Note (Optional)</label>
           <textarea id="uploadRemarks" class="form-input" rows="2" placeholder="Add any comments for the instructor..."></textarea>
         </div>
         <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
           <button type="button" class="btn btn-secondary" style="padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: white;" onclick="document.getElementById('modalUploadDocument').classList.remove('active')">Cancel</button>
-          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); border:none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
-            Upload PDF
+          <button type="submit" class="btn btn-primary" id="btnSubmitDoc" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); border:none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: white;">
+            Upload &amp; Submit PDF
           </button>
         </div>
       </form>
@@ -342,7 +364,7 @@
   <div class="modal-overlay" id="modalUploadPPT">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title">Upload Presentation Slides</h2>
+        <h2 class="modal-title">Upload Presentation Deck</h2>
         <button type="button" class="modal-close-btn" onclick="document.getElementById('modalUploadPPT').classList.remove('active')">✕</button>
       </div>
       <form id="uploadPPTForm">

@@ -7,6 +7,9 @@
   <meta name="description" content="Faculty interface for evaluating assessment submissions" />
   <link rel="stylesheet" href="portal-common.css" />
   <link rel="stylesheet" href="grade.css" />
+  <!-- PDF.js & Tesseract OCR Engines -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
   <div class="bg-mesh" aria-hidden="true">
@@ -91,13 +94,28 @@
 
               <!-- Page & Zoom Controls -->
               <div class="doc-controls-group">
+                <button type="button" class="btn-ctrl" id="btnGradeLoadPdf" title="Load Local PDF Document" style="width:auto; padding:0 0.55rem; font-size:0.75rem;">📂 Open PDF</button>
+                <button type="button" class="btn-ctrl" id="btnRerunOcr" title="Run OCR for Handwriting" style="width:auto; padding:0 0.55rem; font-size:0.75rem; background:rgba(245,158,11,0.15); color:#fbbf24; border-color:rgba(245,158,11,0.3);">✍️ Run OCR</button>
+                <input type="file" id="gradeDocFileInput" accept=".pdf" style="display:none;" />
+                <div class="ctrl-divider"></div>
                 <button type="button" class="btn-ctrl" id="prevPageBtn" title="Previous Page">◀</button>
-                <span class="doc-page-indicator" id="pageIndicator">Page 1 of 2</span>
+                <span class="doc-page-indicator" id="pageIndicator">Page 1 of 1</span>
                 <button type="button" class="btn-ctrl" id="nextPageBtn" title="Next Page">▶</button>
                 <div class="ctrl-divider"></div>
                 <button type="button" class="btn-ctrl" id="zoomOutBtn" title="Zoom Out">−</button>
                 <span style="font-size:0.75rem; color:var(--text-muted);" id="zoomLevel">100%</span>
                 <button type="button" class="btn-ctrl" id="zoomInBtn" title="Zoom In">+</button>
+              </div>
+            </div>
+
+            <!-- OCR Progress Indicator -->
+            <div id="evalOcrProgressBox" style="display: none; padding: 0.65rem 1rem; background: rgba(245,158,11,0.1); border-bottom: 1px solid rgba(245,158,11,0.3);">
+              <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: #fbbf24; margin-bottom: 0.25rem;">
+                <span id="evalOcrStatus">Running handwriting OCR...</span>
+                <span id="evalOcrPercent" style="font-weight: 700;">0%</span>
+              </div>
+              <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+                <div id="evalOcrBar" style="width: 0%; height: 100%; background: #f59e0b; transition: width 0.2s;"></div>
               </div>
             </div>
 
@@ -192,6 +210,7 @@
     </form>
   </main>
 
+  <script src="pdf-ocr-engine.js"></script>
   <script src="portal-state.js"></script>
   <script src="grade.js"></script>
 </body>
