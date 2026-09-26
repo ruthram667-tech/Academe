@@ -9,6 +9,8 @@
   --bg-panel: #1E293B; /* slightly lighter for panels/sidebar */
   --text-main: #F8FAFC;
   --text-muted: #94A3B8;
+  --ink: #FFFFFF;
+  --muted: #94A3B8;
   --accent: #F59E0B; /* Academe signature amber/orange */
   --accent-hover: #D97706;
   --border-color: rgba(255, 255, 255, 0.08);
@@ -201,14 +203,14 @@ body {
 .section-title {
   font-family: 'Outfit', sans-serif;
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-top: 0;
   margin-bottom: 0.5rem;
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 .section-desc {
-  color: var(--text-muted);
+  color: #94a3b8 !important;
   margin-bottom: 2.5rem;
   font-size: 1rem;
 }
@@ -279,8 +281,8 @@ body {
 }
 
 .class-card {
-  background: #ffffff;
-  border: none;
+  background: #1E293B;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   padding: 0;
   position: relative;
@@ -288,7 +290,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   transition: all 0.25s ease;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
 

@@ -291,8 +291,10 @@
       currentTestFilter = 'ongoing';
       tabOngoingTestsBtn.style.background = '#F1F5F9';
       tabOngoingTestsBtn.style.borderColor = '#CBD5E1';
+      tabOngoingTestsBtn.style.color = '#1E293B';
       tabUpcomingTestsBtn.style.background = 'transparent';
       tabUpcomingTestsBtn.style.borderColor = 'transparent';
+      tabUpcomingTestsBtn.style.color = '#94A3B8';
       renderTestsList('ongoing');
     });
 
@@ -300,8 +302,10 @@
       currentTestFilter = 'upcoming';
       tabUpcomingTestsBtn.style.background = '#F1F5F9';
       tabUpcomingTestsBtn.style.borderColor = '#CBD5E1';
+      tabUpcomingTestsBtn.style.color = '#1E293B';
       tabOngoingTestsBtn.style.background = 'transparent';
       tabOngoingTestsBtn.style.borderColor = 'transparent';
+      tabOngoingTestsBtn.style.color = '#94A3B8';
       renderTestsList('upcoming');
     });
   }

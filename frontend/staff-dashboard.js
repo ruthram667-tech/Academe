@@ -7,10 +7,17 @@
   const staffSession = state.requireAuth(['staff', 'superadmin']);
   if (!staffSession) return;
 
-  // 2. Populate Header
+  // 2. Populate Header & Sidebar User Info
   const displayUsername = document.getElementById('displayUsername');
   if (displayUsername) {
     displayUsername.textContent = staffSession.name || staffSession.username || 'Staff Member';
+  }
+
+  const navAvatar = document.getElementById('navAvatar');
+  if (navAvatar && (staffSession.name || staffSession.username)) {
+    const rawName = (staffSession.name || staffSession.username).trim();
+    const parts = rawName.split(' ');
+    navAvatar.textContent = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : rawName.slice(0, 2).toUpperCase();
   }
 
   // 3. Logout Handler
@@ -37,6 +44,10 @@
       if (targetId) {
         const targetSection = document.getElementById(targetId);
         if (targetSection) targetSection.classList.add('active');
+        if (targetId === 'section-cia') renderCiaSection();
+        if (targetId === 'section-course') { renderClasses(); renderCourses(); }
+        if (targetId === 'section-test') renderTests();
+        if (targetId === 'section-presentation') renderPresentations();
       }
     });
   });
@@ -74,12 +85,12 @@
       let coursesListHtml = '';
       if (courses.length > 0) {
         coursesListHtml = courses.map(c => `
-          <div class="course-item-tag" style="font-size:0.85rem; margin-top:0.3rem;">
-            <strong style="color:var(--student-accent);">${c.code}</strong> <span style="color:var(--ink);">— ${c.title}</span>
+          <div class="course-item-tag" style="font-size:0.85rem; margin-top:0.3rem; background:rgba(255,255,255,0.05); padding:0.35rem 0.6rem; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span><strong style="color:#38BDF8;">${c.code}</strong> <span style="color:#F8FAFC;">— ${c.title}</span></span>
           </div>
         `).join('');
       } else {
-        coursesListHtml = `<span style="color:var(--text-dim); font-size:0.8rem; font-style:italic;">No course assigned yet.</span>`;
+        coursesListHtml = `<span style="color:#94A3B8; font-size:0.8rem; font-style:italic;">No course assigned yet.</span>`;
       }
 
       const card = document.createElement('div');
@@ -87,14 +98,14 @@
       card.innerHTML = `
         <div style="padding:1.5rem;">
           <div class="class-card-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-            <h3 class="class-card-title" style="margin:0; font-size:1.15rem; color:var(--ink);">${className}</h3>
-            <span class="class-card-sec-badge" style="background:#FEF3C7; color:#D97706; padding:0.2rem 0.6rem; border-radius:12px; font-size:0.75rem; font-weight:600;">Sec ${section}</span>
+            <h3 class="class-card-title" style="margin:0; font-size:1.15rem; color:#FFFFFF; font-weight:700;">${className}</h3>
+            <span class="class-card-sec-badge" style="background:rgba(245, 158, 11, 0.15); color:#FBBF24; border:1px solid rgba(245, 158, 11, 0.3); padding:0.2rem 0.6rem; border-radius:12px; font-size:0.75rem; font-weight:600;">Sec ${section}</span>
           </div>
-          <div class="class-card-dept" style="color:var(--muted); font-size:0.85rem; margin-bottom:1.2rem;">
+          <div class="class-card-dept" style="color:#94A3B8; font-size:0.85rem; margin-bottom:1.2rem;">
             <i class="fa-solid fa-building-columns" style="margin-right:0.3rem;"></i> ${department}
           </div>
-          <div class="class-courses-list" style="background:#F8FAFC; padding:1rem; border-radius:12px;">
-            <div class="class-courses-header" style="display:flex; justify-content:space-between; font-size:0.7rem; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:0.5rem;">
+          <div class="class-courses-list" style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.06); padding:1rem; border-radius:12px;">
+            <div class="class-courses-header" style="display:flex; justify-content:space-between; font-size:0.7rem; font-weight:700; color:#94A3B8; text-transform:uppercase; margin-bottom:0.5rem;">
               <span>Courses Taught</span>
               <span style="color:#10B981;">${courses.length} active</span>
             </div>
@@ -102,10 +113,10 @@
           </div>
         </div>
         <div class="class-card-actions" style="display:flex; gap:0.5rem; padding:0 1.5rem 1.5rem;">
-          <button type="button" class="btn-card-add-course btn-open-add-course-modal" data-class-id="${asgn.classId}" data-class-name="${className}" style="flex:1; background:var(--faculty-soft); color:var(--faculty); border:none; padding:0.6rem; border-radius:8px; font-weight:600; cursor:pointer;">
+          <button type="button" class="btn-card-add-course btn-open-add-course-modal" data-class-id="${asgn.classId}" data-class-name="${className}" style="flex:1; background:rgba(245, 158, 11, 0.15); color:#FBBF24; border:1px solid rgba(245, 158, 11, 0.3); padding:0.6rem; border-radius:8px; font-weight:600; cursor:pointer;">
             + Add Course
           </button>
-          <button type="button" class="btn-card-remove-class btn-remove-class-assignment" data-class-id="${asgn.classId}" data-class-name="${className}" title="Remove class" style="background:#FEE2E2; color:#EF4444; border:none; padding:0.6rem 1rem; border-radius:8px; cursor:pointer;">
+          <button type="button" class="btn-card-remove-class btn-remove-class-assignment" data-class-id="${asgn.classId}" data-class-name="${className}" title="Remove class" style="background:rgba(239, 68, 68, 0.15); color:#EF4444; border:1px solid rgba(239, 68, 68, 0.3); padding:0.6rem 1rem; border-radius:8px; cursor:pointer;">
             <i class="fa-solid fa-trash-can"></i>
           </button>
         </div>
@@ -118,11 +129,11 @@
     addCard.className = 'class-card-add-new';
     addCard.id = 'cardAddNewClassTrigger';
     addCard.innerHTML = `
-      <div style="background:var(--faculty); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:1rem;">
+      <div style="background:linear-gradient(135deg, #F59E0B, #D97706); color:white; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin-bottom:1rem;">
         <i class="fa-solid fa-plus"></i>
       </div>
-      <div style="font-weight:700; font-size:1.1rem; color:var(--ink); margin-bottom:0.2rem;">Add Class</div>
-      <div style="font-size:0.85rem; color:var(--muted);">Enrol in another class or section</div>
+      <div style="font-weight:700; font-size:1.1rem; color:#FFFFFF; margin-bottom:0.2rem;">Add Class</div>
+      <div style="font-size:0.85rem; color:#94A3B8;">Enrol in another class or section</div>
     `;
     container.appendChild(addCard);
 
@@ -177,11 +188,11 @@
 
     courses.forEach(c => {
       tableBody.innerHTML += `
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-          <td style="padding: 1rem;"><strong style="color:var(--ink);">${c.code}</strong><br><span style="font-size:0.85rem; color:var(--muted);">${c.name || c.title}</span></td>
-          <td style="padding: 1rem; color:var(--ink);">${c.department || 'Computer Science'}</td>
-          <td style="padding: 1rem; color:var(--ink);">${c.credits || 3}</td>
-          <td style="padding: 1rem;"><span class="badge-tag active" style="background:#D1FAE5; color:#059669; border:none; padding:0.3rem 0.6rem; border-radius:12px; font-weight:600; font-size:0.75rem;">${(c.notes||[]).length} Material</span></td>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+          <td style="padding: 1rem;"><strong style="color:#FFFFFF; font-size:0.95rem;">${c.code}</strong><br><span style="font-size:0.85rem; color:#94A3B8;">${c.name || c.title}</span></td>
+          <td style="padding: 1rem; color:#E2E8F0;">${c.department || 'Computer Science'}</td>
+          <td style="padding: 1rem; color:#E2E8F0;">${c.credits || 3}</td>
+          <td style="padding: 1rem;"><span class="badge-tag active" style="background:rgba(16, 185, 129, 0.15); color:#34D399; border:1px solid rgba(16, 185, 129, 0.3); padding:0.35rem 0.75rem; border-radius:12px; font-weight:600; font-size:0.75rem;">${(c.notes||[]).length} Materials</span></td>
         </tr>
       `;
     });
@@ -286,6 +297,101 @@
       `;
     });
   }
+
+  // 7b. Render CIA & AL Section (Classes & Student Roster)
+  function renderCiaSection() {
+    const container = document.getElementById('staffClassesCards');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const assignments = state.getStaffAssignments(staffSession.id) || [];
+    if (assignments.length === 0) {
+      container.innerHTML = `<div style="grid-column: 1/-1; padding: 2rem; text-align: center; color: #94A3B8;">No classes assigned. Click "+ Add Class to Dashboard" above.</div>`;
+      return;
+    }
+
+    assignments.forEach(asgn => {
+      const cls = state.getClassById(asgn.classId) || {};
+      const className = cls.name || asgn.className || 'Class Section';
+      const section = cls.section || asgn.section || 'A';
+      const department = cls.department || asgn.department || 'Computer Science';
+      
+      const allStudents = (state.getUsers() || []).filter(u => u.role === 'student');
+      const classStudents = allStudents.filter(s => s.classId === asgn.classId || s.className === className);
+
+      const card = document.createElement('div');
+      card.className = 'glass-panel';
+      card.style.cssText = 'padding: 1.5rem; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);';
+      card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
+          <div>
+            <h3 style="margin:0; font-size:1.15rem; color:#FFFFFF; font-weight:700;">${className}</h3>
+            <span style="font-size:0.85rem; color:#94A3B8;"><i class="fa-solid fa-building-columns" style="margin-right:0.3rem;"></i> ${department}</span>
+          </div>
+          <span style="background:rgba(245, 158, 11, 0.15); color:#FBBF24; border:1px solid rgba(245, 158, 11, 0.3); padding:0.2rem 0.6rem; border-radius:12px; font-size:0.75rem; font-weight:600;">Sec ${section}</span>
+        </div>
+        <div style="margin:1rem 0; padding:0.75rem; background:rgba(0,0,0,0.25); border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.85rem; color:#94A3B8;">Enrolled Students:</span>
+          <strong style="color:#10B981; font-size:0.95rem;">${classStudents.length} Students</strong>
+        </div>
+        <button type="button" class="btn btn-secondary btn-view-roster" data-class-id="${asgn.classId}" data-class-name="${className}" data-class-sec="${section}" style="width:100%; padding:0.55rem; border-radius:8px; cursor:pointer; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#FFFFFF; font-weight:600; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+          <i class="fa-solid fa-users"></i> View Class Roster
+        </button>
+      `;
+      container.appendChild(card);
+    });
+
+    // Wire up View Roster buttons
+    container.querySelectorAll('.btn-view-roster').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const classId = btn.getAttribute('data-class-id');
+        const className = btn.getAttribute('data-class-name');
+        const classSec = btn.getAttribute('data-class-sec');
+        openClassRoster(classId, className, classSec);
+      });
+    });
+  }
+
+  function openClassRoster(classId, className, classSec) {
+    const rosterPanel = document.getElementById('classRosterPanel');
+    const rosterTitle = document.getElementById('rosterClassName');
+    const rosterMeta = document.getElementById('rosterClassMeta');
+    const rosterTbody = document.getElementById('rosterTableBody');
+    if (!rosterPanel || !rosterTbody) return;
+
+    if (rosterTitle) rosterTitle.textContent = `${className} — Section ${classSec} Roster`;
+    
+    const allStudents = (state.getUsers() || []).filter(u => u.role === 'student');
+    const students = allStudents.filter(s => s.classId === classId || s.className === className);
+    
+    if (rosterMeta) rosterMeta.textContent = `${students.length} students currently registered in this section`;
+
+    rosterTbody.innerHTML = '';
+    if (students.length === 0) {
+      rosterTbody.innerHTML = `<tr><td colspan="4" style="padding:1.5rem; text-align:center; color:#94A3B8;">No students registered for this class section yet.</td></tr>`;
+    } else {
+      students.forEach(st => {
+        rosterTbody.innerHTML += `
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <td style="padding:0.85rem; color:#38BDF8; font-weight:600; font-family:monospace;">${st.regNo || 'N/A'}</td>
+            <td style="padding:0.85rem; color:#FFFFFF; font-weight:600;">${st.name || st.username}</td>
+            <td style="padding:0.85rem; color:#94A3B8;">${st.email || '—'}</td>
+            <td style="padding:0.85rem; color:#CBD5E1;">${st.department || 'Computer Science'}</td>
+          </tr>
+        `;
+      });
+    }
+
+    rosterPanel.style.display = 'block';
+    rosterPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.getElementById('btnCloseRoster')?.addEventListener('click', () => {
+    const rosterPanel = document.getElementById('classRosterPanel');
+    if (rosterPanel) rosterPanel.style.display = 'none';
+  });
+
+  document.getElementById('btnOpenStaffAddClassModal')?.addEventListener('click', openAddClassModal);
 
   // Modal functions for Class and Course
   function openAddClassModal() {
@@ -851,8 +957,25 @@
     ensureInitialAssignments();
     renderClasses();
     renderCourses();
+    renderCiaSection();
     renderTests();
     renderPresentations();
+  }
+
+  // 9. Live Search in Topbar
+  const searchInput = document.getElementById('geminiSearchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      document.querySelectorAll('#staffClassesGrid .class-card, #staffCourseTableBody tr, #staffPresentationCards > div, #staffTestTableBody tr').forEach(el => {
+        if (!q) {
+          el.style.display = '';
+        } else {
+          const match = el.textContent.toLowerCase().includes(q);
+          el.style.display = match ? '' : 'none';
+        }
+      });
+    });
   }
 
   initModals();

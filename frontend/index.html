@@ -26,53 +26,92 @@
     <div class="mesh-blob mesh-blob-3"></div>
   </div>
 
-  <!-- 1. Top Header -->
-  <header class="top-header" style="background:white; border-bottom:1px solid var(--border-subtle); z-index:100; position:relative;">
-    <div class="header-left">
-      <a href="index.html" class="brand" style="color:var(--ink);">
-        <div style="background:var(--staff-accent); color:white; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-right:0.25rem;">
-          <i class="fa-solid fa-graduation-cap" style="color:white; font-size:1rem;"></i>
-        </div>
-        Academe
-      </a>
-      <a href="index.html" class="nav-home" style="margin-left:1.5rem; color:var(--muted); font-size:0.9rem;">Home</a>
-    </div>
-    <div class="header-right">
-      <div class="user-info">
-        <span class="username" id="navStudentName" style="color:var(--ink); font-weight:500; font-size:0.9rem;">Loading...</span>
-        <button type="button" class="btn-logout" id="logoutBtn" style="background:rgba(239, 68, 68, 0.08); color:#EF4444; border:none; padding:0.4rem 1rem; border-radius:8px; font-weight:500;">
-          <i class="fa-solid fa-right-from-bracket"></i> Logout
+  <!-- Mobile Backdrop Overlay -->
+  <div class="gemini-sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- App Layout (Google Gemini Inspired) -->
+  <div class="gemini-app-layout">
+    <!-- 1. Left Sidebar (Google Gemini Reference) -->
+    <aside class="gemini-sidebar" id="geminiSidebar">
+      <!-- Brand & Header -->
+      <div class="gemini-sidebar-header">
+        <a href="index.html" class="gemini-brand">
+          <svg class="gemini-sparkle-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 0C14 7.732 7.732 14 0 14C7.732 14 14 20.268 14 28C14 20.268 20.268 14 28 14C20.268 14 14 7.732 14 0Z" fill="url(#geminiGrad)" />
+            <defs>
+              <linearGradient id="geminiGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#4285F4" />
+                <stop offset="35%" stop-color="#9B72CF" />
+                <stop offset="70%" stop-color="#D96570" />
+                <stop offset="100%" stop-color="#10B981" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="gemini-brand-text">Academe</span>
+        </a>
+        <button type="button" class="gemini-toggle-btn" id="sidebarToggleBtn" title="Collapse sidebar">
+          <i class="fa-solid fa-bars-staggered"></i>
         </button>
       </div>
-    </div>
-  </header>
 
-  <!-- 2. Sub Navigation (Horizontal Tabs) -->
-  <nav class="sub-nav">
-    <a class="nav-item active" data-target="section-overview">
-      <i class="fa-solid fa-house"></i> Overview
-    </a>
-    <a class="nav-item" data-target="section-course" id="tabCoursesTrigger">
-      <i class="fa-solid fa-book"></i> Course
-    </a>
-    <a class="nav-item" data-target="section-presentation" id="tabPresentationsTrigger">
-      <i class="fa-solid fa-person-chalkboard"></i> Presentation
-    </a>
-    <a class="nav-item" data-target="section-test" id="tabTestsTrigger">
-      <i class="fa-solid fa-file-signature"></i> Test
-    </a>
-  </nav>
+      <!-- Main Navigation Menu -->
+      <nav class="gemini-nav-list">
+        <a class="nav-item active" data-target="section-overview">
+          <i class="fa-solid fa-house"></i>
+          <span class="nav-label">Overview</span>
+        </a>
+        <a class="nav-item" data-target="section-course" id="tabCoursesTrigger">
+          <i class="fa-solid fa-book-open"></i>
+          <span class="nav-label">Course</span>
+        </a>
+        <a class="nav-item" data-target="section-presentation" id="tabPresentationsTrigger">
+          <i class="fa-solid fa-person-chalkboard"></i>
+          <span class="nav-label">Presentation</span>
+        </a>
+        <a class="nav-item" data-target="section-test" id="tabTestsTrigger">
+          <i class="fa-solid fa-file-signature"></i>
+          <span class="nav-label">Test</span>
+        </a>
+      </nav>
 
-  <!-- Layout Wrapper (Main Content) -->
-  <div class="dashboard-wrapper" style="position:relative; z-index:1;">
+      <!-- Bottom User Profile (like Ruthra Moorthy in Gemini reference) -->
+      <div class="gemini-sidebar-footer">
+        <div class="gemini-user-profile">
+          <div class="gemini-avatar" id="navAvatar">RM</div>
+          <div class="gemini-user-meta">
+            <span class="gemini-user-name" id="navStudentName">Ruthra Moorthy</span>
+            <span class="gemini-user-role">Student</span>
+          </div>
+        </div>
+        <button type="button" class="gemini-footer-btn" id="logoutBtn" title="Logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
 
-    <!-- 3. Main Content Area -->
-    <main class="main-content">
+    <!-- 2. Main Content Wrapper -->
+    <div class="gemini-main-wrapper">
+      <!-- Top Action Bar -->
+      <header class="gemini-topbar">
+        <button type="button" class="gemini-mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="gemini-topbar-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="Search courses, notes, presentations..." id="geminiSearchInput" />
+        </div>
+        <div class="gemini-topbar-right">
+          <span class="gemini-status-badge">Student Portal</span>
+        </div>
+      </header>
+
+      <!-- 3. Main Content Area -->
+      <main class="main-content">
       
       <!-- Overview Section -->
       <section id="section-overview" class="content-section active">
-        <h2 class="section-title" style="color:var(--ink); font-weight:700;">Student Dashboard</h2>
-        <p class="section-desc" style="color:var(--muted);">Welcome to your academic portal. Select a module to get started.</p>
+        <h2 class="section-title" style="color: #FFFFFF; font-weight: 700;">Student Dashboard</h2>
+        <p class="section-desc" style="color: #94A3B8;">Welcome to your academic portal. Select a module to get started.</p>
         
         <div class="cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
           
@@ -183,10 +222,10 @@
         
         <div class="admin-table-panel" style="padding: 1.5rem;">
           <div class="tools-nav-tabs mb-3" style="display:flex; gap:0.5rem; border-bottom:1px solid #E2E8F0; padding-bottom:0.75rem; margin-bottom:1rem;">
-            <button type="button" class="tool-tab-btn active" id="tabOngoingTestsBtn" style="padding:0.5rem 1rem; border-radius:8px; font-weight:600; font-size:0.85rem; border:1px solid #CBD5E1; background:#F1F5F9; cursor:pointer;">
+            <button type="button" class="tool-tab-btn active" id="tabOngoingTestsBtn" style="padding:0.5rem 1rem; border-radius:8px; font-weight:600; font-size:0.85rem; border:1px solid #CBD5E1; background:#F1F5F9; color:#1E293B; cursor:pointer;">
               Ongoing Tests
             </button>
-            <button type="button" class="tool-tab-btn" id="tabUpcomingTestsBtn" style="padding:0.5rem 1rem; border-radius:8px; font-weight:600; font-size:0.85rem; border:1px solid transparent; background:transparent; cursor:pointer; color: white;">
+            <button type="button" class="tool-tab-btn" id="tabUpcomingTestsBtn" style="padding:0.5rem 1rem; border-radius:8px; font-weight:600; font-size:0.85rem; border:1px solid transparent; background:transparent; cursor:pointer; color:#94A3B8;">
               Upcoming Tests
             </button>
           </div>
@@ -198,6 +237,7 @@
 
     </main>
   </div>
+</div>
 
   <!-- Modal: Test Solution PDF Upload Modal -->
   <div class="modal-backdrop" id="modalUploadDocument">
@@ -399,5 +439,42 @@
   <!-- Scripts -->
   <script src="portal-state.js?v=20260912i"></script>
   <script src="student.js?v=20260912i"></script>
+  <script>
+    // Google Gemini Sidebar Toggle & Drawer Script
+    (function () {
+      const sidebar = document.getElementById('geminiSidebar');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      const mobileBtn = document.getElementById('mobileMenuBtn');
+      const backdrop = document.getElementById('sidebarBackdrop');
+
+      // Desktop collapse toggle
+      if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('collapsed');
+        });
+      }
+
+      // Mobile slide-out drawer
+      if (mobileBtn && sidebar && backdrop) {
+        mobileBtn.addEventListener('click', () => {
+          sidebar.classList.add('mobile-open');
+          backdrop.classList.add('active');
+        });
+
+        backdrop.addEventListener('click', () => {
+          sidebar.classList.remove('mobile-open');
+          backdrop.classList.remove('active');
+        });
+
+        document.querySelectorAll('.gemini-sidebar .nav-item').forEach(item => {
+          item.addEventListener('click', () => {
+            sidebar.classList.remove('mobile-open');
+            backdrop.classList.remove('active');
+          });
+        });
+      }
+
+    })();
+  </script>
 </body>
 </html>

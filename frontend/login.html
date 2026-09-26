@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Sign in — Academe</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,25 +31,42 @@
   body{
     margin: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     font-family: 'Inter', sans-serif;
     color: var(--ink);
     background: radial-gradient(circle at 20% 15%, var(--bg-a), transparent 55%),
                 radial-gradient(circle at 85% 85%, var(--bg-b), transparent 55%),
                 #F3F5FC;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     display: flex;
     align-items: center;
     justify-content: center;
+    -webkit-tap-highlight-color: transparent;
   }
  
   .stage{
     position: relative;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
     perspective: 1400px;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+  }
+
+  .login-container{
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin: auto 0;
   }
  
   /* ---------- floating background shapes ---------- */
@@ -106,20 +123,17 @@
   @keyframes spin{
     to{ transform: rotate(360deg); }
   }
- 
   /* ---------- brand ---------- */
   .brand{
-    position: absolute;
-    top: 6%;
-    left: 50%;
-    transform: translateX(-50%);
     text-align: center;
+    margin-bottom: 1.25rem;
     z-index: 3;
   }
   .brand .name{
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
-    font-size: 1.3rem;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
   }
   .brand .name span{ color: var(--primary); }
   .brand .tag{
@@ -127,7 +141,7 @@
     color: var(--muted);
     margin-top: 0.2rem;
   }
- 
+
   /* ---------- portal switch ---------- */
   .switch{
     position: relative;
@@ -136,8 +150,9 @@
     border: 1px solid var(--rule);
     border-radius: 999px;
     padding: 4px;
-    width: 320px;
-    margin: 0 auto 1.6rem;
+    width: 100%;
+    max-width: 310px;
+    margin: 0 auto 1.35rem;
     box-shadow: 0 8px 20px -12px rgba(28,35,64,0.15);
     z-index: 3;
   }
@@ -149,40 +164,66 @@
     background: none;
     border: none;
     font-family: 'Inter', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    padding: 0.6rem 0.4rem;
+    padding: 0.65rem 0.5rem;
     cursor: pointer;
     color: var(--muted);
     transition: color 0.3s ease;
+    touch-action: manipulation;
   }
   .switch button.active{ color: #fff; }
   .switch .pill{
     position: absolute;
     top: 4px; bottom: 4px; left: 4px;
     width: calc(50% - 4px);
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     border-radius: 999px;
     z-index: 1;
-    transition: transform 0.4s cubic-bezier(.65,.05,.36,1);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+  .switch .pill::before,
+  .switch .pill::after{
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    transition: opacity 0.35s ease;
+  }
+  .switch .pill::before{
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    opacity: 1;
+  }
+  .switch .pill::after{
+    background: linear-gradient(135deg, var(--faculty), #5C40E0);
+    opacity: 0;
   }
   .switch.on-faculty .pill{
     transform: translateX(100%);
-    background: linear-gradient(135deg, var(--faculty), #5C40E0);
   }
- 
+  .switch.on-faculty .pill::before{
+    opacity: 0;
+  }
+  .switch.on-faculty .pill::after{
+    opacity: 1;
+  }
+
   /* ---------- 3D flip card ---------- */
   .tilt-wrap{
-    width: 400px;
-    max-width: 90vw;
+    width: 100%;
+    max-width: 400px;
     z-index: 3;
+    transform-style: preserve-3d;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
   }
   .card-3d{
     position: relative;
     width: 100%;
-    height: 470px;
+    height: 465px;
     transform-style: preserve-3d;
-    transition: transform 0.9s cubic-bezier(.65,.05,.36,1);
+    transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
   }
   .card-3d.flipped{ transform: rotateY(180deg); }
  
@@ -192,13 +233,28 @@
     background: var(--surface);
     border-radius: 22px;
     padding: 2.2rem 2rem;
-    box-shadow: 0 40px 70px -30px rgba(28,35,64,0.35);
+    box-shadow: 0 32px 64px -24px rgba(28,35,64,0.3);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     display: flex;
     flex-direction: column;
+    transform-style: preserve-3d;
+    -webkit-font-smoothing: antialiased;
+    transform: rotateY(0deg) translateZ(0);
   }
-  .face.back{ transform: rotateY(180deg); }
+  .face.front{
+    transform: rotateY(0deg) translateZ(0);
+  }
+  .face.back{
+    transform: rotateY(180deg) translateZ(0);
+  }
+
+  .card-3d.flipped .face.front{
+    pointer-events: none;
+  }
+  .card-3d:not(.flipped) .face.back{
+    pointer-events: none;
+  }
  
   .face .accent-bar{
     width: 46px; height: 5px;
@@ -326,7 +382,72 @@
   }
  
   @media (max-width: 480px){
-    .card-3d{ height: 500px; }
+    .stage{
+      padding: 1.25rem 0.85rem;
+    }
+    .brand{
+      margin-bottom: 0.85rem;
+    }
+    .brand .name{
+      font-size: 1.25rem;
+    }
+    .brand .tag{
+      font-size: 0.72rem;
+    }
+    .switch{
+      max-width: 275px;
+      margin-bottom: 1rem;
+    }
+    .switch button{
+      font-size: 0.78rem;
+      padding: 0.55rem 0.35rem;
+    }
+    .card-3d{
+      height: 450px;
+    }
+    .face{
+      padding: 1.6rem 1.3rem;
+      border-radius: 20px;
+    }
+    .face .accent-bar{
+      margin-bottom: 0.85rem;
+    }
+    .face h2{
+      font-size: 1.22rem;
+      margin-bottom: 0.25rem;
+    }
+    .face .sub{
+      font-size: 0.76rem;
+      margin-bottom: 1.15rem;
+    }
+    .field{
+      margin-bottom: 0.95rem;
+    }
+    .field label{
+      font-size: 0.72rem;
+      margin-bottom: 0.35rem;
+    }
+    .field-box input{
+      font-size: 0.86rem;
+      padding: 0.65rem 2rem 0.65rem 0.8rem;
+    }
+    .remember{
+      margin-bottom: 1rem;
+      font-size: 0.72rem;
+    }
+    .go-btn{
+      padding: 0.78rem;
+      font-size: 0.85rem;
+      border-radius: 10px;
+    }
+    .flip-hint{
+      margin-top: 0.65rem;
+      font-size: 0.68rem;
+    }
+    .sphere-a{ width: 85px; height: 85px; top: 3%; left: 4%; opacity: 0.45; }
+    .sphere-b{ width: 50px; height: 50px; bottom: 5%; left: 5%; opacity: 0.45; }
+    .sphere-c{ width: 35px; height: 35px; top: 6%; right: 5%; opacity: 0.45; }
+    .ring{ width: 120px; height: 120px; bottom: 3%; right: 3%; opacity: 0.35; }
   }
 </style>
 </head>
@@ -339,12 +460,12 @@
   <div class="shape sphere-c"></div>
   <div class="shape ring"></div>
  
-  <div class="brand">
-    <div class="name">A<span>c</span>ademe</div>
-    <div class="tag">Flip the card to switch portals</div>
-  </div>
+  <div class="login-container">
+    <div class="brand">
+      <div class="name">A<span>c</span>ademe</div>
+      <div class="tag">Flip the card to switch portals</div>
+    </div>
  
-  <div style="display:flex; flex-direction:column; align-items:center;">
     <div class="switch" id="switchEl">
       <div class="pill"></div>
       <button type="button" class="active" data-target="student">Student</button>
@@ -426,6 +547,10 @@
   const flag = document.getElementById('flag');
  
   function setPortal(target){
+    // Blur active input so focus doesn't disrupt 3D rotation
+    if (document.activeElement && document.activeElement.blur) {
+      document.activeElement.blur();
+    }
     buttons.forEach(b => b.classList.toggle('active', b.dataset.target === target));
     switchEl.classList.toggle('on-faculty', target === 'faculty');
     card.classList.toggle('flipped', target === 'faculty');
@@ -450,23 +575,30 @@
     });
   });
  
-  // mouse-parallax tilt on the whole card
+  // Smooth mouse-parallax tilt on tiltWrap (card3d rotates cleanly via GPU CSS)
   const tiltWrap = document.getElementById('tiltWrap');
   const stage = document.getElementById('stage');
+  let tiltTicking = false;
+ 
   stage.addEventListener('mousemove', (e) => {
-    const rect = tiltWrap.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const dx = (e.clientX - cx) / (rect.width / 2);
-    const dy = (e.clientY - cy) / (rect.height / 2);
-    const rotY = Math.max(-1, Math.min(1, dx)) * 8;
-    const rotX = Math.max(-1, Math.min(1, dy)) * -8;
-    const base = card.classList.contains('flipped') ? 180 : 0;
-    card.style.transform = `rotateX(${rotX}deg) rotateY(${base + rotY}deg)`;
+    if (!tiltTicking) {
+      requestAnimationFrame(() => {
+        const rect = tiltWrap.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = (e.clientX - cx) / (rect.width / 2);
+        const dy = (e.clientY - cy) / (rect.height / 2);
+        const rotY = Math.max(-1, Math.min(1, dx)) * 5;
+        const rotX = Math.max(-1, Math.min(1, dy)) * -5;
+        tiltWrap.style.transform = `rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
+        tiltTicking = false;
+      });
+      tiltTicking = true;
+    }
   });
+ 
   stage.addEventListener('mouseleave', () => {
-    const base = card.classList.contains('flipped') ? 180 : 0;
-    card.style.transform = `rotateX(0deg) rotateY(${base}deg)`;
+    tiltWrap.style.transform = 'rotateX(0deg) rotateY(0deg)';
   });
 </script>
  
